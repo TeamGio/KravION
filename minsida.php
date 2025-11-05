@@ -6,8 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <php?
-    echo "Arrebarre e böögh!";
-    ?>
+    <h1>Välkommen</h1>
+    
 </body>
 </html>
