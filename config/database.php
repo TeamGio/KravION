@@ -9,17 +9,17 @@ class Database {
 
     public function __construct() {
         $this->host = getenv('PGHOST') ?: 'localhost';
-        $this->port = getenv('PGPORT') ?: '5432';
+        $this->port = getenv('PGPORT') ?: '3306';
         $this->db_name = getenv('PGDATABASE') ?: 'healthcare';
-        $this->username = getenv('PGUSER') ?: 'postgres';
-        $this->password = getenv('PGPASSWORD') ?: '';
+        $this->username = getenv('PGUSER') ?: 'sqllab';
+        $this->password = getenv('PGPASSWORD') ?: 'Pangolin!24';
     }
 
     public function getConnection() {
         $this->conn = null;
 
         try {
-            $dsn = "pgsql:host=" . $this->host . ";port=" . $this->port . ";dbname=" . $this->db_name;
+            $dsn = "pgsql:host=193.93.250.83" . $this->host . ";port=3306" . $this->port . ";dbname=wwwit-utv" . $this->db_name;
             $this->conn = new PDO($dsn, $this->username, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch(PDOException $e) {
