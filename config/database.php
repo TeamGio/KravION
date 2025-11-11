@@ -10,7 +10,7 @@ class Database {
     public function __construct() {
         $this->host = getenv('PGHOST') ?: 'localhost';
         $this->port = getenv('PGPORT') ?: '3306';
-        $this->db_name = getenv('PGDATABASE') ?: 'KravION';
+        $this->db_name = getenv('PGDATABASE') ?: 'Grupp4';
         $this->username = getenv('PGUSER') ?: 'sqllab';
         $this->password = getenv('PGPASSWORD') ?: 'Pangolin!24';
     }
