@@ -1,31 +1,22 @@
 <?php
 class Database {
-    private $host;
-    private $port;
-    private $db_name;
-    private $username;
-    private $password;
     private $conn;
 
-    public function __construct() {
-        $this->host = getenv('PGHOST') ?: 'localhost';
-        $this->port = getenv('PGPORT') ?: '3306';
-        $this->db_name = getenv('PGDATABASE') ?: 'KravION';
-        $this->username = getenv('PGUSER') ?: 'sqllab';
-        $this->password = getenv('PGPASSWORD') ?: 'Pangolin!24';
-    }
-
     public function getConnection() {
-        $this->conn = null;
+        $host = '193.93.250.83/wwwit-utv/';
+        $port = '3306';
+        $db_name = 'KravION';
+        $username = 'sqllab';
+        $password = 'Armadillo#2025';
 
         try {
-            $dsn = "pgsql:host=193.93.250.83" . $this->host . ";port=3306" . $this->port . ";dbname=wwwit-utv" . $this->db_name;
-            $this->conn = new PDO($dsn, $this->username, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch(PDOException $e) {
+            $dsn = "mysql:dbname={$db_name};host={$host};port={$port}";
+            $conn = new PDO($dsn, $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            return $conn;
+        } catch (PDOException $e) {
             echo "Connection Error: " . $e->getMessage();
         }
-
-        return $this->conn;
     }
 }
