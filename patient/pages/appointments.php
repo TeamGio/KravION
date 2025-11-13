@@ -1,4 +1,26 @@
 <?php
+require_once __DIR__ . '/../../config/exempelfil_erp.php'; // justera sökväg vid behov
+
+// Om du mappar lokalt $patient_id till ERP patient-identifier måste du ha den värdet här.
+// Exempel: $erp_patient_identifier = 'Patient/0001' eller patientens name/email i ERP
+$erp_patient_identifier = $patient_external_id ?? null; // sätt korrekt värde
+
+// Hämta appointments från ERP (justera endpoint/filters efter er ERPNext)
+try {
+    // exempel: filtrera på patient fält (ändra fältnamn efter era ERPNext-modeller)
+    if ($erp_patient_identifier) {
+        $filter = urlencode('[["Appointment","patient","=","' . $erp_patient_identifier . '"]]');
+        $res = erp_request("api/resource/Appointment?filters=$filter");
+    } else {
+        // fallback: hämta alla eller patientens objekt med annan query
+        $res = erp_request("api/resource/Appointment");
+    }
+    $appointments = $res['data']['data'] ?? []; // ERPNext brukar nestla data i ['data']['data'] 
+} catch (Exception $e) {
+    $appointments = [];
+    $message = '<div class="alert alert-danger">Kunde inte hämta bokningar från ERP: ' . htmlspecialchars($e->getMessage()) . '</div>';
+}
+
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {

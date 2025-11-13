@@ -1,4 +1,5 @@
 <?php
+require_once '../config/exempelfil_erp.php';
 $stmt = $conn->query("
     SELECT p.*, 
            COUNT(DISTINCT a.id) as appointment_count,

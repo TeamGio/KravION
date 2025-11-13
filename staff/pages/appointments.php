@@ -1,4 +1,5 @@
 <?php
+require_once '../config/exempelfil_erp.php';
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {

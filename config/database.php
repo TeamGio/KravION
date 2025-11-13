@@ -3,7 +3,7 @@ class Database {
     private $conn;
 
     public function getConnection() {
-        $host = '193.93.250.83/wwwit-utv/';
+        $host = '127.0.0.1';
         $port = '3306';
         $db_name = 'KravION';
         $username = 'sqllab';

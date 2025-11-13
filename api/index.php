@@ -16,6 +16,7 @@ if ($request_origin && !empty($allowed_origins) && in_array($request_origin, $al
 }
 
 require_once '../config/database.php';
+require_once __DIR__ . '/exempelfil_erp.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 $request = isset($_SERVER['PATH_INFO']) ? explode('/', trim($_SERVER['PATH_INFO'], '/')) : [];
@@ -53,9 +54,25 @@ try {
         $response = ['success' => true, 'message' => 'Healthcare Management API', 'version' => '1.0', 'status' => 'Authentication required for protected endpoints'];
     } elseif ($request[0] === 'patients' && $method === 'GET') {
         requireAuthentication();
-        $stmt = $conn->query("SELECT id, personal_number, first_name, last_name, email, phone, date_of_birth FROM patients");
-        $patients = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $response = ['success' => true, 'data' => $patients];
+        // If ERP_BASEURL is configured, proxy to ERPNext instead of local DB
+        if (getenv('ERP_BASEURL')) {
+            try {
+                $fields = urlencode('["name","personal_number","first_name","last_name","email","phone","date_of_birth"]');
+                $erp = erp_request('api/resource/Patient?fields=' . $fields);
+                if (isset($erp['data'])) {
+                    // ERPNext returns an array of resources in 'data'
+                    $response = ['success' => true, 'data' => $erp['data']];
+                } else {
+                    $response = ['success' => false, 'message' => 'Unexpected ERP response'];
+                }
+            } catch (Exception $e) {
+                $response = ['success' => false, 'message' => 'ERP request failed: ' . $e->getMessage()];
+            }
+        } else {
+            $stmt = $conn->query("SELECT id, personal_number, first_name, last_name, email, phone, date_of_birth FROM patients");
+            $patients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = ['success' => true, 'data' => $patients];
+        }
         
         
     } elseif ($request[0] === 'appointments' && $method === 'GET') {

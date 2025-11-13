@@ -1,4 +1,5 @@
 <?php
+require_once '../config/exempelfil_erp.php';
 $stmt = $conn->query("
     SELECT 
         category,
