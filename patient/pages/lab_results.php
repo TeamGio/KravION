@@ -1,4 +1,5 @@
 <?php
+require_once '../config/exempelfil_erp.php';
 $stmt = $conn->prepare("
     SELECT lr.*, s.first_name, s.last_name 
     FROM lab_results lr

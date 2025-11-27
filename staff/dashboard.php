@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../config/database.php';
-
+require_once '../config/exempelfil_erp.php';
 if (!isset($_SESSION['staff_id'])) {
     header('Location: login.php');
     exit();

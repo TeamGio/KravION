@@ -6,15 +6,15 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Healthcare Management System</title>
+    <title>Mölndal Vårdcentral</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header class="main-header">
-            <h1>Healthcare Management System</h1>
-            <p class="tagline">Quality Care, Digital Access</p>
+            <h1>Mölndal vårdcentral</h1>
+            <p class="tagline">Din lokala vårdecentral</p>
         </header>
 
         <div class="portal-selection">
@@ -26,7 +26,7 @@ session_start();
                     </svg>
                 </div>
                 <h2>Patient Portal</h2>
-                <p>Access your medical records, book appointments, and manage prescriptions</p>
+                <p>Hantera din journal, boka tid eller förnya dina recept</p>
                 <a href="patient/login.php" class="btn btn-primary">Patient Login</a>
             </div>
 
@@ -39,14 +39,14 @@ session_start();
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
                 </div>
-                <h2>Healthcare Center</h2>
-                <p>Manage patient records, appointments, and medical inventory</p>
+                <h2>Personal portal</h2>
+                <p>Hantera patientjournal, bokningar och läkemedel.</p>
                 <a href="staff/login.php" class="btn btn-secondary">Staff Login</a>
             </div>
         </div>
 
         <footer>
-            <p>&copy; 2025 Healthcare Management System. All rights reserved.</p>
+            <p>&copy; 2025 KravION ERPSystems. All rights reserved.</p>
         </footer>
     </div>
 </body>

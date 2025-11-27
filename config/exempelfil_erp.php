@@ -15,7 +15,7 @@ try {
 
 curl_setopt($ch, CURLOPT_POST, true);
 //  ----------  Här sätter ni era login-data ------------------ //
-curl_setopt($ch, CURLOPT_POSTFIELDS, '{"usr":"wwwit-utv", "pwd":"Pangolin!24"}'); 
+curl_setopt($ch, CURLOPT_POSTFIELDS, '{"usr":"a24leoli@student.his.se", "pwd":"Leoslek123"}'); 
 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
 curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
 curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiepath);
