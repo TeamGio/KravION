@@ -5,7 +5,7 @@ class Database {
     public function getConnection() {
         $host = '127.0.0.1';
         $port = '3306';
-        $db_name = 'KravION';
+        $db_name = 'grupp4';
         $username = 'sqllab';
         $password = 'Armadillo#2025';
 
