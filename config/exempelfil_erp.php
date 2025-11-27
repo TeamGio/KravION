@@ -40,12 +40,11 @@ if (!empty($error_no)) {
   echo "<hr>";
   echo "</div>";
 }
-echo "<div style='background-color:lightgray; border:1px solid black'>";
-echo '$response<br><pre>';
-echo print_r($response) . "</pre><br>";
-echo "</div>";
 
-$ch = curl_init($baseurl . 'api/resource/Patient'); 
+$ch = curl_init($baseurl . 'api/resource/Patient?limit=100&filters=[["name","LIKE","G4%"]]'); 
+
+
+// Ska patienterna registerar sig via hemsidan eller hur läggs dom till 
 
 // man kan även specificera vilka fält man vill se
 // urlencode krävs när du har specialtecken eller mellanslag  
@@ -84,10 +83,7 @@ if (!empty($error_no)) {
   echo "<hr>";
   echo "</div>";
 }
-echo "<div style='background-color:lightgray; border:1px solid black'>";
-echo '$response<br><pre>';
-echo print_r($response) . "</pre><br>";
-echo "</div>";
+
 
 //här väljer jag att loopa över alla poster i [data] och för varje resultat så skriver jag ut name
 echo "<strong>LISTA:</strong><br>";
