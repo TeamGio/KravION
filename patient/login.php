@@ -1,22 +1,40 @@
 <?php
 session_start();
 require_once '../config/database.php';
-require_once '../config/exempelfil_erp.php';
+require_once '../config/exempelfil_erp.php'; 
+
 $error = '';
 $success = '';
+
+
+if (isset($_SESSION['patient_id'])) {
+    header('Location: dashboard.php');
+    exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $personal_number = $_POST['personal_number'] ?? '';
     
     if (empty($personal_number)) {
-        $error = 'Please enter personalnumber';
+        $error = 'Vänligen ange ditt personnummer.';
     } else {
         $database = new Database();
         $conn = $database->getConnection();
         
-        $stmt = $conn->prepare("SELECT * FROM patients WHERE personal_number = :personal_number");
+   
+        $stmt = $conn->prepare("SELECT id, first_name FROM patients WHERE personal_number = :personal_number");
         $stmt->bindParam(':personal_number', $personal_number);
         $stmt->execute();
+        
+        $patient = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($patient) {
+            $_SESSION['patient_id'] = $patient['id'];
+            header('Location: dashboard.php');
+            exit();
+        } else {
+            $error = 'Inloggning misslyckades. Personnumret hittades inte.';
+        }
     }
 }
 ?>
@@ -45,10 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
             <?php endif; ?>
             
-            <form method="POST" action="dashboard.php">
+            <form method="POST" action="login.php">
                 <div class="form-group">
                     <label for="personal_number">Personal Number (YYYYMMDDXXXX)</label>
-                    <input type="text" id="personal_number" name="personal_number" class="form-control" required maxlength="12" placeholder="199001011234">
+                    <input type="text" id="personal_number" name="personal_number" class="form-control" required maxlength="12" placeholder="199001011234" value="<?php echo htmlspecialchars($personal_number ?? ''); ?>">
                 </div>
                 
                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 16px;">Login</button>

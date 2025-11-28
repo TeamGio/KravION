@@ -1,33 +1,58 @@
 <?php
 session_start();
+
+// Om användaren klickar på toggle-länken
+if (isset($_GET['lang'])) {
+    $_SESSION['language'] = $_GET['lang'];
+}
+
+// Standard: svenska
+$lang = $_SESSION['language'] ?? 'sv';
+
+$texts = [
+    'sv' => [
+        'title' => 'Mölndal vårdcentral',
+        'tagline' => 'Din lokala vårdcentral',
+        'patient_portal' => 'Patientportal',
+        'patient_desc' => 'Hantera din journal, boka tid eller förnya dina recept',
+        'patient_login' => 'Logga in som patient',
+    ],
+    'en' => [
+        'title' => 'Mölndal Health Center',
+        'tagline' => 'Your local healthcare center',
+        'patient_portal' => 'Patient Portal',
+        'patient_desc' => 'Manage your records, book appointments or renew prescriptions',
+        'patient_login' => 'Patient Login',
+    ]
+];
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $lang; ?>">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mölndal Vårdcentral</title>
+    <title><?php echo $texts[$lang]['title']; ?></title>
     <link rel="stylesheet" href="assets/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header class="main-header">
-            <h1>Mölndal vårdcentral</h1>
-            <p class="tagline">Din lokala vårdecentral</p>
+            <h1><?php echo $texts[$lang]['title']; ?></h1>
+            <p class="tagline"><?php echo $texts[$lang]['tagline']; ?></p>
         </header>
 
         <div class="portal-selection">
             <div class="portal-card patient-portal">
-                <div class="icon">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                </div>
-                <h2>Patient Portal</h2>
-                <p>Hantera din journal, boka tid eller förnya dina recept</p>
-                <a href="patient/login.php" class="btn btn-primary">Patient Login</a>
+                <h2><?php echo $texts[$lang]['patient_portal']; ?></h2>
+                <p><?php echo $texts[$lang]['patient_desc']; ?></p>
+                <a href="patient/login.php" class="btn btn-primary">
+                    <?php echo $texts[$lang]['patient_login']; ?>
+                </a>
+            </div>
+        </div>
+
+        <!-- Språktoggle -->
+        <div style="margin-top:20px; text-align:center;">
+            <a href="?lang=sv">🇸🇪 Svenska</a> | <a href="?lang=en">🇬🇧 English</a>
         </div>
 
         <footer>
