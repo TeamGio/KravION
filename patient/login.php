@@ -7,10 +7,9 @@ $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $personal_number = $_POST['personal_number'] ?? '';
-    $password = $_POST['password'] ?? '';
     
-    if (empty($personal_number) || empty($password)) {
-        $error = 'Please enter both personal number and password';
+    if (empty($personal_number)) {
+        $error = 'Please enter personalnumber';
     } else {
         $database = new Database();
         $conn = $database->getConnection();
@@ -19,21 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':personal_number', $personal_number);
         $stmt->execute();
         
-        if ($stmt->rowCount() > 0) {
-            $patient = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            if (password_verify($password, $patient['password_hash'])) {
-                $_SESSION['patient_id'] = $patient['id'];
-                $_SESSION['patient_name'] = $patient['first_name'] . ' ' . $patient['last_name'];
-                $_SESSION['language'] = $patient['language'];
-                header('Location: dashboard.php');
-                exit();
-            } else {
-                $error = 'Invalid personal number or password';
-            }
-        } else {
-            $error = 'Invalid personal number or password';
-        }
+       
     }
 }
 ?>
@@ -62,15 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
             <?php endif; ?>
             
-            <form method="POST" action="">
+            <form method="POST" action="dashboard.php">
                 <div class="form-group">
-                    <label for="personal_number">Personal Number (YYYYMMDDXXXX)</label>
+                    <label for="personal_number">Personal Number (YYYYMMDD-XXXX)</label>
                     <input type="text" id="personal_number" name="personal_number" class="form-control" required maxlength="12" placeholder="199001011234">
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" required placeholder="Enter your password">
                 </div>
                 
                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 16px;">Login</button>
