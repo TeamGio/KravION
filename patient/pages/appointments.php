@@ -13,7 +13,7 @@ try {
         $res = erp_request("api/resource/Appointment?filters=$filter");
     } else {
         // fallback: hämta alla eller patientens objekt med annan query
-        $res = erp_request("api/resource/Appointment");
+       // $res = erp_request("api/resource/Appointment");
     }
     $appointments = $res['data']['data'] ?? []; // ERPNext brukar nestla data i ['data']['data'] 
 } catch (Exception $e) {
