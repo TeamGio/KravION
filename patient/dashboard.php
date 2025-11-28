@@ -1,39 +1,43 @@
 <?php
 session_start();
-require_once '../config/database.php';
-require_once '../config/exempelfil_erp.php';
+require_once '../config/database.php'; 
+require_once '../config/exempelfil_erp.php'; 
+
+
 if (!isset($_SESSION['patient_id'])) {
     header('Location: login.php');
     exit();
 }
 
-$database = new Database();
-$conn = $database->getConnection();
-
-$patient_id = $_SESSION['patient_id'];
+$patient_erp_id = $_SESSION['patient_id']; 
+$patient_pnr = $_SESSION['personal_number'] ?? 'N/A'; 
 $page = $_GET['page'] ?? 'overview';
 
-$stmt = $conn->prepare("SELECT * FROM patients WHERE id = :id");
-$stmt->bindParam(':id', $patient_id);
-$stmt->execute();
-$patient = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("SELECT COUNT(*) as count FROM appointments WHERE patient_id = :patient_id AND status = 'scheduled'");
-$stmt->bindParam(':patient_id', $patient_id);
-$stmt->execute();
-$upcoming_appointments = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+$erp_client = new ERPNextClient();
 
-$stmt = $conn->prepare("SELECT COUNT(*) as count FROM prescriptions WHERE patient_id = :patient_id AND status = 'active'");
-$stmt->bindParam(':patient_id', $patient_id);
-$stmt->execute();
-$active_prescriptions = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
-$stmt = $conn->prepare("SELECT COUNT(*) as count FROM medical_records WHERE patient_id = :patient_id");
-$stmt->bindParam(':patient_id', $patient_id);
-$stmt->execute();
-$medical_records_count = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+$patient = $erp_client->findPatientByPNR($patient_pnr); 
 
-$lang = $patient['language'] ?? 'en';
+if (!$patient) {
+    session_destroy();
+    header('Location: login.php?error=Kunde inte hämta patientdata från ERPNext.');
+    exit();
+}
+
+$patient_data = [
+    'first_name' => $patient['first_name'] ?? 'Patient',
+    'personal_number' => $patient_pnr,
+    'language' => $patient['language'] ?? $_SESSION['language'] ?? 'sv', 
+];
+$patient_data = array_merge($patient_data, $patient_data);
+$upcoming_appointments = 2; // fejk bre
+$active_prescriptions = 3;  // fejk bre
+$medical_records_count = 15; // fejk bre
+
+
+
+$lang = $patient_data['language'] ?? 'en';
 $translations = [
     'en' => [
         'welcome' => 'Welcome',
@@ -46,6 +50,10 @@ $translations = [
         'upcoming_appointments' => 'Upcoming Appointments',
         'active_prescriptions' => 'Active Prescriptions',
         'medical_records' => 'Medical Records',
+        'quick_actions' => 'Quick Actions',
+        'book_appointment' => 'Book Appointment',
+        'request_renewal' => 'Request Prescription Renewal',
+        'view_records' => 'View Medical Records',
     ],
     'sv' => [
         'welcome' => 'Välkommen',
@@ -58,6 +66,10 @@ $translations = [
         'upcoming_appointments' => 'Kommande Besök',
         'active_prescriptions' => 'Aktiva Recept',
         'medical_records' => 'Medicinska Journaler',
+        'quick_actions' => 'Snabba Åtgärder',
+        'book_appointment' => 'Boka Tid',
+        'request_renewal' => 'Begär Receptförnyelse',
+        'view_records' => 'Visa Journaler',
     ]
 ];
 
@@ -77,8 +89,8 @@ $t = $translations[$lang];
         <div class="dashboard">
             <div class="dashboard-header">
                 <div>
-                    <h1><?php echo $t['welcome']; ?>, <?php echo htmlspecialchars($patient['first_name']); ?>!</h1>
-                    <p style="color: #6C757D;">Patient ID: <?php echo htmlspecialchars($patient['personal_number']); ?></p>
+                    <h1><?php echo $t['welcome']; ?>, <?php echo htmlspecialchars($patient_data['first_name']); ?>!</h1>
+                    <p style="color: #6C757D;">Patient ID: <?php echo htmlspecialchars($patient_pnr); ?></p>
                 </div>
                 <div>
                     <a href="logout.php" class="btn btn-alert"><?php echo $t['logout']; ?></a>
@@ -112,30 +124,26 @@ $t = $translations[$lang];
                 </div>
                 
                 <div class="card">
-                    <h3>Quick Actions</h3>
+                    <h3><?php echo $t['quick_actions']; ?></h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px;">
-                        <a href="?page=appointments" class="btn btn-primary">Book Appointment</a>
-                        <a href="?page=prescriptions" class="btn btn-accent">Request Prescription Renewal</a>
-                        <a href="?page=medical_journal" class="btn btn-secondary">View Medical Records</a>
+                        <a href="?page=appointments" class="btn btn-primary"><?php echo $t['book_appointment']; ?></a>
+                        <a href="?page=prescriptions" class="btn btn-accent"><?php echo $t['request_renewal']; ?></a>
+                        <a href="?page=medical_journal" class="btn btn-secondary"><?php echo $t['view_records']; ?></a>
                     </div>
                 </div>
             <?php endif; ?>
             
-            <?php if ($page === 'medical_journal'): 
+            <?php 
+            if ($page === 'medical_journal'): 
                 include 'pages/medical_journal.php';
-            endif; ?>
-            
-            <?php if ($page === 'lab_results'): 
+            elseif ($page === 'lab_results'): 
                 include 'pages/lab_results.php';
-            endif; ?>
-            
-            <?php if ($page === 'appointments'): 
+            elseif ($page === 'appointments'): 
                 include 'pages/appointments.php';
-            endif; ?>
-            
-            <?php if ($page === 'prescriptions'): 
+            elseif ($page === 'prescriptions'): 
                 include 'pages/prescriptions.php';
-            endif; ?>
+            endif; 
+            ?>
         </div>
     </div>
 </body>
