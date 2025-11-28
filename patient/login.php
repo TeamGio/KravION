@@ -17,8 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("SELECT * FROM patients WHERE personal_number = :personal_number");
         $stmt->bindParam(':personal_number', $personal_number);
         $stmt->execute();
-        
-       
     }
 }
 ?>
@@ -49,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <form method="POST" action="dashboard.php">
                 <div class="form-group">
-                    <label for="personal_number">Personal Number (YYYYMMDD-XXXX)</label>
+                    <label for="personal_number">Personal Number (YYYYMMDDXXXX)</label>
                     <input type="text" id="personal_number" name="personal_number" class="form-control" required maxlength="12" placeholder="199001011234">
                 </div>
                 
@@ -63,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #E9ECEF; text-align: center; color: #6C757D;">
                 <p><strong>Demo Credentials:</strong></p>
                 <p>Personal Number: 199001011234</p>
-                <p>Password: password</p>
             </div>
         </div>
     </div>
