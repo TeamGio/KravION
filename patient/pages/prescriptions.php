@@ -3,6 +3,32 @@
 require_once '../config/exempelfil_erp.php';
 $message = '';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $personal_number = $_POST['personal_number'] ?? '';
+    
+    if (empty($personal_number)) {
+        $error = $t['err_empty_pnr'];
+    } else {
+        
+
+        $erp_client = new ERPNextClient();
+        
+        $patient_data = $erp_client->renewPrescription($personal_number);
+
+        if ($patient_data) {
+            $_SESSION['patient_id'] = $patient_data['name']; 
+            $_SESSION['personal_number'] = $personal_number;
+            
+            header('Location: prescriptions.php');
+            exit();
+        } else {
+            $error = $t['err_pnr_not_found'];
+        }
+        
+
+    }
+}
+
 ?>
 
 <div class="card">

@@ -88,5 +88,43 @@ class ERPNextClient {
         return null;
     }
 
+     public function renewPrescription($personal_number) {
+        if (!$this->is_authenticated) {
+            return null;
+        }
+
+        $filters = json_encode([
+            ["personnummer", "=", $personal_number],
+            ["patient", "LIKE", "G4%"] 
+        ]);
+        
+        $encoded_filters = urlencode($filters);
+
+        $url = $this->baseurl . 'api/resource/G4FornyaRecept?'. $encoded_filters . '&fields=[["patient_name","=","G4Lionel%20Messi"],["data_rsjo","=","Godkänd"]]&fields=["name","medicin","data_rsjo","behandlare"]'; 
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        
+        // ANVÄND COOKIE-FILEN för att skicka sessionskakan från inloggningen
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath); 
+        
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $data = json_decode($response, true);
+        curl_close($ch);
+
+        if ($http_code === 200 && !empty($data['data'])) {
+            // Patienten hittades! Returnera den första matchningen.
+            return $data['data'][0];
+        }
+
+        return null;
+    }
+
 }
 ?>
