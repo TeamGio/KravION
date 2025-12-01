@@ -78,8 +78,14 @@ $translations = [
 $t = $translations[$lang];
 
 $upcoming_appointments = 2;
-$active_prescriptions = 3;
 $medical_records_count = 15;
+
+
+$recept = $erp_client->getPrescriptionsForPatient($patient_erp_id); // 1. Hämta listan
+$active_prescriptions = count($recept); // 2. Räkna listan
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $lang; ?>">
