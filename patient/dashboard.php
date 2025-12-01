@@ -1,7 +1,20 @@
 <?php
 session_start();
 require_once '../config/database.php'; 
-require_once '../config/exempelfil_erp.php'; 
+require_once '../config/exempelfil_erp.php';
+
+
+
+$INACTIVITY_LIMIT = 300; 
+
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $INACTIVITY_LIMIT)) {
+    session_unset();
+    session_destroy();
+    header('Location: login.php?error=Du har loggats ut på grund av inaktivitet.');
+    exit();
+}
+
+$_SESSION['last_activity'] = time();
 
 
 if (!isset($_SESSION['patient_id'])) {
@@ -10,13 +23,13 @@ if (!isset($_SESSION['patient_id'])) {
 }
 
 $patient_erp_id = $_SESSION['patient_id']; 
-$patient_pnr = $_SESSION['personal_number'] ?? 'N/A'; 
+$patient_pnr = $_SESSION['personal_number'] ?? 'N/A';
 $page = $_GET['page'] ?? 'overview';
 
 
+
+
 $erp_client = new ERPNextClient();
-
-
 $patient = $erp_client->findPatientByPNR($patient_pnr); 
 
 if (!$patient) {
@@ -30,20 +43,17 @@ $patient_data = [
     'personal_number' => $patient_pnr,
     'language' => $patient['language'] ?? $_SESSION['language'] ?? 'sv', 
 ];
-$patient_data = array_merge($patient_data, $patient_data);
-$upcoming_appointments = 2; // fejk bre
-$active_prescriptions = 3;  // fejk bre
-$medical_records_count = 15; // fejk bre
 
 
 
-$lang = $patient_data['language'] ?? 'en';
+$lang = $patient_data['language'] ?? 'sv';
 $translations = [
     'en' => [
         'welcome' => 'Welcome',
         'logout' => 'Logout',
         'overview' => 'Overview',
         'medical_journal' => 'Medical Journal',
+        'lab_results' => 'Lab Results',
         'appointments' => 'Appointments',
         'prescriptions' => 'Prescriptions',
         'upcoming_appointments' => 'Upcoming Appointments',
@@ -59,6 +69,7 @@ $translations = [
         'logout' => 'Logga ut',
         'overview' => 'Översikt',
         'medical_journal' => 'Medicinsk Journal',
+        'lab_results' => 'Laboratorieresultat',
         'appointments' => 'Tidsbokning',
         'prescriptions' => 'Recept',
         'upcoming_appointments' => 'Kommande Besök',
@@ -71,8 +82,11 @@ $translations = [
     ]
 ];
 
-
 $t = $translations[$lang];
+
+$upcoming_appointments = 2;
+$active_prescriptions = 3;
+$medical_records_count = 15;
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $lang; ?>">
