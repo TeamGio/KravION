@@ -1,94 +1,53 @@
 <?php
 
-require_once '../config/exempelfil_erp.php';
 $message = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $personal_number = $_POST['personal_number'] ?? '';
-    
-    if (empty($personal_number)) {
-        $error = $t['err_empty_pnr'];
-    } else {
-        
 
-        $erp_client = new ERPNextClient();
-        
-        $patient_data = $erp_client->renewPrescription($personal_number);
+    $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id); 
+    ?>
 
-        if ($patient_data) {
-            $_SESSION['patient_id'] = $patient_data['name']; 
-            $_SESSION['personal_number'] = $personal_number;
-            
-            header('Location: prescriptions.php');
-            exit();
-        } else {
-            $error = $t['err_pnr_not_found'];
-        }
-        
+    <div class="card">
+    <h3><?php echo $t['prescriptions'] ?? 'Recept'; ?></h3>
+    </div>
 
-    }
-}
-
+    <div class="card" style="margin-top: 20px;">
+    <?php if (!empty($prescriptions)): ?>
+    <table class="table-striped">
+    <thead>
+    <tr>
+    <th><?php echo $t['medication'] ?? 'Läkemedel'; ?></th>
+    <th><?php echo $t['dosage'] ?? 'Dosering'; ?></th>
+    <th><?php echo $t['personnummer'] ?? 'Personnummer'; ?></th>
+    <th><?php echo $t['behandlare'] ?? 'Behandlare'; ?></th>
+    <th><?php echo $t['status'] ?? 'Status'; ?></th>
+    <th><?php echo $t['action'] ?? 'Åtgärd'; ?></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($prescriptions as $prescription): 
+    $status = $prescription['data_rsjo'] ?? 'Ej satt';
+    ?>
+<tr>
+<td><strong><?php echo htmlspecialchars($prescription['medicin'] ?? 'N/A'); ?></strong></td>
+<td><?php echo htmlspecialchars($prescription['dosage'] ?? 'N/A'); ?></td>
+<td><?php echo htmlspecialchars($prescription['personnummer'] ?? 'N/A'); ?></td>
+<td><?php echo htmlspecialchars($prescription['behandlare'] ?? 'N/A'); ?></td>
+<td>
+<?php 
+$is_approved = strtolower($status) === 'godkänd';
+$badge_class = $is_approved ? 'badge-success' : 'badge-danger';
+echo '<span class="badge ' . $badge_class . '">' . htmlspecialchars($status) . '</span>';
 ?>
-
-<div class="card">
-    <h3>My Prescriptions</h3>
-    <?php echo $message; ?>
-    
-    <?php if (count($prescriptions) > 0): ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Medication</th>
-                    <th>Dosage</th>
-                    <th>Frequency</th>
-                    <th>Duration</th>
-                    <th>Prescribed Date</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($prescriptions as $prescription): ?>
-                <tr>
-                    <td><strong><?php echo htmlspecialchars($prescription['medication_name']); ?></strong></td>
-                    <td><?php echo htmlspecialchars($prescription['dosage']); ?></td>
-                    <td><?php echo htmlspecialchars($prescription['frequency'] ?? 'N/A'); ?></td>
-                    <td><?php echo htmlspecialchars($prescription['duration'] ?? 'N/A'); ?></td>
-                    <td><?php echo date('Y-m-d', strtotime($prescription['prescribed_date'])); ?></td>
-                    <td>
-                        <?php 
-                        if ($prescription['renewal_requested']) {
-                            echo '<span class="badge badge-warning">Renewal Pending</span>';
-                        } else {
-                            $status = $prescription['status'];
-                            $badge_class = $status === 'active' ? 'badge-success' : 'badge-info';
-                            echo '<span class="badge ' . $badge_class . '">' . htmlspecialchars(ucfirst($status)) . '</span>';
-                        }
-                        ?>
-                    </td>
-                    <td>
-                        <?php if ($prescription['status'] === 'active' && !$prescription['renewal_requested']): ?>
-                        <form method="POST" style="display: inline;">
-                            <input type="hidden" name="action" value="request_renewal">
-                            <input type="hidden" name="prescription_id" value="<?php echo $prescription['id']; ?>">
-                            <button type="submit" class="btn btn-accent" style="padding: 4px 12px; font-size: 0.9em;">Request Renewal</button>
-                        </form>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="7" style="background: #F8F9FA; padding: 12px;">
-                        <strong>Prescribed by:</strong> <?php echo htmlspecialchars(($prescription['first_name'] ?? '') . ' ' . ($prescription['last_name'] ?? '')); ?><br>
-                        <strong>Notes:</strong> <?php echo htmlspecialchars($prescription['notes'] ?? 'N/A'); ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php else: ?>
-        <p style="color: #6C757D; margin-top: 16px;">No prescriptions found.</p>
-        
-
-    <?php endif; ?>
+</td>
+<td>
+</td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+<?php else: ?>
+<div class="alert alert-info" style="padding: 15px; border: 1px solid #d4edda; background-color: #f0fff0; color: #155724; border-radius: 4px;">
+<?php echo $t['no_prescriptions'] ?? 'Inga aktiva recept hittades.'; ?>
+</div>
+<?php endif; ?>
 </div>
