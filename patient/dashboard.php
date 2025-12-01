@@ -59,6 +59,7 @@ $translations = [
     ]
 ];
 
+
 $t = $translations[$lang];
 ?>
 <!DOCTYPE html>
@@ -87,7 +88,6 @@ $t = $translations[$lang];
                 <ul>
                     <li><a href="?page=overview" class="<?php echo $page === 'overview' ? 'active' : ''; ?>"><?php echo $t['overview']; ?></a></li>
                     <li><a href="?page=medical_journal" class="<?php echo $page === 'medical_journal' ? 'active' : ''; ?>"><?php echo $t['medical_journal']; ?></a></li>
-                    <li><a href="?page=lab_results" class="<?php echo $page === 'lab_results' ? 'active' : ''; ?>"><?php echo $t['lab_results']; ?></a></li>
                     <li><a href="?page=appointments" class="<?php echo $page === 'appointments' ? 'active' : ''; ?>"><?php echo $t['appointments']; ?></a></li>
                     <li><a href="?page=prescriptions" class="<?php echo $page === 'prescriptions' ? 'active' : ''; ?>"><?php echo $t['prescriptions']; ?></a></li>
                 </ul>
@@ -121,10 +121,6 @@ $t = $translations[$lang];
             
             <?php if ($page === 'medical_journal'): 
                 include 'pages/medical_journal.php';
-            endif; ?>
-            
-            <?php if ($page === 'lab_results'): 
-                include 'pages/lab_results.php';
             endif; ?>
             
             <?php if ($page === 'appointments'): 
