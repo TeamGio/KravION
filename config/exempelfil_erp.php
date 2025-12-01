@@ -139,8 +139,6 @@ public function getPrescriptionsForPatient($patient_erp_id) {
         
         $encoded_filters = urlencode($filters);
 
-        // Fälten vi vill hämta (relevanta för patienten):
-        // 8 (practitioner), 10 (department), 12 (date), 32 (time), 2 (title)
         $url = $this->baseurl . 'api/resource/' . urlencode($RESOURCE_NAME) . 
                '?filters=' . $encoded_filters . 
                '&fields=["name","title","practitioner","department","appointment_date","appointment_time"]'; 
@@ -149,7 +147,6 @@ public function getPrescriptionsForPatient($patient_erp_id) {
         if ($ch === false) { return []; }
         
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        // ... (standard cURL options, cookiefilen osv.) ...
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
         curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

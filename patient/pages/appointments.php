@@ -22,7 +22,6 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
             </thead>
             <tbody>
                 <?php foreach ($appointments as $app): 
-                    // Konvertera Datetime-fält om ERPNext använder standardformat
                     $date = date('Y-m-d', strtotime($app['appointment_date'] ?? 'N/A'));
                     $time = date('H:i', strtotime($app['appointment_time'] ?? 'N/A'));
                 ?>
