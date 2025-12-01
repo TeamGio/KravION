@@ -122,6 +122,8 @@ public function getPrescriptionsForPatient($patient_erp_id) {
         }
         return [];
     }
+<<<<<<< HEAD
+=======
 
     public function getAppointmentsForPatient($patient_erp_id) {
         if (!$this->is_authenticated) {
@@ -161,5 +163,6 @@ public function getPrescriptionsForPatient($patient_erp_id) {
         }
         return [];
     }
+>>>>>>> 0408a42c65a81a13001762a99d4a26777465a695
 }
 ?>
