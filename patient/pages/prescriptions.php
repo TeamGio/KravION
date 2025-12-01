@@ -104,6 +104,7 @@ $stmt = $conn->prepare("
     WHERE p.patient_id = :patient_id
     ORDER BY p.prescribed_date DESC
 ");
+
 $stmt->bindParam(':patient_id', $patient_id);
 $stmt->execute();
 $prescriptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
