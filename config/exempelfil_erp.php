@@ -1,11 +1,9 @@
 <?php
 class ERPNextClient {
     private $baseurl = 'http://193.93.250.83:8080/'; 
-    // VIKTIGT: Kontrollera att denna sökväg fungerar och har skrivrättigheter
     private $cookiepath = '/tmp/erpnext_cookies.txt'; 
     private $tmeout = 3600; 
 
-    // ERPNext inloggningsuppgifter för API-användaren
     private $erp_usr = "a24leoli@student.his.se"; 
     private $erp_pwd = "Arvid123!"; 
 
