@@ -84,7 +84,15 @@ $medical_records_count = 15;
 $recept = $erp_client->getPrescriptionsForPatient($patient_erp_id); // 1. Hämta listan
 $active_prescriptions = count($recept); // 2. Räkna listan
 
+$recept = $erp_client->getPrescriptionsForPatient($patient_erp_id); 
 
+// --- DEBUG: KLISTRA IN DETTA TILLFÄLLIGT ---
+echo "<pre style='background: white; padding: 20px; border: 2px solid red; position: absolute; z-index: 9999;'>";
+print_r($recept);
+echo "</pre>";
+// --------------------------------------------
+
+$active_prescriptions = count($recept);
 
 ?>
 <!DOCTYPE html>
