@@ -1,15 +1,6 @@
 <?php
 require_once '../config/exempelfil_erp.php';
-$stmt = $conn->prepare("
-    SELECT mr.*, s.first_name, s.last_name, s.role 
-    FROM medical_records mr
-    LEFT JOIN staff s ON mr.staff_id = s.id
-    WHERE mr.patient_id = :patient_id
-    ORDER BY mr.record_date DESC
-");
-$stmt->bindParam(':patient_id', $patient_id);
-$stmt->execute();
-$records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <div class="card">

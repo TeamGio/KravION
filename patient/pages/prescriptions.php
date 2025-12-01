@@ -1,4 +1,5 @@
 <?php
+
 require_once '../config/exempelfil_erp.php';
 $message = '';
 
@@ -84,30 +85,6 @@ foreach($response['data'] AS $key => $value){
   echo $value["name"]."<br>";
 }
 
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'request_renewal') {
-    $prescription_id = $_POST['prescription_id'];
-    
-    $stmt = $conn->prepare("UPDATE prescriptions SET renewal_requested = true, renewal_date = CURRENT_TIMESTAMP WHERE id = :id AND patient_id = :patient_id");
-    $stmt->bindParam(':id', $prescription_id);
-    $stmt->bindParam(':patient_id', $patient_id);
-    
-    if ($stmt->execute()) {
-        $message = '<div class="alert alert-success">Prescription renewal request submitted successfully!</div>';
-    }
-}
-
-$stmt = $conn->prepare("
-    SELECT p.*, s.first_name, s.last_name 
-    FROM prescriptions p
-    LEFT JOIN staff s ON p.prescribed_by = s.id
-    WHERE p.patient_id = :patient_id
-    ORDER BY p.prescribed_date DESC
-");
-
-$stmt->bindParam(':patient_id', $patient_id);
-$stmt->execute();
-$prescriptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <div class="card">
@@ -167,5 +144,7 @@ $prescriptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </table>
     <?php else: ?>
         <p style="color: #6C757D; margin-top: 16px;">No prescriptions found.</p>
+        
+
     <?php endif; ?>
 </div>
