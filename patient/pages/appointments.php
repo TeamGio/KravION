@@ -23,49 +23,8 @@ try {
 
 $message = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    if ($_POST['action'] === 'book') {
-        $appointment_date = $_POST['appointment_date'];
-        $appointment_time = $_POST['appointment_time'];
-        $category = $_POST['category'];
-        $reason = $_POST['reason'];
-        
-        $stmt = $conn->prepare("
-            INSERT INTO appointments (patient_id, appointment_date, appointment_time, category, appointment_type, reason, status)
-            VALUES (:patient_id, :appointment_date, :appointment_time, :category, 'consultation', :reason, 'scheduled')
-        ");
-        $stmt->bindParam(':patient_id', $patient_id);
-        $stmt->bindParam(':appointment_date', $appointment_date);
-        $stmt->bindParam(':appointment_time', $appointment_time);
-        $stmt->bindParam(':category', $category);
-        $stmt->bindParam(':reason', $reason);
-        
-        if ($stmt->execute()) {
-            $message = '<div class="alert alert-success">Appointment booked successfully!</div>';
-        }
-    } elseif ($_POST['action'] === 'cancel') {
-        $appointment_id = $_POST['appointment_id'];
-        
-        $stmt = $conn->prepare("UPDATE appointments SET status = 'cancelled' WHERE id = :id AND patient_id = :patient_id");
-        $stmt->bindParam(':id', $appointment_id);
-        $stmt->bindParam(':patient_id', $patient_id);
-        
-        if ($stmt->execute()) {
-            $message = '<div class="alert alert-success">Appointment cancelled successfully!</div>';
-        }
-    }
-}
 
-$stmt = $conn->prepare("
-    SELECT a.*, s.first_name, s.last_name, s.role 
-    FROM appointments a
-    LEFT JOIN staff s ON a.staff_id = s.id
-    WHERE a.patient_id = :patient_id
-    ORDER BY a.appointment_date DESC, a.appointment_time DESC
-");
-$stmt->bindParam(':patient_id', $patient_id);
-$stmt->execute();
-$appointments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <div class="card">

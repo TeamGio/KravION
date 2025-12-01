@@ -3,8 +3,6 @@ session_start();
 require_once '../config/database.php'; 
 require_once '../config/exempelfil_erp.php';
 
-
-
 $INACTIVITY_LIMIT = 300; 
 
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $INACTIVITY_LIMIT)) {
@@ -26,9 +24,6 @@ $patient_erp_id = $_SESSION['patient_id'];
 $patient_pnr = $_SESSION['personal_number'] ?? 'N/A';
 $page = $_GET['page'] ?? 'overview';
 
-
-
-
 $erp_client = new ERPNextClient();
 $patient = $erp_client->findPatientByPNR($patient_pnr); 
 
@@ -43,8 +38,6 @@ $patient_data = [
     'personal_number' => $patient_pnr,
     'language' => $patient['language'] ?? $_SESSION['language'] ?? 'sv', 
 ];
-
-
 
 $lang = $patient_data['language'] ?? 'sv';
 $translations = [
