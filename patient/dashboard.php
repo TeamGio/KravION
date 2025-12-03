@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once '../config/database.php'; 
+require_once '../config/database.php';
 require_once '../config/exempelfil_erp.php';
 
-$INACTIVITY_LIMIT = 300; 
+$INACTIVITY_LIMIT = 300;
 
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $INACTIVITY_LIMIT)) {
     session_unset();
@@ -20,12 +20,12 @@ if (!isset($_SESSION['patient_id'])) {
     exit();
 }
 
-$patient_erp_id = $_SESSION['patient_id']; 
+$patient_erp_id = $_SESSION['patient_id'];
 $patient_pnr = $_SESSION['personal_number'] ?? 'N/A';
 $page = $_GET['page'] ?? 'overview';
 
 $erp_client = new ERPNextClient();
-$patient = $erp_client->findPatientByPNR($patient_pnr); 
+$patient = $erp_client->findPatientByPNR($patient_pnr);
 
 if (!$patient) {
     session_destroy();
@@ -36,7 +36,7 @@ if (!$patient) {
 $patient_data = [
     'first_name' => $patient['first_name'] ?? 'Patient',
     'personal_number' => $patient_pnr,
-    'language' => $patient['language'] ?? $_SESSION['language'] ?? 'sv', 
+    'language' => $patient['language'] ?? $_SESSION['language'] ?? 'sv',
 ];
 
 $lang = $patient_data['language'] ?? 'sv';
@@ -77,21 +77,27 @@ $translations = [
 
 $t = $translations[$lang];
 
-$upcoming_appointments = 2;
+
 $medical_records_count = 15;
 
+
+
+
+$bokningar_lista = $erp_client->getAppointmentsForPatient($patient_erp_id); // 1. Anropa din nya funktion i ERP-filen för att hämta listan
+$upcoming_appointments = count($bokningar_lista); // 2. Räkna hur många bokningar som ligger i listan
 
 $recept = $erp_client->getPrescriptionsForPatient($patient_erp_id); // 1. Hämta listan
 $active_prescriptions = count($recept); // 2. Räkna listan
 
-$recept = $erp_client->getPrescriptionsForPatient($patient_erp_id); 
 
 
-$active_prescriptions = count($recept);
+
+
 
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $lang; ?>">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -99,6 +105,7 @@ $active_prescriptions = count($recept);
     <link rel="stylesheet" href="../assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="container">
         <div class="dashboard">
@@ -111,7 +118,7 @@ $active_prescriptions = count($recept);
                     <a href="logout.php" class="btn btn-alert"><?php echo $t['logout']; ?></a>
                 </div>
             </div>
-            
+
             <div class="dashboard-nav">
                 <ul>
                     <li><a href="?page=overview" class="<?php echo $page === 'overview' ? 'active' : ''; ?>"><?php echo $t['overview']; ?></a></li>
@@ -120,7 +127,7 @@ $active_prescriptions = count($recept);
                     <li><a href="?page=prescriptions" class="<?php echo $page === 'prescriptions' ? 'active' : ''; ?>"><?php echo $t['prescriptions']; ?></a></li>
                 </ul>
             </div>
-            
+
             <?php if ($page === 'overview'): ?>
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -136,7 +143,7 @@ $active_prescriptions = count($recept);
                         <p><?php echo $t['medical_records']; ?></p>
                     </div>
                 </div>
-                
+
                 <div class="card">
                     <h3><?php echo $t['quick_actions']; ?></h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px;">
@@ -146,17 +153,18 @@ $active_prescriptions = count($recept);
                     </div>
                 </div>
             <?php endif; ?>
-            
-            <?php 
-            if ($page === 'medical_journal'): 
+
+            <?php
+            if ($page === 'medical_journal'):
                 include 'pages/medical_journal.php';
-            elseif ($page === 'appointments'): 
+            elseif ($page === 'appointments'):
                 include 'pages/appointments.php';
-            elseif ($page === 'prescriptions'): 
+            elseif ($page === 'prescriptions'):
                 include 'pages/prescriptions.php';
-            endif; 
+            endif;
             ?>
         </div>
     </div>
 </body>
+
 </html>
