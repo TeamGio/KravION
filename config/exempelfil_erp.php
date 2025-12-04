@@ -172,5 +172,69 @@ $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) .
     }
     return [];
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public function getMessagesForPatient($patient_erp_id) {
+        if (!$this->is_authenticated) {
+            return [];
+        }
+
+        $RESOURCE_NAME = 'Communication';
+
+        // 1. Skapa filtren snyggt
+        $filters = json_encode([
+            ["reference_doctype", "=", "Patient"],
+            ["reference_name", "=", $patient_erp_id],
+            ["communication_type", "=", "Communication"]
+        ]);
+
+        // 2. Skapa fält-listan snyggt (Det formella sättet)
+        $fields = json_encode([
+            "name",
+            "subject",
+            "content",
+            "sender",
+            "creation",
+            "sent_or_received"
+        ]);
+
+        // 3. Bygg URL:en med urlencode
+        $url = $this->baseurl . 'api/resource/' . $RESOURCE_NAME . 
+               '?filters=' . urlencode($filters) . 
+               '&fields=' . urlencode($fields) . 
+               '&order_by=creation desc';
+
+        $ch = curl_init($url);
+        if ($ch === false) { return []; }
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath); 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $data = json_decode($response, true);
+        curl_close($ch);
+
+        if ($http_code === 200 && isset($data['data'])) {
+            return $data['data'];
+        }
+        return [];
+    }
 }
 ?>

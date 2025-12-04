@@ -77,17 +77,27 @@ $translations = [
 
 $t = $translations[$lang];
 
-$upcoming_appointments = 2;
-$medical_records_count = 15;
 
+
+
+$bokningar_lista = $erp_client->getAppointmentsForPatient($patient_erp_id);
+$upcoming_appointments = count($bokningar_lista);
+
+
+$journal_lista = $erp_client->getMedicalrecords($patient_erp_id);
+$medical_records_count = count($journal_lista);
 
 $recept = $erp_client->getPrescriptionsForPatient($patient_erp_id); // 1. Hämta listan
 $active_prescriptions = count($recept); // 2. Räkna listan
 
-$recept = $erp_client->getPrescriptionsForPatient($patient_erp_id); 
 
 
-$active_prescriptions = count($recept);
+
+
+$messages = $erp_client->getMessagesForPatient($patient_erp_id);
+$message_count = count($messages);
+
+
 
 ?>
 <!DOCTYPE html>
@@ -118,6 +128,7 @@ $active_prescriptions = count($recept);
                     <li><a href="?page=medical_journal" class="<?php echo $page === 'medical_journal' ? 'active' : ''; ?>"><?php echo $t['medical_journal']; ?></a></li>
                     <li><a href="?page=appointments" class="<?php echo $page === 'appointments' ? 'active' : ''; ?>"><?php echo $t['appointments']; ?></a></li>
                     <li><a href="?page=prescriptions" class="<?php echo $page === 'prescriptions' ? 'active' : ''; ?>"><?php echo $t['prescriptions']; ?></a></li>
+                    <li><a href="?page=inbox" class="<?php echo $page === 'inbox' ? 'active' : ''; ?>">Inkorg </a></li>
                 </ul>
             </div>
             
