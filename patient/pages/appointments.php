@@ -1,6 +1,5 @@
 <?php
-
-$appointments = $erp_client->getAppointmentsForPatient($patient_erp_id); 
+$appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
 ?>
 
 <div class="card">
@@ -22,10 +21,7 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
             </thead>
             <tbody>
                 <?php foreach ($appointments as $app): 
-<<<<<<< Updated upstream
-                    // Konvertera Datetime-fält om ERPNext använder standardformat
-=======
->>>>>>> Stashed changes
+
                     $date = date('Y-m-d', strtotime($app['appointment_date'] ?? 'N/A'));
                     $time = date('H:i', strtotime($app['appointment_time'] ?? 'N/A'));
                 ?>
@@ -44,4 +40,12 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
             <?php echo $t['no_upcoming_appointments'] ?? 'Inga kommande tidsbokningar hittades.'; ?>
         </div>
     <?php endif; ?>
+</div>
+
+
+<div class="card" style="margin-top: 20px;">
+    <h3>Kontaktformulär</h3>
+    <iframe src="http://193.93.250.83:8080/kontakt-formular"
+            style="border: none; width: 100%; height: 600px;">
+    </iframe>
 </div>

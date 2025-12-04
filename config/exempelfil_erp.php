@@ -1,39 +1,42 @@
 <?php
-class ERPNextClient {
-    private $baseurl = 'http://193.93.250.83:8080/'; 
-    private $cookiepath = '/tmp/erpnext_cookies.txt'; 
-    private $tmeout = 3600; 
+class ERPNextClient
+{
+    private $baseurl = 'http://193.93.250.83:8080/';
+    private $cookiepath = '/tmp/erpnext_cookies.txt';
+    private $tmeout = 3600;
 
-    private $erp_usr = "a24leoli@student.his.se"; 
-    private $erp_pwd = "Arvid123!"; 
+    private $erp_usr = "a24leoli@student.his.se";
+    private $erp_pwd = "Arvid123!";
 
     private $is_authenticated = false;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->authenticateSession();
     }
 
-    private function authenticateSession() {
+    private function authenticateSession()
+    {
         $ch = curl_init($this->baseurl . 'api/method/login');
-        
+
         if ($ch === false) {
             $this->is_authenticated = false;
             return;
         }
-        
+
         curl_setopt($ch, CURLOPT_POST, true);
-        
+
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
             'usr' => $this->erp_usr,
             'pwd' => $this->erp_pwd
-        ])); 
+        ]));
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-        
+
         // Spara och skicka cookien
         curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookiepath);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
-        
+
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -48,25 +51,28 @@ class ERPNextClient {
         }
     }
 
-    public function findPatientByPNR($personal_number) {
+    public function findPatientByPNR($personal_number)
+    {
         if (!$this->is_authenticated) {
             return null;
         }
         $filters = json_encode([
             ["uid", "=", $personal_number],
-            ["name", "LIKE", "G4%"] 
+            ["name", "LIKE", "G4%"]
         ]);
         $encoded_filters = urlencode($filters);
 
-        $url = $this->baseurl . 'api/resource/Patient?filters=' . $encoded_filters . '&fields=["name","first_name","uid","language"]'; 
+        $url = $this->baseurl . 'api/resource/Patient?filters=' . $encoded_filters . '&fields=["name","first_name","uid","language"]';
 
         $ch = curl_init($url);
-        if ($ch === false) { return null; }
+        if ($ch === false) {
+            return null;
+        }
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath); 
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -89,11 +95,12 @@ public function getPrescriptionsForPatient($patient_erp_id, $statuses=["Godkänd
 
         $RESOURCE_NAME = 'G4FornyaRecept'; 
         
+        // Använd "in" för att matcha flera statusvärden
         $filters = json_encode([
             ["patient_name", "=", $patient_erp_id], 
             ["data_rsjo", "in", $statuses]
         ]);
-        
+
         $encoded_filters = urlencode($filters);
 
         $url = $this->baseurl . 'api/resource/' . $RESOURCE_NAME . 
@@ -102,13 +109,15 @@ public function getPrescriptionsForPatient($patient_erp_id, $statuses=["Godkänd
                
         $ch = curl_init($url);
 
-        
-        if ($ch === false) { return []; }
-        
+
+        if ($ch === false) {
+            return [];
+        }
+
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath); 
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -123,13 +132,13 @@ public function getPrescriptionsForPatient($patient_erp_id, $statuses=["Godkänd
         return [];
     }
 
-    public function getAppointmentsForPatient($patient_erp_id) {
+    public function getAppointmentsForPatient($patient_erp_id)
+    {
         if (!$this->is_authenticated) {
             return [];
         }
 
-        $RESOURCE_NAME = 'patient-appointment'; 
-        
+        $RESOURCE_NAME = 'patient-appointment';
 
         $filters = json_encode([
             ["patient_name", "=", $patient_erp_id],
@@ -137,7 +146,7 @@ public function getPrescriptionsForPatient($patient_erp_id, $statuses=["Godkänd
             ["status", "in", ["Scheduled","Open","Confirmed"]],
             ["company","=","G4Mölndals Vårdcentral"]
         ]);
-        
+
         $encoded_filters = urlencode($filters);
 
         // Fälten vi vill hämta (relevanta för patienten):
@@ -147,10 +156,13 @@ public function getPrescriptionsForPatient($patient_erp_id, $statuses=["Godkänd
                '&fields=["name","title","practitioner","department","appointment_date","appointment_time"]'; 
 
         $ch = curl_init($url);
-        if ($ch === false) { return []; }
-        
+        if ($ch === false) {
+            return [];
+        }
+
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        // ... (standard cURL options, cookiefilen osv.) ...
+
+        // Alla nödvändiga inställningar:
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
@@ -207,5 +219,4 @@ public function getAppointmentsForPatient($patient_erp_id) {
         }
         return [];
     }
-
 ?>
