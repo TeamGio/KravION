@@ -82,23 +82,24 @@ class ERPNextClient {
     }
 
 
-public function getPrescriptionsForPatient($patient_erp_id) {
+public function getPrescriptionsForPatient($patient_erp_id, $statuses = ["Godkänd", "Ej Godkänd", "Under behandling"]) {
         if (!$this->is_authenticated) {
             return [];
         }
 
         $RESOURCE_NAME = 'G4FornyaRecept'; 
         
+        // Använd "in" för att matcha flera statusvärden
         $filters = json_encode([
             ["patient_name", "=", $patient_erp_id], 
-            ["data_rsjo", "=", "Godkänd"] 
+            ["data_rsjo", "in", $statuses]
         ]);
         
         $encoded_filters = urlencode($filters);
 
         $url = $this->baseurl . 'api/resource/' . $RESOURCE_NAME . 
                '?filters=' . $encoded_filters . 
-               '&fields=["name","personnummer","medicin","data_rsjo","behandlare"]'; 
+               '&fields=["name","personnummer","medicin","strenght","data_rsjo","behandlare","expiration_date"]';
                
         $ch = curl_init($url);
 
