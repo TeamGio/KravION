@@ -78,9 +78,8 @@ $translations = [
 $t = $translations[$lang];
 
 
-$medical_records_count = 15;
-
-
+$medical_records = $erp_client->getMedicalrecords($patient_erp_id); // 1. Anropa din nya funktion i ERP-filen för att hämta listan
+$total_medical_records = count($medical_records); // 2. Räkna hur många records som ligger i listan
 
 
 $bokningar_lista = $erp_client->getAppointmentsForPatient($patient_erp_id); // 1. Anropa din nya funktion i ERP-filen för att hämta listan

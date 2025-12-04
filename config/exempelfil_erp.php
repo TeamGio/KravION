@@ -1,5 +1,6 @@
 <?php
-class ERPNextClient {
+class ERPNextClient
+{
     private $baseurl = 'http://193.93.250.83:8080/';
     private $cookiepath = '/tmp/erpnext_cookies.txt';
     private $tmeout = 3600;
@@ -9,11 +10,13 @@ class ERPNextClient {
 
     private $is_authenticated = false;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->authenticateSession();
     }
 
-    private function authenticateSession() {
+    private function authenticateSession()
+    {
         $ch = curl_init($this->baseurl . 'api/method/login');
 
         if ($ch === false) {
@@ -48,7 +51,8 @@ class ERPNextClient {
         }
     }
 
-    public function findPatientByPNR($personal_number) {
+    public function findPatientByPNR($personal_number)
+    {
         if (!$this->is_authenticated) {
             return null;
         }
@@ -84,7 +88,8 @@ class ERPNextClient {
     }
 
 
-    public function getPrescriptionsForPatient($patient_erp_id) {
+    public function getPrescriptionsForPatient($patient_erp_id)
+    {
         if (!$this->is_authenticated) {
             return [];
         }
@@ -127,7 +132,8 @@ class ERPNextClient {
         return [];
     }
 
-    public function getAppointmentsForPatient($patient_erp_id) {
+    public function getAppointmentsForPatient($patient_erp_id)
+    {
         if (!$this->is_authenticated) {
             return [];
         }
@@ -155,6 +161,51 @@ class ERPNextClient {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
 
         // Alla nödvändiga inställningar:
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $data = json_decode($response, true);
+        curl_close($ch);
+
+        if ($http_code === 200 && isset($data['data'])) {
+            return $data['data'];
+        }
+        return [];
+    }
+
+    public function getMedicalrecords($patient_erp_id)
+    {
+        if (!$this->is_authenticated) {
+            return [];
+        }
+
+        // HÄR ÄR NAMNET DU HITTADE!
+        $RESOURCE_NAME = 'patient-medical-record';
+
+        // Vi filtrerar BARA på patienten för att vara säkra på att få träff.
+        // Vi tar bort datum-filtret eftersom vi vill se ALL historik.
+        $filters = json_encode([
+            ["patient", "=", $patient_erp_id]
+        ]);
+
+        $encoded_filters = urlencode($filters);
+
+        // Vi hämtar ID (name) och status för att kunna räkna dem.
+        $url = $this->baseurl . 'api/resource/' . $RESOURCE_NAME .
+            '?filters=' . $encoded_filters .
+            '&fields=["name","status"]';
+
+        $ch = curl_init($url);
+        if ($ch === false) {
+            return [];
+        }
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
