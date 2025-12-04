@@ -168,4 +168,44 @@ public function getPrescriptionsForPatient($patient_erp_id, $statuses=["Godkänd
         return [];
     }
 }
+
+public function getAppointmentsForPatient($patient_erp_id) {
+        if (!$this->is_authenticated) {
+            return [];
+        }
+
+        $RESOURCE_NAME = 'patient-appointment'; 
+
+
+        $filters = json_encode([
+            ["patient", "=", $patient_erp_id],
+            ["appointment_date", ">=", date('Y-m-d')], 
+            ["status", "in", ["Open", "Scheduled"]] 
+        ]);
+
+        $encoded_filters = urlencode($filters);
+
+        $url = $this->baseurl . 'api/resource/' . urlencode($RESOURCE_NAME) . 
+               '?filters=' . $encoded_filters . 
+               '&fields=["name","title","practitioner","department","appointment_date","appointment_time"]'; 
+
+        $ch = curl_init($url);
+        if ($ch === false) { return []; }
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath); 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $data = json_decode($response, true);
+        curl_close($ch);
+
+        if ($http_code === 200 && isset($data['data'])) {
+            return $data['data'];
+        }
+        return [];
+    }
+
 ?>
