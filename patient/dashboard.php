@@ -1,5 +1,15 @@
 <?php
 session_start();
+
+
+// --- TILLFÄLLIG TJUVKOPPLING (Ta bort sen!) ---
+$_SESSION['patient_id'] = 'G4Marta Veira da Silva'; // Detta ID hämtade jag från din ERP-länk
+$_SESSION['personal_number'] = '200811252384';
+$_SESSION['language'] = 'sv';
+// ----------------------------------------------
+
+
+
 require_once '../config/database.php';
 require_once '../config/exempelfil_erp.php';
 
