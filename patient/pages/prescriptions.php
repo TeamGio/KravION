@@ -13,8 +13,7 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                 <tr>
                     <th><?php echo $t['medication'] ?? 'Läkemedel'; ?></th>
                     <th><?php echo $t['personnummer'] ?? 'Personnummer'; ?></th>
-                    <th><?php echo $t['läkare'] ?? 'Läkare'; ?></th>
-                    <th><?php echo $t['datum'] ?? 'Datum'; ?></th>
+                    <th><?php echo $t['behandlare'] ?? 'Läkare'; ?></th>
                     <th><?php echo $t['uttag'] ?? 'Uttag'; ?></th>
                     <th><?php echo $t['expiration_date'] ?? 'Utgångsdatum'; ?></th>
                     <th><?php echo $t['strenght'] ?? 'Styrka'; ?></th>
@@ -29,7 +28,6 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                         <td><strong><?php echo htmlspecialchars($prescription['medicin'] ?? 'N/A'); ?></strong></td>
                         <td><?php echo htmlspecialchars($prescription['personnummer'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['behandlare'] ?? 'N/A'); ?></td>
-                        <td><?php echo htmlspecialchars($prescription['datum'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['uttag'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['expiration_date'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['strenght'] ?? 'N/A'); ?></td>
