@@ -11,10 +11,9 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
 <table class="table-striped">
     <thead>
         <tr>
-            <th><?php echo $t['date'] ?? 'Datum'; ?></th>
-            <th><?php echo $t['time'] ?? 'Tid'; ?></th>
+            <th><?php echo $t['appointment_date'] ?? 'Datum'; ?></th>
+            <th><?php echo $t['title'] ?? 'Titel'; ?></th>
             <th><?php echo $t['practitioner'] ?? 'Behandlare'; ?></th>
-            <th><?php echo $t['reason'] ?? 'Ärende/Titel'; ?></th>
         </tr>
     </thead>
     <tbody>
@@ -24,13 +23,12 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
                 : 'N/A';
             $practitioner = $app['practitioner'] ?? 'N/A';
             $title        = $app['title']        ?? 'N/A';
+            
         ?>
         <tr>
-            <td><?php echo htmlspecialchars($date); ?></td>
-            <td><?php echo htmlspecialchars($time); ?></td>
-            <td><?php echo htmlspecialchars($department); ?></td>
-            <td><?php echo htmlspecialchars($practitioner); ?></td>
-            <td><?php echo htmlspecialchars($title); ?></td>
+            <td><?php echo htmlspecialchars($date['appointment_date'] ?? 'N/A'); ?></td>
+            <td><?php echo htmlspecialchars($practitioner['practitioner'] ?? 'N/A'); ?></td>
+            <td><?php echo htmlspecialchars($title['title'] ?? 'N/A'); ?></td>
         </tr>
         <?php endforeach; ?>
     </tbody>

@@ -137,11 +137,9 @@ public function getAppointmentsForPatient($patient_erp_id) {
     $encoded_filters = urlencode($filters);
 
     $fields = json_encode([
-        "name",
         "title",
         "appointment_date",
         "practitioner",
-        "patient"
     ]);
 
 $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) .
