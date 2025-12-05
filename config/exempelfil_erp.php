@@ -233,11 +233,9 @@ public function getMessagesForPatient($patient_erp_id) {
 
         $RESOURCE_NAME = 'Communication';
 
-        // 1. Skapa filtren snyggt
+ 
         $filters = json_encode([
-            ["reference_doctype", "=", "Patient"],
-            ["reference_name", "=", $patient_erp_id],
-            ["communication_type", "=", "Communication"]
+            ["subject", "like", "%" . $patient_erp_id . "%"]
         ]);
 
         // 2. Skapa fält-listan snyggt (Det formella sättet)

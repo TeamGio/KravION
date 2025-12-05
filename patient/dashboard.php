@@ -142,7 +142,7 @@ $message_count = count($messages);
             
             <?php if ($page === 'overview'): ?>
                 <div class="stats-grid">
-                    <div class="stat-card">
+                    <div class="stat-card primary">
                         <h4><?php echo $upcoming_appointments; ?></h4>
                         <p><?php echo $t['upcoming_appointments']; ?></p>
                     </div>
@@ -150,10 +150,10 @@ $message_count = count($messages);
                         <h4><?php echo $active_prescriptions; ?></h4>
                         <p><?php echo $t['active_prescriptions']; ?></p>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card tertiary">
                         <h4><?php echo $medical_records_count; ?></h4>
                         <p><?php echo $t['medical_records']; ?></p>
-                    </div>
+                    </div>                    
                 </div>
                 
                 <div class="card">

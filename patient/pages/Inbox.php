@@ -1,0 +1,64 @@
+<div class="card">
+    <h3>Min Inkorg</h3>
+    
+    <?php if (count($messages) > 0): ?>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="text-align: left; border-bottom: 2px solid #eee;">
+                    <th style="padding: 10px; width: 20%;">Avsändare</th>
+                    <th style="padding: 10px; width: 40%;">Ämne</th>
+                    <th style="padding: 10px; width: 20%;">Datum</th>
+                    <th style="padding: 10px; width: 10%;">Status</th>
+                    <th style="padding: 10px; width: 10%;">Åtgärd</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($messages as $msg): ?>
+                <tr style="border-bottom: 1px solid #f0f0f0;">
+                    <td style="padding: 10px;">
+                        <strong><?php echo htmlspecialchars($msg['sender'] ?? 'System'); ?></strong>
+                    </td>
+
+                    <td style="padding: 10px;">
+                        <?php echo htmlspecialchars($msg['subject'] ?? '(Inget ämne)'); ?>
+                    </td>
+
+                    <td style="padding: 10px;">
+                        <?php 
+                            // Vi formaterar datumet (ÅÅÅÅ-MM-DD kl TT:MM)
+                            $date = strtotime($msg['creation'] ?? 'now');
+                            echo date('Y-m-d H:i', $date); 
+                        ?>
+                    </td>
+
+                    <td style="padding: 10px;">
+                        <?php 
+                            $status = $msg['sent_or_received'] ?? 'Unknown';
+                            $badge_class = ($status === 'Received') ? 'badge-success' : 'badge-info';
+                            $status_text = ($status === 'Received') ? 'Mottaget' : 'Skickat';
+                        ?>
+                        <span class="badge <?php echo $badge_class; ?>"><?php echo $status_text; ?></span>
+                    </td>
+
+                    <td style="padding: 10px;">
+                        <span style="font-size: 0.8em; color: #666;">(Klicka nedan)</span>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td colspan="5" style="padding: 0; border: none;">
+                        <details style="padding: 10px 20px; background: #f9f9f9; border-bottom: 2px solid #eee;">
+                            <summary style="cursor: pointer; color: #007bff; font-weight: bold; margin-bottom: 10px;">Läs meddelande</summary>
+                            <div style="background: white; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+                                <?php echo $msg['content'] ?? 'Inget innehåll.'; ?>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <p style="color: #6C757D; margin-top: 30px;">Du har inga meddelanden i inkorgen.</p>
+    <?php endif; ?>
+</div>
