@@ -1,9 +1,17 @@
 <?php
+
+
+// --- SKVALLER-KOD (Ta bort sen) ---
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+// ----------------------------------
+
 session_start();
-require_once '../config/database.php';
+require_once '../config/database.php'; 
 require_once '../config/exempelfil_erp.php';
 
-$INACTIVITY_LIMIT = 300;
+$INACTIVITY_LIMIT = 300; 
 
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $INACTIVITY_LIMIT)) {
     session_unset();
@@ -20,12 +28,12 @@ if (!isset($_SESSION['patient_id'])) {
     exit();
 }
 
-$patient_erp_id = $_SESSION['patient_id'];
+$patient_erp_id = $_SESSION['patient_id']; 
 $patient_pnr = $_SESSION['personal_number'] ?? 'N/A';
 $page = $_GET['page'] ?? 'overview';
 
 $erp_client = new ERPNextClient();
-$patient = $erp_client->findPatientByPNR($patient_pnr);
+$patient = $erp_client->findPatientByPNR($patient_pnr); 
 
 if (!$patient) {
     session_destroy();
@@ -36,7 +44,7 @@ if (!$patient) {
 $patient_data = [
     'first_name' => $patient['first_name'] ?? 'Patient',
     'personal_number' => $patient_pnr,
-    'language' => $patient['language'] ?? $_SESSION['language'] ?? 'sv',
+    'language' => $patient['language'] ?? $_SESSION['language'] ?? 'sv', 
 ];
 
 $lang = $patient_data['language'] ?? 'sv';
@@ -78,13 +86,14 @@ $translations = [
 $t = $translations[$lang];
 
 
-$medical_records_count = 15;
 
 
+$bokningar_lista = $erp_client->getAppointmentsForPatient($patient_erp_id);
+$upcoming_appointments = count($bokningar_lista);
 
 
-$bokningar_lista = $erp_client->getAppointmentsForPatient($patient_erp_id); // 1. Anropa din nya funktion i ERP-filen för att hämta listan
-$upcoming_appointments = count($bokningar_lista); // 2. Räkna hur många bokningar som ligger i listan
+$journal_lista = $erp_client->getMedicalrecords($patient_erp_id);
+$medical_records_count = count($journal_lista);
 
 $recept = $erp_client->getPrescriptionsForPatient($patient_erp_id); // 1. Hämta listan
 $active_prescriptions = count($recept); // 2. Räkna listan
@@ -93,11 +102,14 @@ $active_prescriptions = count($recept); // 2. Räkna listan
 
 
 
+$messages = $erp_client->getMessagesForPatient($patient_erp_id);
+$message_count = count($messages);
+
+
 
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $lang; ?>">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -105,7 +117,6 @@ $active_prescriptions = count($recept); // 2. Räkna listan
     <link rel="stylesheet" href="../assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
     <div class="container">
         <div class="dashboard">
@@ -118,19 +129,20 @@ $active_prescriptions = count($recept); // 2. Räkna listan
                     <a href="logout.php" class="btn btn-alert"><?php echo $t['logout']; ?></a>
                 </div>
             </div>
-
+            
             <div class="dashboard-nav">
                 <ul>
                     <li><a href="?page=overview" class="<?php echo $page === 'overview' ? 'active' : ''; ?>"><?php echo $t['overview']; ?></a></li>
                     <li><a href="?page=medical_journal" class="<?php echo $page === 'medical_journal' ? 'active' : ''; ?>"><?php echo $t['medical_journal']; ?></a></li>
                     <li><a href="?page=appointments" class="<?php echo $page === 'appointments' ? 'active' : ''; ?>"><?php echo $t['appointments']; ?></a></li>
                     <li><a href="?page=prescriptions" class="<?php echo $page === 'prescriptions' ? 'active' : ''; ?>"><?php echo $t['prescriptions']; ?></a></li>
+                    <li><a href="?page=inbox" class="<?php echo $page === 'inbox' ? 'active' : ''; ?>">Inkorg </a></li>
                 </ul>
             </div>
-
+            
             <?php if ($page === 'overview'): ?>
                 <div class="stats-grid">
-                    <div class="stat-card">
+                    <div class="stat-card primary">
                         <h4><?php echo $upcoming_appointments; ?></h4>
                         <p><?php echo $t['upcoming_appointments']; ?></p>
                     </div>
@@ -138,12 +150,12 @@ $active_prescriptions = count($recept); // 2. Räkna listan
                         <h4><?php echo $active_prescriptions; ?></h4>
                         <p><?php echo $t['active_prescriptions']; ?></p>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card tertiary">
                         <h4><?php echo $medical_records_count; ?></h4>
                         <p><?php echo $t['medical_records']; ?></p>
-                    </div>
+                    </div>                    
                 </div>
-
+                
                 <div class="card">
                     <h3><?php echo $t['quick_actions']; ?></h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px;">
@@ -153,18 +165,17 @@ $active_prescriptions = count($recept); // 2. Räkna listan
                     </div>
                 </div>
             <?php endif; ?>
-
-            <?php
-            if ($page === 'medical_journal'):
+            
+            <?php 
+            if ($page === 'medical_journal'): 
                 include 'pages/medical_journal.php';
-            elseif ($page === 'appointments'):
+            elseif ($page === 'appointments'): 
                 include 'pages/appointments.php';
-            elseif ($page === 'prescriptions'):
+            elseif ($page === 'prescriptions'): 
                 include 'pages/prescriptions.php';
-            endif;
+            endif; 
             ?>
         </div>
     </div>
 </body>
-
 </html>

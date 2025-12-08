@@ -1,46 +1,44 @@
 <?php
-$appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
+
+$appointments = $erp_client->getAppointmentsForPatient($patient_erp_id); 
 ?>
 
-<div class="card">
-    <h3><?php echo $t['appointments'] ?? 'Tidsbokning'; ?></h3>
-    <p>Här visas alla dina kommande inbokade tider.</p>
-</div>
 
 <div class="card" style="margin-top: 20px;">
+    <h3><?php echo $t['appointments'] ?? 'Tidsbokning'; ?></h3>
+    <p>Här visas alla dina kommande inbokade tider.</p>
     <?php if (!empty($appointments)): ?>
-        <table class="table-striped">
-            <thead>
-                <tr>
-                    <th><?php echo $t['date'] ?? 'Datum'; ?></th>
-                    <th><?php echo $t['time'] ?? 'Tid'; ?></th>
-                    <th><?php echo $t['department'] ?? 'Avdelning'; ?></th>
-                    <th><?php echo $t['practitioner'] ?? 'Behandlare'; ?></th>
-                    <th><?php echo $t['reason'] ?? 'Ärende/Titel'; ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($appointments as $app): 
-                    $date = date('Y-m-d', strtotime($app['appointment_date'] ?? 'N/A'));
-                    $time = date('H:i', strtotime($app['appointment_time'] ?? 'N/A'));
-                ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($date); ?></td>
-                    <td><?php echo htmlspecialchars($time); ?></td>
-                    <td><?php echo htmlspecialchars($app['department'] ?? 'N/A'); ?></td>
-                    <td><?php echo htmlspecialchars($app['practitioner'] ?? 'N/A'); ?></td>
-                    <td><?php echo htmlspecialchars($app['title'] ?? 'N/A'); ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+<table class="table-striped">
+    <thead>
+        <tr>
+            <th><?php echo $t['appointment_date'] ?? 'Datum'; ?></th>
+            <th><?php echo $t['title'] ?? 'Titel'; ?></th>
+            <th><?php echo $t['practitioner'] ?? 'Behandlare'; ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($appointments as $app): 
+            $date = !empty($app['appointment_date']) 
+                ? date('Y-m-d', strtotime($app['appointment_date'])) 
+                : 'N/A';
+            $practitioner = $app['practitioner'] ?? 'N/A';
+            $title        = $app['title']        ?? 'N/A';
+            
+        ?>
+        <tr>
+            <td><?php echo htmlspecialchars($date['appointment_date'] ?? 'N/A'); ?></td>
+            <td><?php echo htmlspecialchars($practitioner['practitioner'] ?? 'N/A'); ?></td>
+            <td><?php echo htmlspecialchars($title['title'] ?? 'N/A'); ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
     <?php else: ?>
         <div class="alert alert-info">
             <?php echo $t['no_upcoming_appointments'] ?? 'Inga kommande tidsbokningar hittades.'; ?>
         </div>
     <?php endif; ?>
 </div>
-
 
 <div class="card" style="margin-top: 20px;">
     <h3>Kontaktformulär</h3>
