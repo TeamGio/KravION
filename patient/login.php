@@ -1,9 +1,7 @@
 <?php
 session_start();
-// Du behöver inte 'database.php' för inloggning längre, men behålls om du använder det någon annanstans.
 require_once '../config/database.php'; 
-require_once '../config/exempelfil_erp.php'; // Inkluderar ERPNextClient-klassen
-// require_once '../config/i18n.php'; // Om du väljer den centrala språkfilen istället, ta bort $texts nedan.
+require_once '../config/exempelfil_erp.php'; 
 
 $error = '';
 $success = '';
@@ -13,7 +11,7 @@ if (isset($_SESSION['patient_id'])) {
     header('Location: dashboard.php');
     exit();
 }
-
+ 
 // Hantera språkbyte via URL-parameter
 if (isset($_GET['lang']) && ($_GET['lang'] === 'sv' || $_GET['lang'] === 'en')) {
     $_SESSION['language'] = $_GET['lang'];
