@@ -12,8 +12,9 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
     <thead>
         <tr>
             <th><?php echo $t['appointment_date'] ?? 'Datum'; ?></th>
-            <th><?php echo $t['title'] ?? 'Titel'; ?></th>
             <th><?php echo $t['practitioner'] ?? 'Behandlare'; ?></th>
+            <th><?php echo $t['title'] ?? 'Titel'; ?></th>
+            <th><?php echo $t['patient'] ?? 'Patient'; ?></th>
         </tr>
     </thead>
     <tbody>
@@ -26,9 +27,10 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
             
         ?>
         <tr>
-            <td><?php echo htmlspecialchars($date['appointment_date'] ?? 'N/A'); ?></td>
-            <td><?php echo htmlspecialchars($practitioner['practitioner'] ?? 'N/A'); ?></td>
-            <td><?php echo htmlspecialchars($title['title'] ?? 'N/A'); ?></td>
+            <td><?php echo htmlspecialchars($app['appointment_date'] ?? 'N/A'); ?></td>
+            <td><?php echo htmlspecialchars($app['practitioner'] ?? 'N/A'); ?></td>
+            <td><?php echo htmlspecialchars($app['title'] ?? 'N/A'); ?></td>
+            <td><?php echo htmlspecialchars($app['patient'] ?? 'N/A'); ?></td>
         </tr>
         <?php endforeach; ?>
     </tbody>
