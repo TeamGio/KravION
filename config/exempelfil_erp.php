@@ -171,6 +171,13 @@ $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) .
 
 
 
+
+
+
+
+
+
+
 // --- DENNA SAKNADES ---
     public function getMedicalrecords($patient_erp_id) {
         if (!$this->is_authenticated) {
