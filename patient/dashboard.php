@@ -1,4 +1,12 @@
 <?php
+
+
+// --- SKVALLER-KOD (Ta bort sen) ---
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+// ----------------------------------
+
 session_start();
 require_once '../config/database.php'; 
 require_once '../config/exempelfil_erp.php';
@@ -77,17 +85,27 @@ $translations = [
 
 $t = $translations[$lang];
 
-$upcoming_appointments = 2;
-$medical_records_count = 15;
 
+
+
+$bokningar_lista = $erp_client->getAppointmentsForPatient($patient_erp_id);
+$upcoming_appointments = count($bokningar_lista);
+
+
+$journal_lista = $erp_client->getMedicalrecords($patient_erp_id);
+$medical_records_count = count($journal_lista);
 
 $recept = $erp_client->getPrescriptionsForPatient($patient_erp_id); // 1. Hämta listan
 $active_prescriptions = count($recept); // 2. Räkna listan
 
-$recept = $erp_client->getPrescriptionsForPatient($patient_erp_id); 
 
 
-$active_prescriptions = count($recept);
+
+
+$messages = $erp_client->getMessagesForPatient($patient_erp_id);
+$message_count = count($messages);
+
+
 
 ?>
 <!DOCTYPE html>
@@ -118,12 +136,13 @@ $active_prescriptions = count($recept);
                     <li><a href="?page=medical_journal" class="<?php echo $page === 'medical_journal' ? 'active' : ''; ?>"><?php echo $t['medical_journal']; ?></a></li>
                     <li><a href="?page=appointments" class="<?php echo $page === 'appointments' ? 'active' : ''; ?>"><?php echo $t['appointments']; ?></a></li>
                     <li><a href="?page=prescriptions" class="<?php echo $page === 'prescriptions' ? 'active' : ''; ?>"><?php echo $t['prescriptions']; ?></a></li>
+                    <li><a href="?page=inbox" class="<?php echo $page === 'inbox' ? 'active' : ''; ?>">Inkorg </a></li>
                 </ul>
             </div>
             
             <?php if ($page === 'overview'): ?>
                 <div class="stats-grid">
-                    <div class="stat-card">
+                    <div class="stat-card primary">
                         <h4><?php echo $upcoming_appointments; ?></h4>
                         <p><?php echo $t['upcoming_appointments']; ?></p>
                     </div>
@@ -131,10 +150,10 @@ $active_prescriptions = count($recept);
                         <h4><?php echo $active_prescriptions; ?></h4>
                         <p><?php echo $t['active_prescriptions']; ?></p>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card tertiary">
                         <h4><?php echo $medical_records_count; ?></h4>
                         <p><?php echo $t['medical_records']; ?></p>
-                    </div>
+                    </div>                    
                 </div>
                 
                 <div class="card">
