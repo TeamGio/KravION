@@ -1,11 +1,7 @@
 <?php
 
 
-// --- SKVALLER-KOD (Ta bort sen) ---
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-// ----------------------------------
+
 
 session_start();
 require_once '../config/database.php'; 
@@ -173,7 +169,9 @@ $message_count = count($messages);
                 include 'pages/appointments.php';
             elseif ($page === 'prescriptions'): 
                 include 'pages/prescriptions.php';
-            endif; 
+            elseif ($page === 'inbox'): 
+                include 'pages/inbox.php'; 
+            endif;
             ?>
         </div>
     </div>
