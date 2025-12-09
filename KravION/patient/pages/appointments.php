@@ -16,11 +16,9 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
                     <th><?php echo $t['practitioner']; ?></th>
                     <th><?php echo $t['reason']; ?></th>
                     <th><?php echo $t['patient']; ?></th>
-                    <th><?php echo $t['cancel_time']; ?></th>
-
-
-        
-
+                    <th><?php echo $t['cancel_booking']; ?></th>
+                     <th><?php echo $t['reschedule_booking']; ?></th>
+                     
                 </tr>
             </thead>
 
@@ -28,10 +26,6 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
     
 
 
-
-
-
-            
             <tbody>
                 <?php foreach ($appointments as $app): 
                     $date = !empty($app['appointment_date']) 
@@ -41,12 +35,34 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
                     $title = $app['title'] ?? 'N/A';
                     $patient_name = $app['patient'] ?? 'N/A';
                 ?>
+
+
                 <tr>
                     <td><?php echo htmlspecialchars($date); ?></td>
                     <td><?php echo htmlspecialchars($practitioner); ?></td>
                     <td><?php echo htmlspecialchars($title); ?></td>
                     <td><?php echo htmlspecialchars($patient_name); ?></td>
-                    <td><?php echo htmlspecialchars($app['cancel_time'] ?? 'N/A'); ?></td>
+                    <td> 
+                        <form method="post" action="pages/Cancel.php">
+                            <!-- SKICKA BOKNINGENS ID (name) -->
+                            <input type="hidden" name="appointment_name" value="<?php echo htmlspecialchars($app['name']); ?>">
+                            <button type="submit" name="action" value="cancel">Avboka</button>
+                        </form>
+                    </td>
+
+                             <!-- Boka om -->
+                    <td>
+                        <form method="post" action="pages/Reschedule.php">
+                            <input type="hidden" name="appointment_name" value="<?php echo htmlspecialchars($app['name']); ?>">
+                            <button type="submit" name="action" value="reschedule">Boka om</button>
+                        </form>
+                    </td>
+
+
+
+
+
+
             
                 </tr>
                 <?php endforeach; ?>
