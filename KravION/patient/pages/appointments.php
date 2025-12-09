@@ -16,9 +16,25 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
                     <th><?php echo $t['practitioner']; ?></th>
                     <th><?php echo $t['reason']; ?></th>
                     <th><?php echo $t['patient']; ?></th>
+                    <th><?php echo $t['cancel_time']; ?></th>
                 </tr>
             </thead>
 
+
+               <td> 
+                    <form method="post" action="pages/appointments.php">
+                    <input type="hidden" name="cancel_time" value="<?php echo htmlspecialchars($prescription['name']); ?>">
+                    <button type="submit">Förnya</button>
+                    </form>
+                </td>
+                
+
+
+
+
+
+
+            
             <tbody>
                 <?php foreach ($appointments as $app): 
                     $date = !empty($app['appointment_date']) 
