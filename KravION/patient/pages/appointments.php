@@ -47,16 +47,7 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
                     <td><?php echo htmlspecialchars($title); ?></td>
                     <td><?php echo htmlspecialchars($patient_name); ?></td>
                     <td><?php echo htmlspecialchars($app['cancel_time'] ?? 'N/A'); ?></td>
-
-
-
-                   
-                        <td> 
-                            <form method="post" action="pages/appointments.php">
-                            <input type="hidden" name="cancel_time" value="<?php echo htmlspecialchars($prescription['name']); ?>">
-                            <button type="submit">Avboka</button>
-                            </form>
-                        </td>
+            
                 </tr>
                 <?php endforeach; ?>
             </tbody>
