@@ -140,6 +140,20 @@ class ERPNextClient {
 
         $filters = json_encode([
             ["patient", "=", $patient_erp_id],
+public function renewPrescriptions($patient_erp_id) {
+        if (!$this->is_authenticated) {
+            return [
+              'success' => false,
+              'message' => 'Inte inloggad i ERP-systemet.'
+            ];
+        }
+
+        $RESOURCE_NAME = 'G4FornyaRecept'; 
+        
+        // Använd "in" för att matcha flera statusvärden
+        $filters = json_encode([
+            ["patient_name", "=", $patient_erp_id], 
+            ["data_rsjo", "in", $statuses]
         ]);
 
         $encoded_filters = urlencode($filters);
@@ -174,17 +188,14 @@ class ERPNextClient {
         $data = json_decode($response, true);
         curl_close($ch);
 
-
         if ($http_code === 200 && isset($data['data'])) {
             return $data['data'];
         }
         return [];
     }
 
-
-
-    // --- DENNA SAKNADES ---
-    public function getMedicalrecords($patient_erp_id) {
+    public function getAppointmentsForPatient($patient_erp_id)
+    {
         if (!$this->is_authenticated) {
             return [];
         }

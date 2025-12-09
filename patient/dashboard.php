@@ -98,8 +98,8 @@ $active_prescriptions = count($recept); // 2. Räkna listan
 
 
 
-$messages = $erp_client->getMessagesForPatient($patient_erp_id);
-$message_count = count($messages);
+// $messages = $erp_client->getMessagesForPatient($patient_erp_id);
+// $message_count = count($messages);
 
 
 
