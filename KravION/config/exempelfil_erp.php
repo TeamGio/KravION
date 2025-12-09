@@ -221,27 +221,20 @@ class ERPNextClient {
         return [];
     }
 
+    //hämta meddelanden för en patient
      public function getMessagesForPatient($patient_erp_id) {
         if (!$this->is_authenticated) {
             return [];
         }
 
-
         $RESOURCE_NAME = 'G4PatientMeddelande';
-
-
-
-
-
 
         $filters = json_encode([
             ["patient_name", "=", $patient_erp_id]
         ]);
 
 
-
-
-        // 2. Skapa fält-listan snyggt (Det formella sättet)
+        // 2. Skapa fält-listan 
         $fields = json_encode([
             "patient_name",
             "practitioner",
@@ -249,7 +242,6 @@ class ERPNextClient {
             "message",
             "creation",
         ]);
-
 
         // 3. Bygg URL:en med urlencode
         $url = $this->baseurl . 'api/resource/' . $RESOURCE_NAME .

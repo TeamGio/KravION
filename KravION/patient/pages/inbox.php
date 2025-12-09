@@ -1,26 +1,11 @@
 
 
 
-
 <div class="card">
     <h3>Min Inkorg</h3>
    
   <?php $messages = $erp_client->getMessagesForPatient($patient_erp_id);
      if (count($messages) > 0): ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         <table style="width: 100%; border-collapse: collapse;">
@@ -32,12 +17,6 @@
                     <th style="padding: 10px; width: 10%;">Status</th>
 
 
-
-
-
-
-
-
                 </tr>
             </thead>
             <tbody>
@@ -47,23 +26,9 @@
                         <strong><?php echo htmlspecialchars($msg['practitioner'] ?? 'System'); ?></strong>
                     </td>
 
-
-
-
-
-
-
-
                     <td style="padding: 10px;">
                         <?php echo htmlspecialchars($msg['subject'] ?? '(Inget ämne)'); ?>
                     </td>
-
-
-
-
-
-
-
 
                     <td style="padding: 10px;">
                         <?php
@@ -72,20 +37,6 @@
                             echo date('Y-m-d H:i', $date);
                         ?>
                     </td>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                     <td style="padding: 10px;">
