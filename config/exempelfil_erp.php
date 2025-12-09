@@ -1,4 +1,9 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 class ERPNextClient
 {
     private $baseurl = 'http://193.93.250.83:8080/';
@@ -115,6 +120,54 @@ public function getPrescriptionsForPatient($patient_erp_id, $statuses = ["Godkä
         }
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $data = json_decode($response, true);
+        curl_close($ch);
+
+        if ($http_code === 200 && isset($data['data'])) {
+            return $data['data'];
+        }
+        return [];
+    }
+
+public function renewPrescriptions($patient_erp_id) {
+        if (!$this->is_authenticated) {
+            return [
+              'success' => false,
+              'message' => 'Inte inloggad i ERP-systemet.'
+            ];
+        }
+
+        $RESOURCE_NAME = 'G4FornyaRecept'; 
+        
+        // Använd "in" för att matcha flera statusvärden
+        $filters = json_encode([
+            ["patient_name", "=", $patient_erp_id], 
+            ["data_rsjo", "in", $statuses]
+        ]);
+
+        $encoded_filters = urlencode($filters);
+
+        $url = $this->baseurl . 'api/resource/' . $RESOURCE_NAME . 
+               '?filters=' . $encoded_filters . 
+               '&fields=["*"]';
+               
+        $ch = curl_init($url);
+        if ($ch === false) {
+            return [
+              'success' => false,
+              'message' => 'Kunde inte initiera curl.'
+            ];
+        }
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);

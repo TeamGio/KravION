@@ -1,5 +1,10 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 $message = '';
 
 
@@ -33,8 +38,8 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                         <td><?php echo htmlspecialchars($prescription['expiration_date'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['strenght'] ?? 'N/A'); ?></td>
                         <td> 
-                            <form method="post" action="renewPrescription.php">
-                            <input type="hidden" name="prscriptionID" value="<?php echo htmlspecialchars($prescription['prescriptionID'] ?? ''); ?>">
+                            <form method="post" action="pages/renewPrescription.php">
+                            <input type="hidden" name="prscriptionID" value="<?php echo htmlspecialchars($prescription['name']); ?>">
                             <button type="submit">Förnya</button>
                             </form>
                         </td>
