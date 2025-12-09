@@ -19,6 +19,7 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                     <th><?php echo $t['expiration_date']; ?></th>
                     <th><?php echo $t['strength']; ?></th>
                     <th><?php echo $t['status']; ?></th>
+                    <th><?php echo $t['renew_prescription']; ?></th>
                 </tr>
             </thead>
 
@@ -59,6 +60,14 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                                 <?php echo htmlspecialchars($status); ?>
                             </span>
                         </td>
+
+                        <!-- La till en knapp för att förnya recept -->
+                        <td> 
+                            <form method="post" action="pages/renewPrescription.php">
+                            <input type="hidden" name="prscriptionID" value="<?php echo htmlspecialchars($prescription['name']); ?>">
+                            <button type="submit">Förnya</button>
+                            </form>
+                        </td>
                     </tr>
 
                 <?php endforeach; ?>
@@ -72,7 +81,3 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
     <?php endif; ?>
 </div>
 
-<div class="card" style="margin-top: 20px;">
-    <h3><?php echo $t['renew_prescription']; ?></h3>
-    <iframe src="http://193.93.250.83:8080/g4fornya-recept" style="border: none; width: 100%; height: 400px;"></iframe>
-</div>
