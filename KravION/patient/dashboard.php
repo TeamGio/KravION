@@ -115,6 +115,7 @@ $new_lang = ($lang === 'sv') ? 'en' : 'sv';
                 <li><a href="?page=medical_journal" class="<?php echo $page === 'medical_journal' ? 'active' : ''; ?>"><?php echo $t['medical_journal']; ?></a></li>
                 <li><a href="?page=appointments" class="<?php echo $page === 'appointments' ? 'active' : ''; ?>"><?php echo $t['appointments']; ?></a></li>
                 <li><a href="?page=prescriptions" class="<?php echo $page === 'prescriptions' ? 'active' : ''; ?>"><?php echo $t['prescriptions']; ?></a></li>
+                <li><a href="?page=inbox" class="<?php echo $page === 'inbox' ? 'active' : ''; ?>">Inkorg </a></li>
             </ul>
         </div>
 
@@ -135,14 +136,7 @@ $new_lang = ($lang === 'sv') ? 'en' : 'sv';
             </div>
         </div>
 
-        <div class="card">
-            <h3><?php echo $t['quick_actions']; ?></h3>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:16px;">
-                <a href="?page=appointments" class="btn btn-primary"><?php echo $t['book_appointment']; ?></a>
-                <a href="?page=prescriptions" class="btn btn-accent"><?php echo $t['request_renewal']; ?></a>
-                <a href="?page=medical_journal" class="btn btn-secondary"><?php echo $t['view_records']; ?></a>
-            </div>
-        </div>
+
         <?php endif; ?>
 
         <!-- UNDER-SIDOR -->
@@ -150,6 +144,7 @@ $new_lang = ($lang === 'sv') ? 'en' : 'sv';
             if ($page === 'medical_journal') include 'pages/medical_journal.php';
             elseif ($page === 'appointments') include 'pages/appointments.php';
             elseif ($page === 'prescriptions') include 'pages/prescriptions.php';
+            elseif ($page === 'inbox') include 'pages/inbox.php';
         ?>
 
     </div>
