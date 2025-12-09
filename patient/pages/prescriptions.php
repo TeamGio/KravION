@@ -17,6 +17,7 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                     <th><?php echo $t['uttag'] ?? 'Uttag'; ?></th>
                     <th><?php echo $t['expiration_date'] ?? 'Utgångsdatum'; ?></th>
                     <th><?php echo $t['strenght'] ?? 'Styrka'; ?></th>
+                    <th><?php echo 'Förnya' ?></th>
                     <th><?php echo $t['data_rsjo'] ?? 'Status'; ?></th>
                 </tr>
             </thead>
@@ -31,6 +32,12 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                         <td><?php echo htmlspecialchars($prescription['uttag'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['expiration_date'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['strenght'] ?? 'N/A'); ?></td>
+                        <td> 
+                            <form method="post" action="renewPrescription.php">
+                            <input type="hidden" name="prscriptionID" value="<?php echo htmlspecialchars($prescription['prescriptionID'] ?? ''); ?>">
+                            <button type="submit">Förnya</button>
+                            </form>
+                        </td>
                         <td>
                             <?php 
                                 $is_approved = strtolower($status) === 'godkänd';
@@ -50,7 +57,3 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
     
 </div>
 
-<div class="card" style="margin-top: 20px;">
-    <h3>Förnya recept</h3>
-    <iframe src="http://193.93.250.83:8080/g4fornya-recept" style="border: none; width: 100%; height: 400px;"></iframe>
-</div>
