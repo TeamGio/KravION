@@ -50,15 +50,32 @@ $patient_data = [
     'personal_number' => $patient_pnr,
 ];
 
+
+
 // Statistik
 $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);   // ← FIX
 $active_prescriptions = count($prescriptions);
 
-$upcoming_appointments = 2;
-$medical_records_count = 15;
+$appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);     // ← FIX
+$upcoming_appointments = count($appointments);
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Språkknapp (samma logik som index/login)
 $new_lang = ($lang === 'sv') ? 'en' : 'sv';
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $lang; ?>">
