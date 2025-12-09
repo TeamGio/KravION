@@ -127,7 +127,7 @@ class ERPNextClient {
     }
 
     // Förnya recept för en patient Arvid
-    public function renewPrescriptions($patient_erp_id) {
+    public function renewPrescriptions($prescription_name) {
         if (!$this->is_authenticated) {
             return [
               'success' => false,
@@ -139,8 +139,7 @@ class ERPNextClient {
         
         // Använd "in" för att matcha flera statusvärden
         $filters = json_encode([
-            ["patient_name", "=", $patient_erp_id], 
-            ["data_rsjo", "in", $statuses]
+            ["name", "=", $prescription_id]
         ]);
 
         $encoded_filters = urlencode($filters);
@@ -218,61 +217,6 @@ class ERPNextClient {
             return $data['data'];
         }
 
-        return [];
-    }
-
-    //hämta meddelanden för en patient
-     public function getMessagesForPatient($patient_erp_id) {
-        if (!$this->is_authenticated) {
-            return [];
-        }
-
-        $RESOURCE_NAME = 'G4PatientMeddelande';
-
-        $filters = json_encode([
-            ["patient_name", "=", $patient_erp_id]
-        ]);
-
-
-        // 2. Skapa fält-listan 
-        $fields = json_encode([
-            "patient_name",
-            "practitioner",
-            "subject",
-            "message",
-            "creation",
-        ]);
-
-        // 3. Bygg URL:en med urlencode
-        $url = $this->baseurl . 'api/resource/' . $RESOURCE_NAME .
-            '?filters=' . urlencode($filters) .
-            '&fields=' . urlencode($fields) .
-            '&order_by=creation desc';
-
-
-        $ch = curl_init($url);
-        if ($ch === false) {
-            return [];
-        }
-
-
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
-        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-
-        $response = curl_exec($ch);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $data = json_decode($response, true);
-        curl_close($ch);
-
-
-        if ($http_code === 200 && isset($data['data'])) {
-            return $data['data'];
-        }
         return [];
     }
 }

@@ -64,7 +64,7 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                         <!-- La till en knapp för att förnya recept -->
                         <td> 
                             <form method="post" action="pages/renewPrescription.php">
-                            <input type="hidden" name="prscriptionID" value="<?php echo htmlspecialchars($prescription['name']); ?>">
+                            <input type="hidden" name="prescription_id" value="<?php echo htmlspecialchars($prescription['name']); ?>">
                             <button type="submit">Förnya</button>
                             </form>
                         </td>
