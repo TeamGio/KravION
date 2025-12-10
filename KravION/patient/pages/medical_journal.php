@@ -1,68 +1,72 @@
 <?php
-
-// Hämta journaler från databasen
-$stmt = $conn->prepare("
-    SELECT mr.*, s.first_name, s.last_name, s.role 
-    FROM medical_records mr
-    LEFT JOIN staff s ON mr.staff_id = s.id
-    WHERE mr.patient_id = :patient_id
-    ORDER BY mr.record_date DESC
-");
-$stmt->bindParam(':patient_id', $patient_id);
-$stmt->execute();
-$records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$records = $erp_client->getJournalRecordsForPatient($patient_erp_id);
 ?>
 
 <div class="card">
     <h3><?php echo $t['medical_journal']; ?></h3>
 
-    <?php if (count($records) > 0): ?>
-        <table>
-            <thead>
-                <tr>
-                    <th><?php echo $t['date']; ?></th>
-                    <th><?php echo $t['record_type']; ?></th>
-                    <th><?php echo $t['diagnosis']; ?></th>
-                    <th><?php echo $t['treatment']; ?></th>
-                    <th><?php echo $t['provider']; ?></th>
-                </tr>
-            </thead>
+    <?php
+    if (isset($error_message) && !empty($error_message)): ?>
+        <div class="alert alert-danger" style="margin-bottom: 20px;">
+            <?php echo $error_message; ?>
+        </div>
+    <?php endif; ?>
 
-            <tbody>
-                <?php foreach ($records as $record): ?>
-                <tr>
-                    <td><?php echo date('Y-m-d', strtotime($record['record_date'])); ?></td>
+    <?php if (!empty($records)): ?>
+        
+        <?php foreach ($records as $record): ?>
+            <?php
+                $encounter_datetime_str = ($record['encounter_date'] ?? 'N/A') . ' ' . ($record['encounter_time'] ?? '00:00:00');
+                $encounter_datetime = strtotime($encounter_datetime_str);
+                $date_time_display = date('Y-m-d H:i', $encounter_datetime);
+            ?>
 
-                    <td>
-                        <span class="badge badge-info">
-                            <?php echo htmlspecialchars($record['record_type'] ?? $t['general']); ?>
-                        </span>
-                    </td>
+            <div class="card" style="margin-bottom: 25px; border-left: 5px solid #007bff; padding: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #dee2e6; padding-bottom: 8px; margin-bottom: 10px;">
+                    <h4 style="margin: 0; font-size: 1.1em;">
+                        <?php echo $t['encounter_on'] ?? 'Besök den'; ?>: 
+                        **<?php echo htmlspecialchars($date_time_display); ?>**
+                    </h4>
+                    <span style="font-size: 0.9em; color: #6c757d;">
+                        <?php echo $t['provider']; ?>: 
+                        **<?php echo htmlspecialchars($record['practitioner_name'] ?? 'N/A'); ?>**
+                    </span>
+                </div>
 
-                    <td><?php echo htmlspecialchars($record['diagnosis'] ?? $t['not_available']); ?></td>
-                    <td><?php echo htmlspecialchars($record['treatment'] ?? $t['not_available']); ?></td>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 0.9em;">
+                    <div>
+                        <p style="margin: 0;">**<?php echo $t['Height']; ?> (m):** <?php echo htmlspecialchars($record['height'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;">**<?php echo $t['Weight']; ?> (kg):** <?php echo htmlspecialchars($record['weight'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;">**BMI:** <?php echo htmlspecialchars($record['bmi'] ?? 'N/A'); ?></p>
+                    </div>
 
-                    <td>
-                        <?php echo htmlspecialchars(($record['first_name'] ?? '') . ' ' . ($record['last_name'] ?? '')); ?>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td colspan="5" style="background: #F8F9FA; padding: 12px;">
-                        <strong><?php echo $t['symptoms']; ?>:</strong>
-                        <?php echo htmlspecialchars($record['symptoms'] ?? $t['not_available']); ?><br>
-
-                        <strong><?php echo $t['notes']; ?>:</strong>
-                        <?php echo htmlspecialchars($record['notes'] ?? $t['not_available']); ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                    <div>
+                        <p style="margin: 0;">**<?php echo $t['Body Temperature']; ?>:** <?php echo htmlspecialchars($record['body_temperature'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;">**<?php echo $t['Heart Rate']; ?>:** <?php echo htmlspecialchars($record['heart_rate'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;">**<?php echo $t['Respiratory Rate']; ?>:** <?php echo htmlspecialchars($record['respiratory_rate'] ?? 'N/A'); ?></p>
+                    </div>
+                    
+                    <div>
+                        <p style="margin: 0;">**<?php echo $t['Tongue']; ?>:** <?php echo htmlspecialchars($record['tongue'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;">**<?php echo $t['Abdomen']; ?>:** <?php echo htmlspecialchars($record['abdomen'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;">**<?php echo $t['Reflexes']; ?>:** <?php echo htmlspecialchars($record['reflexes'] ?? 'N/A'); ?></p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 15px; border-top: 1px dashed #ced4da; padding-top: 10px;">
+                    <p style="margin-bottom: 8px;">**<?php echo $t['symptoms']; ?>:** <?php echo htmlspecialchars($record['symptoms'] ?? 'N/A'); ?></p>
+                    
+                    <h5 style="margin-bottom: 5px; font-size: 1em;"><?php echo $t['notes']; ?>:</h5>
+                    <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 10px; min-height: 50px; white-space: pre-wrap; word-wrap: break-word;">
+                        <?php echo htmlspecialchars($record['notes'] ?? $t['no_notes_recorded']); ?>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
 
     <?php else: ?>
-        <p style="color: #6C757D; margin-top: 16px;">
+        <div class="alert alert-info">
             <?php echo $t['no_records']; ?>
-        </p>
+        </div>
     <?php endif; ?>
 </div>

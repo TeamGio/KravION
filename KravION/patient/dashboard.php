@@ -8,10 +8,6 @@ require_once '../config/language.php';
 require_once '../config/database.php';
 require_once '../config/exempelfil_erp.php';
 
-// *** NYTT: skapa databaskoppling så medical_journal.php får $conn ***
-$database = new Database();
-$conn = $database->getConnection();
-
 // Inaktivitet
 $INACTIVITY_LIMIT = 300;
 
@@ -50,8 +46,6 @@ $patient_data = [
     'personal_number' => $patient_pnr,
 ];
 
-
-
 // Statistik
 $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);   // ← FIX
 $active_prescriptions = count($prescriptions);
@@ -59,22 +53,8 @@ $active_prescriptions = count($prescriptions);
 $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);     // ← FIX
 $upcoming_appointments = count($appointments);
 
-
-
-
-
-
-
-
-
-
-
-
-
 // Språkknapp (samma logik som index/login)
 $new_lang = ($lang === 'sv') ? 'en' : 'sv';
-
-
 
 ?>
 <!DOCTYPE html>
