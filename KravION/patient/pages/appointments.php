@@ -42,8 +42,7 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
                     <td><?php echo htmlspecialchars($practitioner); ?></td>
                     <td><?php echo htmlspecialchars($title); ?></td>
                     <td><?php echo htmlspecialchars($patient_name); ?></td>
-                    <td><?php echo htmlspecialchars($cancel_booking); ?></td>
-                    <td><?php echo htmlspecialchars($reschedule_booking); ?></td>
+                    
                     <td> 
                         <form method="post" action="pages/Cancel.php">
                             <!-- SKICKA BOKNINGENS ID (name) -->
