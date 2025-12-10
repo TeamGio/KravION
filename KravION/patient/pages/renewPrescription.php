@@ -46,7 +46,7 @@ if (!isset($erp_client)) {
 }
 
 if (!empty($result['success']) && $result['success'] === true) {
-    header('Location: ../dashboard.php?msg= . urlencode("Receptet har förnyats framgångsrikt.")');
+    header('Location: ../prescriptions.php?msg=' . urlencode("Receptet har förnyats framgångsrikt."));
 
     exit();
 }
