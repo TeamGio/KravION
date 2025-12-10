@@ -127,7 +127,7 @@ class ERPNextClient {
     }
 
     // Förnya recept för en patient Arvid
-    public function renewPrescriptions($prescription_name) {
+    public function renewPrescriptions($prescription_id) {
         if (!$this->is_authenticated) {
             return [
               'success' => false,
@@ -267,4 +267,4 @@ class ERPNextClient {
         return [];
     }
 }
-?>
+

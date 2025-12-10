@@ -10,6 +10,8 @@ error_reporting(E_ALL);
 session_start();
 require_once '../../config/exempelfil_erp.php';
 
+$renewPrescriptions = $erp_client->renewPrescriptions($prescription_id);
+
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -46,7 +48,7 @@ if (!isset($erp_client)) {
 }
 
 if (!empty($result['success']) && $result['success'] === true) {
-    header('Location: ../dashboard.php?msg= . urlencode("Receptet har förnyats framgångsrikt.")');
+    header('Location: ../prescriptions.php?msg=' . urlencode("Receptet har förnyats framgångsrikt."));
 
     exit();
 }
