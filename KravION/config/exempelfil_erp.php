@@ -268,8 +268,7 @@ class ERPNextClient {
 
         $RESOURCE_NAME = 'Patient Encounter';
         
-        $fields = ['name','patient_name', 'encounter_date', 'encounter_time', 'practitioner_name'
-        ];
+        $fields = ['name','patient_name', 'encounter_date', 'encounter_time', 'practitioner_name'];
 
         $filters = json_encode([
             ["patient_name", "=", $patient_erp_id]
@@ -309,8 +308,7 @@ class ERPNextClient {
 
         $RESOURCE_NAME = 'Vital Signs';
         
-        $fields = ['height','weight', 'bmi', 'pulse', 'respiratory_rate', 'tongue', 'abdomen', 'reflexes'. 'vital_signs_note'
-        ];
+        $fields = ['height','weight', 'bmi', 'pulse', 'respiratory_rate', 'tongue', 'abdomen', 'reflexes'. 'vital_signs_note'];
 
         $filters = json_encode([
             ["patient_name", "=", $patient_erp_id]
@@ -319,7 +317,7 @@ class ERPNextClient {
         $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) .
                '?filters=' . urlencode($filters) .
                '&fields=' . urlencode(json_encode($fields)) .
-               '&order_by=encounter_date%20desc,encounter_time%20desc'; // Sortera efter datum o tid
+               '&order_by=signs_date%20desc,signs_time%20desc'; // Sortera efter datum o tid
 
         $ch = curl_init($url);
         if ($ch === false) { return []; }
@@ -342,4 +340,3 @@ class ERPNextClient {
         return [];
     }
 }
-
