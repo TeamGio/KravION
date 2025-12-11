@@ -1,9 +1,46 @@
 <?php 
+// prescriptions.php
 
 $message = '';
+// VIKTIGT: Vi tar bort den URL-baserade rensningslogiken.
+// session_start() antas köras i föräldern (dashboard.php)
+$success_message = null; 
+$error_message = null;   
+
+// --- NY LOGIK FÖR ATT VISA SESSION-BASERAT MEDDELANDE ---
+
+// 1. Hantera Framgångsmeddelanden (Flash Message)
+if (isset($_SESSION['success_message'])) {
+    $success_message = htmlspecialchars($_SESSION['success_message']);
+    // Rensa sessionen direkt efter att ha lagrat meddelandet lokalt
+    unset($_SESSION['success_message']);
+}
+
+// 2. Hantera Felmeddelanden (Om renewPrescription skickade ett fel)
+if (isset($_SESSION['error_message'])) {
+    $error_message = htmlspecialchars($_SESSION['error_message']);
+    // Rensa sessionen
+    unset($_SESSION['error_message']);
+}
+// -----------------------------------------------------------
+
 
 $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
 ?>
+
+<?php if (isset($success_message)): ?>
+    <div class="alert alert-success" role="alert" style="margin-top: 20px;">
+         Klart! <?php echo $success_message; ?>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($error_message)): ?>
+    <div class="alert alert-danger" role="alert" style="margin-top: 20px;">
+         Fel! <?php echo $error_message; ?>
+    </div>
+<?php endif; ?>
+
+
 <div class="card" style="margin-top: 20px;">
     <h3><?php echo $t['prescriptions']; ?></h3>
 
@@ -13,7 +50,7 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                 <tr>
                     <th><?php echo $t['medication']; ?></th>
                     <th><?php echo $t['personnummer']; ?></th>
-                    <th><?php echo $t['provider']; ?></th>
+                    <th><?php echo $t['practitioner_name']; ?></th>
                     <th><?php echo $t['date']; ?></th>
                     <th><?php echo $t['withdrawal']; ?></th>
                     <th><?php echo $t['expiration_date']; ?></th>
@@ -31,6 +68,7 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                         $raw_status = strtolower(trim($status));
 
                         // Bestäm badge-färg baserat på originalstatus
+                        // Lägg till 'behandlas' till villkoren för badge-färg om du vill ha en annan färg för pågående.
                         $is_approved = ($raw_status === 'godkänd');
                         $badge_class = $is_approved ? 'badge-success' : 'badge-danger';
 
@@ -42,6 +80,8 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                                 $status = 'Not approved';
                             } elseif ($raw_status === 'behandlas') {
                                 $status = 'Processing';
+                                // Uppdatera badge-klassen för 'behandlas'
+                                $badge_class = 'badge-warning'; 
                             }
                         }
                     ?>
@@ -49,7 +89,7 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                     <tr>
                         <td><strong><?php echo htmlspecialchars($prescription['medicin'] ?? 'N/A'); ?></strong></td>
                         <td><?php echo htmlspecialchars($prescription['personnummer'] ?? 'N/A'); ?></td>
-                        <td><?php echo htmlspecialchars($prescription['behandlare'] ?? 'N/A'); ?></td>
+                        <td><?php echo htmlspecialchars($prescription['vårdgivare_namn'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['datum'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['uttag'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['expiration_date'] ?? 'N/A'); ?></td>
@@ -61,9 +101,8 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                             </span>
                         </td>
 
-                        <!-- La till en knapp för att förnya recept -->
                         <td> 
-                            <form method="post" action="pages/renewPrescription.php">
+                            <form method="post" action="/wwwit-utv/Grupp%204/patient/pages/renewPrescription.php">
                             <input type="hidden" name="prescription_id" value="<?php echo htmlspecialchars($prescription['name']); ?>">
                             <button type="submit">Förnya</button>
                             </form>
@@ -80,4 +119,3 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
         </div>
     <?php endif; ?>
 </div>
-
