@@ -42,6 +42,8 @@ if (!$patient) {
     exit();
 }
 
+$patient_erp_id = $patient['name'];
+
 $patient_data = [
     'first_name' => $patient['first_name'] ?? 'Patient',
     'personal_number' => $patient_pnr,

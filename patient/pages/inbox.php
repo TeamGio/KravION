@@ -1,10 +1,12 @@
 <div class="card">
     <h3>Min Inkorg</h3>
 
-    <?php 
+
+    <?php
     $messages = $erp_client->getMessagesForPatient($patient_erp_id);
-    if (count($messages) > 0): 
+    if (count($messages) > 0):
     ?>
+
 
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
@@ -22,9 +24,11 @@
                             <strong><?php echo htmlspecialchars($msg['practitioner'] ?? 'System'); ?></strong>
                         </td>
 
+
                         <td style="padding: 10px;">
                             <?php echo htmlspecialchars($msg['subject'] ?? '(Inget ämne)'); ?>
                         </td>
+
 
                         <td style="padding: 10px;">
                             <?php
@@ -34,10 +38,12 @@
                             ?>
                         </td>
 
+
                         <td style="padding: 10px;">
                             <span style="font-size: 0.8em; color: #666;">(Klicka nedan)</span>
                         </td>
                     </tr>
+
 
                     <tr>
                         <td colspan="5" style="padding: 0; border: none;">
@@ -52,6 +58,7 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
+
 
     <?php else: ?>
         <p style="color: #6C757D; margin-top: 30px;">Du har inga meddelanden i inkorgen.</p>

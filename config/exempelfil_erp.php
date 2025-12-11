@@ -459,7 +459,7 @@ class ERPNextClient {
         $url = $this->baseurl . 'api/resource/' . $RESOURCE_NAME .
             '?filters=' . urlencode($filters) .
             '&fields=' . urlencode($fields) .
-            '&order_by=creation desc';
+            '&order_by=' . urlencode('creation desc');
 
 
         $ch = curl_init($url);
