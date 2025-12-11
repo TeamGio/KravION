@@ -86,7 +86,12 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                     ?>
 
                     <tr>
+<<<<<<< Updated upstream
                         <td><strong><?php echo htmlspecialchars($prescription['medicin'] ?? 'N/A'); ?></strong></td>
+=======
+                        <td><strong><?php echo htmlspecialchars($prescription['medicin_names'] ?? 'N/A'); ?></strong></td>
+                        <td><?php echo htmlspecialchars($prescription['personnummer'] ?? 'N/A'); ?></td>
+>>>>>>> Stashed changes
                         <td><?php echo htmlspecialchars($prescription['vårdgivare_namn'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['datum'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['uttag'] ?? 'N/A'); ?></td>
