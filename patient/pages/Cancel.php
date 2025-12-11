@@ -1,9 +1,6 @@
 <?php
 // Cancel.php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 session_start();
 // Samma mappstruktur som i renewPrescription.php
@@ -39,14 +36,13 @@ $result = [
     'success' => false,
     'message' => 'Okänt fel vid avbokning.'
 ];
-
+error_log("Avbokning av $appointment_id för patient $patient_erp_id");
 // Kontrollera att ERP-klienten och metoden finns
 if (!isset($erp_client) || !method_exists($erp_client, 'cancelAppointment')) {
     $result['message'] = 'ERP-klienten eller metoden för avbokning saknas.';
 } else {
     // Utför API-anropet (PUT/DELETE inuti cancelAppointment)
-    $tmp = $erp_client->cancelAppointment($appointment_id, $patient_erp_id);
-
+       $tmp = $erp_client->cancelAppointment($appointment_id);
     if (is_array($tmp)) {
         $result = array_merge($result, $tmp);
     } else {

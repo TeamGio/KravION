@@ -71,7 +71,7 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
                         <form method="post" action="pages/Cancel.php">
                             <!-- SKICKA BOKNINGENS ID (name) -->
                             <input type="hidden" name="appointment_name" value="<?php echo htmlspecialchars($app['name']); ?>">
-                            <button type="submit" name="action" value="cancel">Avboka</button>
+                            <button type="submit" name="action" value="cancel" onclick="return confirm('Är du säker på att du vill avboka?')">Avboka</button>                        
                         </form>
                     </td>
                     <td>
