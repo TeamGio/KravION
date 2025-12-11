@@ -276,7 +276,7 @@ class ERPNextClient {
 
     // Markera tiden som avbokad
     $update_data = [
-        'status' => 'Cancelled'
+        'custom_status_copy' => 'Cancelled'
     ];
     $json_payload = json_encode($update_data);
 
