@@ -1,7 +1,7 @@
 <?php
 class ERPNextClient {
     private $baseurl = 'http://193.93.250.83:8080/'; 
-    private $cookiepath = '/tmp/erpnext_cookies.txt'; 
+    private $cookiepath = '/tmp/erpnext_cookies.txt'; // Kontrollera skrivrättigheter till denna fil!
     private $tmeout = 3600; 
 
     private $erp_usr = "a24leoli@student.his.se"; 
@@ -24,14 +24,17 @@ class ERPNextClient {
         }
         
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        // Använder http_build_query för att skicka form-data, vilket ERPNext förväntar sig för login.
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([ 
             'usr' => $this->erp_usr,
             'pwd' => $this->erp_pwd
         ])); 
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
+    
+        // Vi behöver inte Content-Type för form-data, men Accept är bra.
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json')); 
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
 
+        // VIKTIGT: Sätt cookie-burk och ladda cookie-fil
         curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookiepath);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
         
@@ -44,10 +47,14 @@ class ERPNextClient {
 
         if ($http_code === 200) {
             $this->is_authenticated = true;
+            error_log("ERPNext: Inloggning lyckades! HTTP " . $http_code);
         } else {
             $this->is_authenticated = false;
+            // Fånga felmeddelande om inloggning misslyckas.
+            error_log("ERPNext: Inloggning misslyckades! HTTP " . $http_code . " Svar: " . $response); 
         }
     }
+    
 
     // Hämta patientinformation baserat på personnummer
     public function findPatientByPNR($personal_number) {
@@ -99,7 +106,7 @@ class ERPNextClient {
 
         $url = $this->baseurl . 'api/resource/' . $RESOURCE_NAME . 
                '?filters=' . urlencode($filters) . 
-               '&fields=["name","personnummer","medicin","datum","uttag","strenght","data_rsjo","behandlare","expiration_date"]';
+               '&fields=["*"]';
 
         $ch = curl_init($url);
         if ($ch === false) { return []; }
@@ -126,52 +133,86 @@ class ERPNextClient {
         return [];
     }
 
-    // Förnya recept för en patient Arvid
-    public function renewPrescriptions($prescription_id) {
+    // Förnya recept för en patient (PUT-anrop)
+    public function renewPrescription($prescription_id, $patient_erp_id) {
         if (!$this->is_authenticated) {
             return [
-              'success' => false,
-              'message' => 'Inte inloggad i ERP-systemet.'
+                'success' => false,
+                'message' => 'Inte inloggad i ERP-systemet.'
             ];
         }
 
         $RESOURCE_NAME = 'G4FornyaRecept'; 
         
-        // Använd "in" för att matcha flera statusvärden
-        $filters = json_encode([
-            ["name", "=", $prescription_id]
-        ]);
+        // 1. Skapa den fullständiga URL:en med ID (name) på receptet.
+        $url = $this->baseurl . 'api/resource/' . $RESOURCE_NAME . '/' . urlencode($prescription_id);
 
-        $encoded_filters = urlencode($filters);
+        // 2. Skapa den data (payload) du vill uppdatera
+        $update_data = [
+            'name' => $prescription_id, 
+            'last_renewal_request' => date('Y-m-d H:i:s'), 
+            
+            // Sätter den tillåtna statusen som indikerar att en begäran är gjord
+            'data_rsjo' => 'Behandlas', 
+            // Sätter det önskade uttagssaldot
+            'uttag' => 4        
+        ];
+        $json_payload = json_encode($update_data);
 
-        $url = $this->baseurl . 'api/resource/' . $RESOURCE_NAME . 
-               '?filters=' . $encoded_filters . 
-               '&fields=["*"]';
-               
+
         $ch = curl_init($url);
         if ($ch === false) {
             return [
-              'success' => false,
-              'message' => 'Kunde inte initiera curl.'
+                'success' => false,
+                'message' => 'Kunde inte initiera curl.'
             ];
         }
 
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
+        // 3. Använd PUT för uppdatering
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT'); 
+        
+        // 4. Lägg till JSON-payloaden i body
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_payload); 
+        
+        // Sätt headers
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json', 
+            'Accept: application/json',
+            'Content-Length: ' . strlen($json_payload)
+        ));
+        
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
 
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $data = json_decode($response, true);
         curl_close($ch);
 
-        if ($http_code === 200 && isset($data['data'])) {
-            return $data['data'];
+        // 5. Förbättrad felsökning vid icke-200-svar (inkl. 500)
+        $error_message = 'Okänt fel i ERPNext.';
+        if (isset($data['exc'])) {
+            $error_message = strip_tags($data['exc']); 
+        } elseif (isset($data['message'])) {
+            $error_message = $data['message'];
         }
-        return [];
+
+        // Kontrollerar om svaret var 200 (OK)
+        if ($http_code === 200 && isset($data['data'])) {
+            return [
+                'success' => true,
+                'message' => 'Receptet är nu satt till "Behandlas" med 4 uttag. Det kan ta en stund innan det godkänns.', // <-- Detta meddelande skickas till prescriptions.php
+                'data' => $data['data']
+            ];
+        }
+        
+        return [
+            'success' => false,
+            // Returnera det detaljerade felmeddelandet
+            'message' => 'Misslyckades med att förnyas receptet. HTTP-kod: ' . $http_code . '. Meddelande: ' . $error_message
+        ];
     }
 
 
@@ -181,18 +222,17 @@ class ERPNextClient {
             return [];
         }
 
-
+   
         $RESOURCE_NAME = 'Patient Appointment';
 
         $filters = json_encode([
             ["patient", "=", $patient_erp_id],
             ["appointment_date", ">=", date('Y-m-d')],
-            ["status", "in", ["Scheduled","Open","Confirmed"]]
         ]);
 
         $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) .
                '?filters=' . urlencode($filters) .
-               '&fields=["name","title","practitioner","department","appointment_date","appointment_time","patient"]';
+               '&fields=["name","title","practitioner_name","department","appointment_date","appointment_time","patient"]';
 
         $ch = curl_init($url);
         if ($ch === false) { return []; }
