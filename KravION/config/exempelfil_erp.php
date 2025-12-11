@@ -220,7 +220,7 @@ class ERPNextClient {
         return [];
     }
 
-// Hämta Patient Encounter journaler
+// Hämta Patient Encounter, journal
     public function getJournalRecordsForPatient($patient_erp_id) {
         if (!$this->is_authenticated) {
             return [];
@@ -228,10 +228,7 @@ class ERPNextClient {
 
         $RESOURCE_NAME = 'Patient Encounter';
         
-        $fields = ['name', 'encounter_date', 'encounter_time', 'practitioner_name', 'symptoms', 'diagnosis', 'notes', 
-                'status', 'title', 'height', 'weight', 'bmi', 'body_temperature', 'heart_rate', 'respiratory_rate',
-                'tongue', 'abdomen', 'reflexes'
-                // Lägg till för vital signs sen (om de oxå ska visas)
+        $fields = ['name','patient_name', 'encounter_date', 'encounter_time', 'practitioner_name'
         ];
 
         $filters = json_encode([
@@ -247,10 +244,48 @@ class ERPNextClient {
         if ($ch === false) { return []; }
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Accept: application/json'
-        ));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath); 
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $data = json_decode($response, true);
+        curl_close($ch);
+
+        if ($http_code === 200 && isset($data['data'])) {
+            return $data['data'];
+        }
+        return [];
+    }
+
+// Hämta Vital Signs, journal
+    public function getVitalSignsForPatient($patient_erp_id) {
+        if (!$this->is_authenticated) {
+            return [];
+        }
+
+        $RESOURCE_NAME = 'Vital Signs';
+        
+        $fields = ['height','weight', 'BMI', 'pulse', 'respiratory_rate', 'tongue', 'abdomen', 'reflexes'. 'vital_signs_note'
+        ];
+
+        $filters = json_encode([
+            ["patient_name", "=", $patient_erp_id]
+        ]);
+
+        $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) .
+               '?filters=' . urlencode($filters) .
+               '&fields=' . urlencode(json_encode($fields)) .
+               '&order_by=encounter_date%20desc,encounter_time%20desc'; // Sortera efter datum o tid
+
+        $ch = curl_init($url);
+        if ($ch === false) { return []; }
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath); 
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);

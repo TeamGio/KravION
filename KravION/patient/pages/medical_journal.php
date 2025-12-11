@@ -1,5 +1,6 @@
 <?php
 $records = $erp_client->getJournalRecordsForPatient($patient_erp_id);
+//$records = $erp_client->getVitalSignsForPatient($patient_erp_id);
 ?>
 
 <div class="card">
@@ -25,40 +26,40 @@ $records = $erp_client->getJournalRecordsForPatient($patient_erp_id);
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #dee2e6; padding-bottom: 8px; margin-bottom: 10px;">
                     <h4 style="margin: 0; font-size: 1.1em;">
                         <?php echo $t['encounter_on'] ?? 'Besök den'; ?>: 
-                        **<?php echo htmlspecialchars($date_time_display); ?>**
+                        <?php echo htmlspecialchars($date_time_display); ?>
                     </h4>
                     <span style="font-size: 0.9em; color: #6c757d;">
                         <?php echo $t['provider']; ?>: 
-                        **<?php echo htmlspecialchars($record['practitioner_name'] ?? 'N/A'); ?>**
+                        <?php echo htmlspecialchars($record['practitioner_name'] ?? 'N/A'); ?>
                     </span>
                 </div>
 
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 0.9em;">
                     <div>
-                        <p style="margin: 0;">**<?php echo $t['Height']; ?> (m):** <?php echo htmlspecialchars($record['height'] ?? 'N/A'); ?></p>
-                        <p style="margin: 0;">**<?php echo $t['Weight']; ?> (kg):** <?php echo htmlspecialchars($record['weight'] ?? 'N/A'); ?></p>
-                        <p style="margin: 0;">**BMI:** <?php echo htmlspecialchars($record['bmi'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['height']; ?> m: <?php echo htmlspecialchars($record['height'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Weight']; ?> kg: <?php echo htmlspecialchars($record['weight'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;">BMI: <?php echo htmlspecialchars($record['bmi'] ?? 'N/A'); ?></p>
                     </div>
 
                     <div>
-                        <p style="margin: 0;">**<?php echo $t['Body Temperature']; ?>:** <?php echo htmlspecialchars($record['body_temperature'] ?? 'N/A'); ?></p>
-                        <p style="margin: 0;">**<?php echo $t['Heart Rate']; ?>:** <?php echo htmlspecialchars($record['heart_rate'] ?? 'N/A'); ?></p>
-                        <p style="margin: 0;">**<?php echo $t['Respiratory Rate']; ?>:** <?php echo htmlspecialchars($record['respiratory_rate'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Temperature']; ?>: <?php echo htmlspecialchars($record['temperature'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Pulse']; ?>: <?php echo htmlspecialchars($record['ulse'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Respiratory Rate']; ?>: <?php echo htmlspecialchars($record['respiratory_rate'] ?? 'N/A'); ?></p>
                     </div>
                     
                     <div>
-                        <p style="margin: 0;">**<?php echo $t['Tongue']; ?>:** <?php echo htmlspecialchars($record['tongue'] ?? 'N/A'); ?></p>
-                        <p style="margin: 0;">**<?php echo $t['Abdomen']; ?>:** <?php echo htmlspecialchars($record['abdomen'] ?? 'N/A'); ?></p>
-                        <p style="margin: 0;">**<?php echo $t['Reflexes']; ?>:** <?php echo htmlspecialchars($record['reflexes'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Tongue']; ?>: <?php echo htmlspecialchars($record['tongue'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Abdomen']; ?>: <?php echo htmlspecialchars($record['abdomen'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Reflexes']; ?>: <?php echo htmlspecialchars($record['reflexes'] ?? 'N/A'); ?></p>
                     </div>
                 </div>
                 
                 <div style="margin-top: 15px; border-top: 1px dashed #ced4da; padding-top: 10px;">
-                    <p style="margin-bottom: 8px;">**<?php echo $t['symptoms']; ?>:** <?php echo htmlspecialchars($record['symptoms'] ?? 'N/A'); ?></p>
+                    <p style="margin-bottom: 8px;"><?php echo $t['symptoms']; ?>: <?php echo htmlspecialchars($record['symptoms'] ?? 'N/A'); ?></p>
                     
                     <h5 style="margin-bottom: 5px; font-size: 1em;"><?php echo $t['notes']; ?>:</h5>
                     <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 10px; min-height: 50px; white-space: pre-wrap; word-wrap: break-word;">
-                        <?php echo htmlspecialchars($record['notes'] ?? $t['no_notes_recorded']); ?>
+                        <?php echo htmlspecialchars($record['notes'] ?? $t['vital_signs_note']); ?>
                     </div>
                 </div>
             </div>
