@@ -3,6 +3,30 @@ $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);
 ?>
 
 
+<?php if (isset($_SESSION['success_message'])): ?>
+    <div class="alert alert-success">
+        <?php 
+            echo htmlspecialchars($_SESSION['success_message']);
+            unset($_SESSION['success_message']);
+        ?>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error_message'])): ?>
+    <div class="alert alert-danger">
+        <?php 
+            echo htmlspecialchars($_SESSION['error_message']);
+            unset($_SESSION['error_message']);
+        ?>
+    </div>
+<?php endif; ?>
+
+
+
+
+
+
+
 
 <div class="card" style="margin-top: 20px;">
     <h3><?php echo $t['appointments']; ?></h3>

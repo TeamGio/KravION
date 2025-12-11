@@ -228,6 +228,7 @@ class ERPNextClient {
         $filters = json_encode([
             ["patient", "=", $patient_erp_id],
             ["appointment_date", ">=", date('Y-m-d')],
+            ["status", "!=", "Cancelled"] // Visa inte avbokade tider
         ]);
 
         $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) .
@@ -259,6 +260,66 @@ class ERPNextClient {
 
         return [];
     }
+
+
+
+    public function cancelAppointment($appointment_id) {
+    if (!$this->is_authenticated) {
+        return [
+            'success' => false,
+            'message' => 'Inte inloggad i ERP-systemet.'
+        ];
+    }
+
+    $RESOURCE_NAME = 'Patient Appointment';
+    $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) . '/' . urlencode($appointment_id);
+
+    // Markera tiden som avbokad
+    $update_data = [
+        'status' => 'Cancelled'
+    ];
+    $json_payload = json_encode($update_data);
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_payload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Accept: application/json'
+    ));
+    curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $data = json_decode($response, true);
+
+    curl_close($ch);
+
+    if ($http_code === 200 && isset($data['data'])) {
+        return [
+            'success' => true,
+            'message' => 'Tiden är nu avbokad.'
+        ];
+    }
+
+    return [
+        'success' => false,
+        'message' => 'Misslyckades med att avboka tiden. HTTP: ' . $http_code
+    ];
+}
+
+
+
+
+
+
+
+
+
+
+
 
 // Hämta Patient Encounter, journal
     public function getJournalRecordsForPatient($patient_erp_id) {
