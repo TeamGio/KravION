@@ -260,6 +260,19 @@ class ERPNextClient {
         return [];
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Hämta Patient Encounter, journal
     public function getJournalRecordsForPatient($patient_erp_id) {
         if (!$this->is_authenticated) {
