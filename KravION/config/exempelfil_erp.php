@@ -269,7 +269,7 @@ class ERPNextClient {
 
         $RESOURCE_NAME = 'Vital Signs';
         
-        $fields = ['height','weight', 'BMI', 'pulse', 'respiratory_rate', 'tongue', 'abdomen', 'reflexes'. 'vital_signs_note'
+        $fields = ['height','weight', 'bmi', 'pulse', 'respiratory_rate', 'tongue', 'abdomen', 'reflexes'. 'vital_signs_note'
         ];
 
         $filters = json_encode([

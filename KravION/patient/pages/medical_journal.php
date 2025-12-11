@@ -43,7 +43,7 @@ $records = $erp_client->getJournalRecordsForPatient($patient_erp_id);
 
                     <div>
                         <p style="margin: 0;"><?php echo $t['Temperature']; ?> Kroppstempratur: <?php echo htmlspecialchars($record['temperature'] ?? 'N/A'); ?></p>
-                        <p style="margin: 0;"><?php echo $t['Pulse']; ?> Puls: <?php echo htmlspecialchars($record['ulse'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Pulse']; ?> Puls: <?php echo htmlspecialchars($record['pulse'] ?? 'N/A'); ?></p>
                         <p style="margin: 0;"><?php echo $t['Respiratory Rate']; ?> Andningsfrekvens: <?php echo htmlspecialchars($record['respiratory_rate'] ?? 'N/A'); ?></p>
                     </div>
                     
