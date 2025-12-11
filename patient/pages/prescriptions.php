@@ -102,7 +102,7 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                         </td>
 
                         <td> 
-                            <form method="post" action="/wwwit-utv/Grupp%204/patient/pages/renewPrescription.php">
+                            <form method="post" action="/wwwit-utv/Grupp4/patient/pages/renewPrescription.php">
                             <input type="hidden" name="prescription_id" value="<?php echo htmlspecialchars($prescription['name']); ?>">
                             <button type="submit">Förnya</button>
                             </form>

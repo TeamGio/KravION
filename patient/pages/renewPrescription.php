@@ -57,7 +57,7 @@ if (!empty($result['success']) && $result['success'] === true) {
     $_SESSION['success_message'] = $result['message'];
     
     // Omdirigera tillbaka till prescriptions-sidan via dashboard.php
-    $redirect_url = '/wwwit-utv/Grupp%204/patient/dashboard.php?page=prescriptions'; 
+    $redirect_url = '/wwwit-utv/Grupp4/patient/dashboard.php?page=prescriptions'; 
 
     header('Location: ' . $redirect_url);
     exit();
@@ -69,7 +69,7 @@ if (!empty($result['message'])) {
     $_SESSION['error_message'] = $result['message']; 
     
     // Omdirigera tillbaka för att visa felet
-    $redirect_url = '/wwwit-utv/Grupp%204/patient/dashboard.php?page=prescriptions';
+    $redirect_url = '/wwwit-utv/Grupp4/patient/dashboard.php?page=prescriptions';
     header('Location: ' . $redirect_url);
     exit();
 }
