@@ -339,4 +339,27 @@ class ERPNextClient {
         }
         return [];
     }
+
+    public function getMedicalrecords($patient_erp_id) {
+        if (!$this->is_authenticated) return [];
+
+        $url = $this->baseurl . 'api/resource/Patient%20Medical%20Record' .
+               '?filters=' . urlencode(json_encode([["patient", "=", $patient_erp_id]])) . 
+               '&fields=' . urlencode(json_encode(["name", "status"]));
+
+        $ch = curl_init($url);
+        
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_COOKIEFILE     => $this->cookiepath,
+            CURLOPT_TIMEOUT        => $this->tmeout, // <--- ANVÄNDER DIN STAVNING (utan 'i')
+            CURLOPT_HTTPHEADER     => ['Content-Type: application/json', 'Accept: application/json']
+        ]);
+
+        $result = json_decode(curl_exec($ch), true);
+        curl_close($ch);
+
+        return $result['data'] ?? [];
+    }
+
 }

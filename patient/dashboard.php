@@ -1,3 +1,7 @@
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 <?php
 session_start();
 
@@ -54,13 +58,8 @@ $active_prescriptions = count($prescriptions);
 $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);     // ← FIX
 $upcoming_appointments = count($appointments);
 
-
-
-
-
-
-
-
+$journal_lista = $erp_client->getMedicalrecords($patient_erp_id);
+$medical_records_count = count($journal_lista);
 
 
 
