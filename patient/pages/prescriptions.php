@@ -49,7 +49,6 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
             <thead>
                 <tr>
                     <th><?php echo $t['medication']; ?></th>
-                    <th><?php echo $t['personnummer']; ?></th>
                     <th><?php echo $t['practitioner_name']; ?></th>
                     <th><?php echo $t['date']; ?></th>
                     <th><?php echo $t['withdrawal']; ?></th>
@@ -87,8 +86,7 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                     ?>
 
                     <tr>
-                        <td><strong><?php echo htmlspecialchars($prescription['medicin'] ?? 'N/A'); ?></strong></td>
-                        <td><?php echo htmlspecialchars($prescription['personnummer'] ?? 'N/A'); ?></td>
+                        <td><strong><?php echo htmlspecialchars($prescription['medicin_names'] ?? 'N/A'); ?></strong></td>
                         <td><?php echo htmlspecialchars($prescription['vårdgivare_namn'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['datum'] ?? 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($prescription['uttag'] ?? 'N/A'); ?></td>
