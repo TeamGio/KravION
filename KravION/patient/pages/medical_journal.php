@@ -36,21 +36,21 @@ $records = $erp_client->getJournalRecordsForPatient($patient_erp_id);
 
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 0.9em;">
                     <div>
-                        <p style="margin: 0;"><?php echo $t['height']; ?> m: <?php echo htmlspecialchars($record['height'] ?? 'N/A'); ?></p>
-                        <p style="margin: 0;"><?php echo $t['Weight']; ?> kg: <?php echo htmlspecialchars($record['weight'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['height']; ?> Meter: <?php echo htmlspecialchars($record['height'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Weight']; ?> Kilogram: <?php echo htmlspecialchars($record['weight'] ?? 'N/A'); ?></p>
                         <p style="margin: 0;">BMI: <?php echo htmlspecialchars($record['bmi'] ?? 'N/A'); ?></p>
                     </div>
 
                     <div>
-                        <p style="margin: 0;"><?php echo $t['Temperature']; ?>: <?php echo htmlspecialchars($record['temperature'] ?? 'N/A'); ?></p>
-                        <p style="margin: 0;"><?php echo $t['Pulse']; ?>: <?php echo htmlspecialchars($record['ulse'] ?? 'N/A'); ?></p>
-                        <p style="margin: 0;"><?php echo $t['Respiratory Rate']; ?>: <?php echo htmlspecialchars($record['respiratory_rate'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Temperature']; ?> Kroppstempratur: <?php echo htmlspecialchars($record['temperature'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Pulse']; ?> Puls: <?php echo htmlspecialchars($record['ulse'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Respiratory Rate']; ?> Andningsfrekvens: <?php echo htmlspecialchars($record['respiratory_rate'] ?? 'N/A'); ?></p>
                     </div>
                     
                     <div>
-                        <p style="margin: 0;"><?php echo $t['Tongue']; ?>: <?php echo htmlspecialchars($record['tongue'] ?? 'N/A'); ?></p>
-                        <p style="margin: 0;"><?php echo $t['Abdomen']; ?>: <?php echo htmlspecialchars($record['abdomen'] ?? 'N/A'); ?></p>
-                        <p style="margin: 0;"><?php echo $t['Reflexes']; ?>: <?php echo htmlspecialchars($record['reflexes'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Tongue']; ?> Tunga: <?php echo htmlspecialchars($record['tongue'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Abdomen']; ?> Mage: <?php echo htmlspecialchars($record['abdomen'] ?? 'N/A'); ?></p>
+                        <p style="margin: 0;"><?php echo $t['Reflexes']; ?> Reflex: <?php echo htmlspecialchars($record['reflexes'] ?? 'N/A'); ?></p>
                     </div>
                 </div>
                 
