@@ -64,3 +64,24 @@
         <p style="color: #6C757D; margin-top: 30px;">Du har inga meddelanden i inkorgen.</p>
     <?php endif; ?>
 </div>
+
+<?php
+// === BLOGGPOST – SAMMA PRINCIP SOM APPOINTMENTS ===
+$blog_url = ($lang === 'en')
+    ? 'http://193.93.250.83:8080/blog/opening%20hours/blogpost'
+    : 'http://193.93.250.83:8080/blog/%C3%B6ppettider/bloggpost';
+?>
+
+<div class="card" style="margin-top: 20px;">
+    <h3>
+        <?php echo ($lang === 'en') 
+            ? 'Information & Opening Hours' 
+            : 'Information & Öppettider'; 
+        ?>
+    </h3>
+
+    <iframe 
+        src="<?php echo $blog_url; ?>"
+        style="border: none; width: 100%; height: 700px;">
+    </iframe>
+</div>
