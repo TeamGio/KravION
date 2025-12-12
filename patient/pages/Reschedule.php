@@ -6,8 +6,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
-
-// Samma require-struktur som renewPrescription.php och Cancel.php
 require_once '../../config/exempelfil_erp.php';
 
 $erp_client = new ERPNextClient();
@@ -19,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-// appointment_name kommer från hidden-fältet i appointments.php
+// Kontrollera att boknings-ID finns
 if (empty($_POST['appointment_name'])) {
     http_response_code(400);
     echo "Saknar boknings-ID.";
@@ -29,45 +27,43 @@ if (empty($_POST['appointment_name'])) {
 // Kontrollera att patienten är inloggad
 if (!isset($_SESSION['patient_id'])) {
     $_SESSION['error_message'] = "Du måste vara inloggad för att boka om en tid.";
-    header('Location: ../login.php'); // Omdirigera till inloggningssidan
+    header('Location: ../login.php');
     exit();
 }
 
-$patient_erp_id  = $_SESSION['patient_id'];
-$appointment_id  = $_POST['appointment_name'];
+$appointment_id = $_POST['appointment_name'];
+$patient_erp_id = $_SESSION['patient_id'];
 
 $result = [
     'success' => false,
     'message' => 'Okänt fel vid ombokning.'
 ];
 
-// Kontrollera att ERP-klienten och metoden finns
-if (!isset($erp_client) || !method_exists($erp_client, 'rescheduleAppointment')) {
-    $result['message'] = 'ERP-klienten eller metoden för ombokning saknas.';
+// Kontrollera att metoden finns
+if (!isset($erp_client) || !method_exists($erp_client, 'cancelAppointment')) {
+    $result['message'] = 'ERP-klienten eller avbokningsmetoden saknas.';
 } else {
-    // Utför API-anropet (PUT eller annan logik i rescheduleAppointment)
-    $tmp = $erp_client->rescheduleAppointment($appointment_id, $patient_erp_id);
+    // 🔴 STEG 1: Avboka tiden
+    $tmp = $erp_client->cancelAppointment($appointment_id, $patient_erp_id);
 
     if (is_array($tmp)) {
         $result = array_merge($result, $tmp);
     } else {
-        $result['message'] = 'Ogiltigt svar från ERP-klienten vid ombokning.';
+        $result['message'] = 'Ogiltigt svar från ERP-klienten vid avbokning.';
     }
 }
 
-// Om ombokningen lyckades
+//  Om avbokningen lyckades till ombokning.php
 if (!empty($result['success']) && $result['success'] === true) {
-    // Spara meddelandet i sessionen (popup på appointments-sidan)
-    $_SESSION['success_message'] = $result['message'];
+    $_SESSION['success_message'] = 'Tiden är avbokad. Välj nu en ny tid.';
 
-
-    
-    $redirect_url = '/wwwit-utv/Grupp4/patient/dashboard.php?page=appointments';
-    header('Location: ' . $redirect_url);
+    //  HIT SKICKAS ANVÄNDAREN
+   header('Location: ombokning.php');
     exit();
+
 }
 
-// Vid fel – spara felmeddelande och omdirigera tillbaka
+// Om något gick fel → tillbaka till appointments
 if (!empty($result['message'])) {
     $_SESSION['error_message'] = $result['message'];
 
