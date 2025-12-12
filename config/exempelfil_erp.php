@@ -262,10 +262,7 @@ class ERPNextClient {
     }
 
 
-    /**
-     * Hämtar en specifik bokning (Patient Appointment) via ERPNext REST API.
-     * Används för kontroll att bokningen finns och ev. tillhör patienten.
-     */
+    
     public function getAppointmentById($appointment_id) {
         if (!$this->is_authenticated) {
             return [
@@ -313,13 +310,8 @@ class ERPNextClient {
         ];
     }
 
-    /**
-     * Avbokar en bokning genom att sätta status=Cancelled.
-     * Om $patient_erp_id skickas in så validerar vi att tiden tillhör patienten.
-     *
-     * @param string $appointment_id  ERPNext "name" för Patient Appointment
-     * @param string|null $patient_erp_id patientens ERPNext-id (valfritt)
-     */
+   
+    // Avbokar en bokning
     public function cancelAppointment($appointment_id, $patient_erp_id = null) {
         if (!$this->is_authenticated) {
             return [
@@ -350,7 +342,7 @@ class ERPNextClient {
             }
         }
 
-        // 3) Om redan Cancelled, returnera OK (idempotent)
+        // 3) Om redan Cancelled, returnera OK 
         $current_status = $appointment['status'] ?? '';
         if ($current_status === 'Cancelled') {
             return [
@@ -363,8 +355,7 @@ class ERPNextClient {
         $RESOURCE_NAME = 'Patient Appointment';
         $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) . '/' . urlencode($appointment_id);
 
-        // Sätt "status" (det är den du filtrerar på i getAppointmentsForPatient)
-        // Lägg även custom_status_copy om du fortfarande vill hålla den synkad
+        
         $update_data = [
             'status' => 'Cancelled',
             'custom_status_copy' => 'Cancelled'
