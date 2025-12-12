@@ -1,5 +1,4 @@
 <?php
-// Cancel.php
 
 
 session_start();
@@ -22,7 +21,6 @@ if (empty($_POST['appointment_name'])) {
     exit();
 }
 
-// Kontrollera att patienten är inloggad
 if (!isset($_SESSION['patient_id'])) {
     $_SESSION['error_message'] = "Du måste vara inloggad för att avboka en tid.";
     header('Location: ../login.php'); // Omdirigera till inloggningssidan
@@ -37,7 +35,7 @@ $result = [
     'message' => 'Okänt fel vid avbokning.'
 ];
 error_log("Avbokning av $appointment_id för patient $patient_erp_id");
-// Kontrollera att ERP-klienten och metoden finns
+
 if (!isset($erp_client) || !method_exists($erp_client, 'cancelAppointment')) {
     $result['message'] = 'ERP-klienten eller metoden för avbokning saknas.';
 } else {

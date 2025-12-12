@@ -11,7 +11,7 @@ if (!isset($_SESSION['patient_id'])) {
     exit();
 }
 
-// Måste finnas ett id från Reschedule.php
+// Måste finnas ett id
 $appointment_id = $_SESSION['reschedule_appointment_id'] ?? null;
 if (!$appointment_id) {
     $_SESSION['error_message'] = "Ingen tid vald för ombokning.";
