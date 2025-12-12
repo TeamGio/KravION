@@ -3,19 +3,19 @@
 
 
 session_start();
-// Samma mappstruktur som i renewPrescription.php
+
 require_once '../../config/exempelfil_erp.php';
 
 $erp_client = new ERPNextClient();
 
-// Tillåt bara POST
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo "Endast POST är tillåten.";
     exit();
 }
 
-// appointment_name kommer från hidden-fältet i appointments.php
+
 if (empty($_POST['appointment_name'])) {
     http_response_code(400);
     echo "Saknar boknings-ID.";
@@ -52,7 +52,7 @@ if (!isset($erp_client) || !method_exists($erp_client, 'cancelAppointment')) {
 
 // Om avbokningen lyckades
 if (!empty($result['success']) && $result['success'] === true) {
-    // Spara meddelandet i sessionen (så det kan visas på appointments-sidan)
+    
     $_SESSION['success_message'] = $result['message'];
 
     // Omdirigera tillbaka till appointments-sidan via dashboard.php
