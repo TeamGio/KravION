@@ -610,6 +610,7 @@ public function deleteAppointment($appointment_id) {
         // 2. Skapa fält-listan snyggt (Det formella sättet)
         $fields = json_encode([
             "patient_name",
+            "prac_name",
             "practitioner",
             "subject",
             "message",
