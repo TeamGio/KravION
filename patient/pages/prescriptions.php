@@ -68,8 +68,20 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
 
                         // Bestäm badge-färg baserat på originalstatus
                         // Lägg till 'behandlas' till villkoren för badge-färg om du vill ha en annan färg för pågående.
-                        $is_approved = ($raw_status === 'godkänd');
-                        $badge_class = $is_approved ? 'badge-success' : 'badge-danger';
+                        switch ($raw_status) {
+                            case 'godkänd':
+                                $badge_class = 'badge-success';
+                                break;
+                                
+                                case 'behandlas':
+                                    $badge_class = 'badge-warning';
+                                    break;
+                                    
+                                    case 'ej godkänd':
+                                        default:
+                                        $badge_class = 'badge-danger';
+                                        break;
+                                    }
 
                         // Översätt status vid engelska
                         if ($lang === 'en') {
