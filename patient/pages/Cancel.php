@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 
-if (empty($_POST['appointment_name'])) {
+if (empty($_POST['name'])) {
     http_response_code(400);
     echo "Saknar boknings-ID.";
     exit();
@@ -28,7 +28,7 @@ if (!isset($_SESSION['patient_id'])) {
 }
 
 $patient_erp_id = $_SESSION['patient_id'];
-$appointment_id = $_POST['appointment_name'];
+$appointment_id = $_POST['name'];
 
 $result = [
     'success' => false,
@@ -40,8 +40,7 @@ if (!isset($erp_client) || !method_exists($erp_client, 'cancelAppointment')) {
     $result['message'] = 'ERP-klienten eller metoden för avbokning saknas.';
 } else {
     // Utför API-anropet (PUT/DELETE inuti cancelAppointment)
-       $tmp = $erp_client->cancelAppointment($appointment_id);
-    if (is_array($tmp)) {
+$tmp = $erp_client->deleteAppointment($appointment_id);    if (is_array($tmp)) {
         $result = array_merge($result, $tmp);
     } else {
         $result['message'] = 'Ogiltigt svar från ERP-klienten vid avbokning.';
