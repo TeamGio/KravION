@@ -40,6 +40,7 @@ $texts = [
         'book_appointment' => 'Boka tid',
         'request_renewal' => 'Begär receptförnyelse',
         'view_records' => 'Visa journaler',
+        'inbox' => 'Inkorg',
 
         // APPOINTMENTS
         'appointments_info' => 'Här visas alla dina kommande inbokade tider.',
@@ -72,6 +73,13 @@ $texts = [
         'approved' => 'Godkänd',
         'no_prescriptions' => 'Inga aktiva recept hittades.',
         'renew_prescription' => 'Förnya recept',
+
+        // INBOX
+        'practitioner' => 'Avsändare',
+        'subject' => 'Ämne',
+        'date' => 'Datum',
+        'status' => 'Status',
+
     ],
 
     'en' => [
@@ -106,6 +114,7 @@ $texts = [
         'book_appointment' => 'Book appointment',
         'request_renewal' => 'Request prescription renewal',
         'view_records' => 'View medical records',
+        'inbox' => 'Inbox',
 
         // APPOINTMENTS
         'appointments_info' => 'Here you can see all your upcoming appointments.',
@@ -138,6 +147,13 @@ $texts = [
         'approved' => 'Approved',
         'no_prescriptions' => 'No active prescriptions found.',
         'renew_prescription' => 'Renew prescription',
+
+        // INBOX
+        'practitioner' => 'Sender',
+        'subject' => 'Subject',
+        'date' => 'Date',
+        'status' => 'Status',
+
     ]
 ];
 

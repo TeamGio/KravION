@@ -109,7 +109,7 @@ $new_lang = ($lang === 'sv') ? 'en' : 'sv';
                 <li><a href="?page=medical_journal" class="<?php echo $page === 'medical_journal' ? 'active' : ''; ?>"><?php echo $t['medical_journal']; ?></a></li>
                 <li><a href="?page=appointments" class="<?php echo $page === 'appointments' ? 'active' : ''; ?>"><?php echo $t['appointments']; ?></a></li>
                 <li><a href="?page=prescriptions" class="<?php echo $page === 'prescriptions' ? 'active' : ''; ?>"><?php echo $t['prescriptions']; ?></a></li>
-                <li><a href="?page=inbox" class="<?php echo $page === 'inbox' ? 'active' : ''; ?>">Inkorg </a></li>
+                <li><a href="?page=inbox" class="<?php echo $page === 'inbox' ? 'active' : ''; ?>"><?php echo $t['inbox']; ?></a></li>
             </ul>
         </div>
 

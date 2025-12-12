@@ -3,18 +3,21 @@
 
 
     <?php
+    $new_lang = ($lang === 'sv') ? 'en' : 'sv';
+
+
     $messages = $erp_client->getMessagesForPatient($patient_erp_id);
     if (count($messages) > 0):
     ?>
-
+  <?php echo $t['date']; ?>
 
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr style="text-align: left; border-bottom: 2px solid #eee;">
-                    <th style="padding: 10px; width: 20%;">Avsändare</th>
-                    <th style="padding: 10px; width: 40%;">Ämne</th>
-                    <th style="padding: 10px; width: 20%;">Datum</th>
-                    <th style="padding: 10px; width: 10%;">Status</th>
+                    <th style="padding: 10px; width: 20%;">  <?php echo $t['practitioner']; ?></th>
+                    <th style="padding: 10px; width: 40%;">  <?php echo $t['subject']; ?></th>
+                    <th style="padding: 10px; width: 20%;">  <?php echo $t['date']; ?></th>
+                    <th style="padding: 10px; width: 10%;">  <?php echo $t['status']; ?></th>
                 </tr>
             </thead>
             <tbody>
