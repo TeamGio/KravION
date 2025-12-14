@@ -3,56 +3,50 @@
 
 
     <?php
-    $new_lang = ($lang === 'sv') ? 'en' : 'sv';
+        $new_lang = ($lang === 'sv') ? 'en' : 'sv';
 
 
-    $messages = $erp_client->getMessagesForPatient($patient_erp_id);
-    if (count($messages) > 0):
+        $messages = $erp_client->getMessagesForPatient($patient_erp_id);
+        if (count($messages) > 0):
     ?>
-  <?php echo $t['date']; ?>
 
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
-                <tr style="text-align: left; border-bottom: 2px solid #eee;">
-                    <th style="padding: 10px; width: 20%;">  <?php echo $t['practitioner']; ?></th>
-                    <th style="padding: 10px; width: 40%;">  <?php echo $t['subject']; ?></th>
-                    <th style="padding: 10px; width: 20%;">  <?php echo $t['date']; ?></th>
-                    <th style="padding: 10px; width: 10%;">  <?php echo $t['status']; ?></th>
+                <tr style="text-align: left;">
+                    <th style="padding: 10px; width: 33%;">  <?php echo $t['practitioner']; ?></th>
+                    <th style="padding: 10px; width: 33%;">  <?php echo $t['subject']; ?></th>
+                    <th style="padding: 10px; width: 33%;">  <?php echo $t['date']; ?></th>
                 </tr>
             </thead>
+
             <tbody>
                 <?php foreach ($messages as $msg): ?>
                     <tr style="border-bottom: 1px solid #f0f0f0;">
                         <td style="padding: 10px;">
-                            <strong><?php echo htmlspecialchars($msg['prac_name'] ?? 'System'); ?></strong>
+                            <strong><?php echo htmlspecialchars($msg['prac_name'] ?? 'Inget namn'); ?></strong>
                         </td>
 
 
                         <td style="padding: 10px;">
-                            <?php echo htmlspecialchars($msg['subject'] ?? '(Inget ämne)'); ?>
+                            <?php echo htmlspecialchars($msg['subject'] ?? 'Inget ämne'); ?>
                         </td>
 
 
                         <td style="padding: 10px;">
                             <?php
-                            // Vi formaterar datumet (ÅÅÅÅ-MM-DD kl TT:MM)
-                            $date = strtotime($msg['creation'] ?? 'now');
+                            $date = strtotime($msg['creation']);
                             echo date('Y-m-d H:i', $date);
                             ?>
                         </td>
 
-
-                        <td style="padding: 10px;">
-                            <span style="font-size: 0.8em; color: #666;">(Klicka nedan)</span>
-                        </td>
                     </tr>
 
 
                     <tr>
                         <td colspan="4" style="border: none; padding: 0;">
-                            <details style="padding: 10px 15px;">
-                                <summary style="cursor: pointer; color: #007bff;">Läs meddelande</summary>
-                                <p style="margin-top: 10px; color: #333;">
+                            <details>
+                                <summary>Läs meddelande</summary>
+                                <p>
                                     <?php echo $msg['message'] ?? 'Inget innehåll.'; ?>
                                 </p>
                             </details>
