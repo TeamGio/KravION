@@ -49,12 +49,12 @@
 
 
                     <tr>
-                        <td colspan="5" style="padding: 0; border: none;">
-                            <details style="padding: 10px 20px; background: #f9f9f9; border-bottom: 2px solid #eee;">
-                                <summary style="cursor: pointer; color: #007bff; font-weight: bold; margin-bottom: 10px;">Läs meddelande</summary>
-                                <div style="background: white; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+                        <td colspan="4" style="border: none; padding: 0;">
+                            <details style="padding: 10px 15px;">
+                                <summary style="cursor: pointer; color: #007bff;">Läs meddelande</summary>
+                                <p style="margin-top: 10px; color: #333;">
                                     <?php echo $msg['message'] ?? 'Inget innehåll.'; ?>
-                                </div>
+                                </p>
                             </details>
                         </td>
                     </tr>
