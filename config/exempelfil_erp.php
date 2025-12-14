@@ -446,13 +446,27 @@ public function deleteAppointment($appointment_id) {
         curl_close($ch);
         
         // 2. Kontrollera resultatet
-        if ($http_code === 200) {
-            // ERPNext returnerar ofta en tom array vid lyckad DELETE, men 200 är nyckeln.
-            return [
-                'success' => true,
-                'message' => 'Bokningen permanent borttagen från systemet.'
-            ];
-        }
+$code = (int)$http_code;
+
+$code = (int)$http_code;
+
+if ($code === 200 || $code === 202 || $code === 204) {
+    return array(
+        'success' => true,
+        'message' => 'Bokningen avbokad.'
+    );
+}
+
+return array(
+    'success' => false,
+    'message' => 'Kunde inte ta bort bokningen. HTTP-kod: ' . $code
+);
+
+return array(
+    'success' => false,
+    'message' => 'Kunde inte ta bort bokningen. HTTP-kod: ' . $code
+);
+
         
         // 3. Hantera fel
         $error_message = 'Okänt fel vid radering.';
