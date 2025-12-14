@@ -1,5 +1,5 @@
 <div class="card">
-    <h3>Min Inkorg</h3>
+    <h3><?php echo $t['my inbox']; ?></h3>
 
 
     <?php
@@ -45,7 +45,7 @@
                     <tr>
                         <td colspan="4" style="border: none; padding: 0;">
                             <details>
-                                <summary>Läs meddelande</summary>
+                                <summary><?php echo $t['read message']; ?></summary>
                                 <p>
                                     <?php echo $msg['message'] ?? 'Inget innehåll.'; ?>
                                 </p>

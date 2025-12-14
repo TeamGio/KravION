@@ -42,6 +42,7 @@ $texts = [
         'view_records' => 'Visa journaler',
         'inbox' => 'Inkorg',
 
+
         // APPOINTMENTS
         'appointments_info' => 'Här visas alla dina kommande inbokade tider.',
         'date' => 'Datum',
@@ -79,6 +80,9 @@ $texts = [
         'subject' => 'Ämne',
         'date' => 'Datum',
         'status' => 'Status',
+        'read message' => 'Läs meddelande',
+        'my inbox' => 'Min inkorg',
+
 
     ],
 
@@ -153,6 +157,8 @@ $texts = [
         'subject' => 'Subject',
         'date' => 'Date',
         'status' => 'Status',
+        'read message' => 'Read message',
+        'my inbox' => 'My inbox',
 
     ]
 ];
