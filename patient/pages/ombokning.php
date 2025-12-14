@@ -54,7 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <div class="card">
     <h2>Ombokning</h2>
 
-    <p>Du är på väg att begära ombokning för din valda tid. Notera att om du ändrar tid 24h innan den bokade tiden kommer du faktureras för ombokningne</p>
+    <p>Du är på väg att begära ombokning för din valda tid. 
+    Notera att om du ändrar tid 24h innan den bokade tiden kommer du faktureras för ombokningen
+    </p>
 
     <form method="post">
         <input type="hidden" name="action" value="request_reschedule">
