@@ -262,10 +262,7 @@ class ERPNextClient {
     }
 
 
-    /**
-     * Hämtar en specifik bokning (Patient Appointment) via ERPNext REST API.
-     * Används för kontroll att bokningen finns och ev. tillhör patienten.
-     */
+    
     public function getAppointmentById($appointment_id) {
         if (!$this->is_authenticated) {
             return [
@@ -313,13 +310,8 @@ class ERPNextClient {
         ];
     }
 
-    /**
-     * Avbokar en bokning genom att sätta status=Cancelled.
-     * Om $patient_erp_id skickas in så validerar vi att tiden tillhör patienten.
-     *
-     * @param string $appointment_id  ERPNext "name" för Patient Appointment
-     * @param string|null $patient_erp_id patientens ERPNext-id (valfritt)
-     */
+   
+    // Avbokar en bokning
     public function cancelAppointment($appointment_id, $patient_erp_id = null) {
         if (!$this->is_authenticated) {
             return [
@@ -350,7 +342,7 @@ class ERPNextClient {
             }
         }
 
-        // 3) Om redan Cancelled, returnera OK (idempotent)
+        // 3) Om redan Cancelled, returnera OK 
         $current_status = $appointment['status'] ?? '';
         if ($current_status === 'Cancelled') {
             return [
@@ -363,8 +355,7 @@ class ERPNextClient {
         $RESOURCE_NAME = 'Patient Appointment';
         $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) . '/' . urlencode($appointment_id);
 
-        // Sätt "status" (det är den du filtrerar på i getAppointmentsForPatient)
-        // Lägg även custom_status_copy om du fortfarande vill hålla den synkad
+        
         $update_data = [
             'status' => 'Cancelled',
             'custom_status_copy' => 'Cancelled'
@@ -416,7 +407,70 @@ class ERPNextClient {
 
 
 
+public function deleteAppointment($appointment_id) {
+        if (!$this->is_authenticated) {
+            return [
+                'success' => false,
+                'message' => 'Inte inloggad i ERP-systemet.'
+            ];
+        }
 
+        $RESOURCE_NAME = 'Patient Appointment';
+        // Skapa den fullständiga URL:en med ID (name) på bokningen.
+        $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) . '/' . urlencode($appointment_id);
+
+        $ch = curl_init($url);
+        if ($ch === false) {
+            return [
+                'success' => false,
+                'message' => 'Kunde inte initiera curl.'
+            ];
+        }
+
+        // 1. Använd DELETE för permanent radering
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); 
+        
+        // Sätt headers
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/json',
+        ]);
+        
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $data = json_decode($response, true);
+        curl_close($ch);
+        
+        // 2. Kontrollera resultatet
+        if ($http_code === 200) {
+            // ERPNext returnerar ofta en tom array vid lyckad DELETE, men 200 är nyckeln.
+            return [
+                'success' => true,
+                'message' => 'Bokningen permanent borttagen från systemet.'
+            ];
+        }
+        
+        // 3. Hantera fel
+        $error_message = 'Okänt fel vid radering.';
+        if (isset($data['exc'])) {
+            $error_message = strip_tags($data['exc']); 
+        } elseif (isset($data['message'])) {
+            $error_message = $data['message'];
+        } elseif ($http_code === 403) {
+            $error_message = 'Behörighet saknas för att permanent radera Patient Appointment.';
+        } elseif ($http_code === 404) {
+            $error_message = 'Bokningen hittades inte eller är redan raderad.';
+        }
+        
+        return [
+            'success' => false,
+            'message' => 'Misslyckades med att radera bokningen. HTTP-kod: ' . $http_code . '. Meddelande: ' . $error_message
+        ];
+    }
 
 
 
@@ -556,6 +610,7 @@ class ERPNextClient {
         // 2. Skapa fält-listan snyggt (Det formella sättet)
         $fields = json_encode([
             "patient_name",
+            "prac_name",
             "practitioner",
             "subject",
             "message",

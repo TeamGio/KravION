@@ -24,7 +24,7 @@
                 <?php foreach ($messages as $msg): ?>
                     <tr style="border-bottom: 1px solid #f0f0f0;">
                         <td style="padding: 10px;">
-                            <strong><?php echo htmlspecialchars($msg['practitioner'] ?? 'System'); ?></strong>
+                            <strong><?php echo htmlspecialchars($msg['prac_name'] ?? 'System'); ?></strong>
                         </td>
 
 
