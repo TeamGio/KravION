@@ -1,6 +1,7 @@
 <?php
 $records = $erp_client->getJournalRecordsForPatient($patient_erp_id);
-$records = $erp_client->getVitalSignsForPatient($patient_erp_id);
+//$records = $erp_client->getVitalSignsForPatient($patient_erp_id);
+
 ?>
 
 <div class="card">
@@ -54,8 +55,13 @@ $records = $erp_client->getVitalSignsForPatient($patient_erp_id);
                     </div>
                 </div>
                 
+
+
+
                 <div style="margin-top: 15px; border-top: 1px dashed #ced4da; padding-top: 10px;">
                     <p style="margin-bottom: 8px;"><?php echo $t['symptoms']; ?>: <?php echo htmlspecialchars($record['symptoms'] ?? 'N/A'); ?></p>
+                    
+
                     
                     <h5 style="margin-bottom: 5px; font-size: 1em;"><?php echo $t['notes']; ?>:</h5>
                     <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 10px; min-height: 50px;">
