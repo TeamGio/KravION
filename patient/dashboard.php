@@ -3,10 +3,7 @@
 <?php
 session_start();
 
-// Ladda global språkfil
 require_once '../config/language.php';
-
-// ERP 
 require_once '../config/exempelfil_erp.php';
 
 // Inaktivitet
@@ -20,7 +17,9 @@ if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 
 }
 $_SESSION['last_activity'] = time();
 
-// Kräver inloggning
+
+
+// Om ej inloggad, skicka till login
 if (!isset($_SESSION['patient_id'])) {
     header('Location: login.php');
     exit();
