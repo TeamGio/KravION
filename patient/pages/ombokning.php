@@ -24,11 +24,12 @@ $patient_erp_id = $_SESSION['patient_id'];
 // När användaren klickar på knappen
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'request_reschedule') {
 
-    $tmp = $erp_client->cancelAppointment($appointment_id, $patient_erp_id);
+    $tmp = $erp_client->deleteAppointment($appointment_id);
+
 
     if (!empty($tmp['success'])) {
         unset($_SESSION['reschedule_appointment_id']);
-        $_SESSION['success_message'] = "Ombokning begärd. Tiden är avbokad – välj nu en ny tid.";
+        $_SESSION['success_message'] = "Ombokning begärd. Tiden är avbokad.";
         header('Location: ../dashboard.php?page=appointments');
         exit();
     }
