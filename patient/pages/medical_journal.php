@@ -58,8 +58,8 @@ $records = $erp_client->getVitalSignsForPatient($patient_erp_id);
                     <p style="margin-bottom: 8px;"><?php echo $t['symptoms']; ?>: <?php echo htmlspecialchars($record['symptoms'] ?? 'N/A'); ?></p>
                     
                     <h5 style="margin-bottom: 5px; font-size: 1em;"><?php echo $t['notes']; ?>:</h5>
-                    <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 10px; min-height: 50px; white-space: pre-wrap; word-wrap: break-word;">
-                        <?php echo htmlspecialchars($record['notes'] ?? $t['vital_signs_note']); ?>
+                    <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 10px; min-height: 50px;">
+                        <?php echo htmlspecialchars($record['vital_signs_note'] ?? 'Ingen anteckning.'); ?>
                     </div>
                 </div>
             </div>
