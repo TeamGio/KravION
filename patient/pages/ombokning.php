@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     if (!empty($tmp['success'])) {
         unset($_SESSION['reschedule_appointment_id']);
-        $_SESSION['success_message'] = "Ombokning begärd. Tiden är avbokad – välj nu en ny tid.";
+        $_SESSION['success_message'] = "Ombokning begärd. Tiden är avbokad.";
         header('Location: ../dashboard.php?page=appointments');
         exit();
     }
