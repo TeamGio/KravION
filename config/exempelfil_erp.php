@@ -545,7 +545,7 @@ return array(
 
         $RESOURCE_NAME = 'Vital Signs';
         
-        $fields = ['name','patient_name', 'height','weight', 'bmi', 'pulse', 'respiratory_rate', 'tongue', 'abdomen', 'reflexes'. 'vital_signs_note'];
+        $fields = ['name','patient_name', 'height','weight', 'bmi', 'pulse', 'respiratory_rate', 'tongue', 'abdomen', 'reflexes', 'vital_signs_note'];
 
         $filters = json_encode([
             ["patient_name", "=", $patient_erp_id]
@@ -601,6 +601,7 @@ return array(
         return $result['data'] ?? [];
     }
 
+// Hämta meddelanden för patient
     public function getMessagesForPatient($patient_erp_id) {
         if (!$this->is_authenticated) {
             return [];
