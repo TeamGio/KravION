@@ -62,6 +62,15 @@
     <?php endif; ?>
 </div>
 
+<div class="card" style="margin-top: 20px;">
+    <h3><?php echo $t['contact_form']; ?></h3>
+    <iframe src="http://193.93.250.83:8080/g4form"
+            style="border: none; width: 100%; height: 600px;">
+    </iframe>
+</div>
+
+
+
 <?php
 // === BLOGGPOST – SAMMA PRINCIP SOM APPOINTMENTS ===
 $blog_url = ($lang === 'en')
