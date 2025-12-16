@@ -505,7 +505,7 @@ return array(
 
         $RESOURCE_NAME = 'Patient Encounter';
         
-        $fields = ['name', 'patient_name', 'encounter_date', 'encounter_time', 'practitioner_name', 'symptoms'];
+        $fields = ['*'];
 
         $filters = json_encode([
             ["patient_name", "=", $patient_erp_id]
@@ -545,8 +545,7 @@ return array(
 
         $RESOURCE_NAME = 'Vital Signs';
         
-        $fields = ['name','patient_name', 'height','weight', 'bmi', 'pulse', 'respiratory_rate', 'tongue', 
-        'abdomen', 'reflexes', 'vital_signs_note', 'signs_date', 'signs_time', 'temperature'];
+        $fields = ['*'];
 
         $filters = json_encode([
             ["patient_name", "=", $patient_erp_id]
