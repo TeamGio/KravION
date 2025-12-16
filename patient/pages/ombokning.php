@@ -21,11 +21,33 @@ if (!$appointment_id) {
 
 $patient_erp_id = $_SESSION['patient_id'];
 
+
+// === NYTT: hämta och visa vald tid (precis som i appointments.php) ===
+$appt_res = $erp_client->getAppointmentById($appointment_id);
+
+if (empty($appt_res['success']) || empty($appt_res['data'])) {
+    $_SESSION['error_message'] = $appt_res['message'] ?? "Kunde inte hämta vald tid.";
+    header('Location: ../dashboard.php?page=appointments');
+    exit();
+}
+
+$selected = $appt_res['data'];
+
+// Säkerhet: kontrollera att bokningen tillhör inloggad patient
+if (($selected['patient'] ?? null) !== $patient_erp_id) {
+    $_SESSION['error_message'] = "Du kan inte omboka en tid som inte tillhör dig.";
+    header('Location: ../dashboard.php?page=appointments');
+    exit();
+}
+
+// Samma tänk som i appointments.php (foreach ($appointments as $app))
+$appointments = [$selected];
+
+
 // När användaren klickar på knappen
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'request_reschedule') {
 
     $tmp = $erp_client->deleteAppointment($appointment_id);
-
 
     if (!empty($tmp['success'])) {
         unset($_SESSION['reschedule_appointment_id']);
@@ -54,6 +76,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <p>Du är på väg att begära ombokning för din valda tid. 
     Notera att om du ändrar tid 24h innan den bokade tiden kommer du faktureras för ombokningen
     </p>
+
+    
+    <table class="table-striped">
+        <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Tid</th>
+                <th>Behandlare</th>
+                <th>Titel</th>
+                <th>Patient</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <?php foreach ($appointments as $app): 
+                $date = !empty($app['appointment_date']) 
+                    ? date('Y-m-d', strtotime($app['appointment_date'])) 
+                    : 'N/A';
+                $practitioner = $app['practitioner_name'] ?? 'N/A';
+                $title = $app['title'] ?? 'N/A';
+                $patient_name = $app['patient'] ?? 'N/A';
+                $time = $app['appointment_time'] ?? '';
+            ?>
+            <tr>
+                <td><?php echo htmlspecialchars($date); ?></td>
+                <td><?php echo htmlspecialchars($time); ?></td>
+                <td><?php echo htmlspecialchars($practitioner); ?></td>
+                <td><?php echo htmlspecialchars($title); ?></td>
+                <td><?php echo htmlspecialchars($patient_name); ?></td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 
     <form method="post">
         <input type="hidden" name="action" value="request_reschedule">
