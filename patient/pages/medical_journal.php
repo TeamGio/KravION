@@ -59,7 +59,7 @@ krsort($records);
                 </div>
 
                 <div style="margin-top:15px; border-top:1px dashed #ced4da; padding-top:10px;">
-                    <p><?php echo $t['symptoms']; ?>: <?php echo htmlspecialchars($enc['symptoms'] ?? 'N/A'); ?></p>
+                    <p><?php echo $t['symptoms']; ?>: <?php echo htmlspecialchars($enc['custom_symtom'] ?? 'N/A'); ?></p>
                     <h5><?php echo $t['notes']; ?>:</h5>
                     <div style="background:#f8f9fa; border:1px solid #e9ecef; padding:10px;">
                         <?php echo htmlspecialchars($vs['vital_signs_note'] ?? $enc['notes'] ?? 'Ingen anteckning.'); ?>
