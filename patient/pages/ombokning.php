@@ -44,11 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <head>
     <meta charset="UTF-8">
     <title>Ombokning</title>
-    <style>
-        .card { background:#fff; padding:20px; border-radius:6px; margin-top:20px; }
-        .btn { display:inline-block; padding:10px 16px; background:#e0e0e0; color:#000; text-decoration:none; border-radius:4px; border:1px solid #aaa; cursor:pointer; }
-        .btn:hover { background:#d5d5d5; }
-    </style>
+
 </head>
 <body>
 
