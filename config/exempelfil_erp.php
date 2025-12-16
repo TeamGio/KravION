@@ -660,6 +660,7 @@ return array(
         return [];
     }
 
+// Hämtar Medical Records
     public function getMedicalrecords($patient_erp_id) {
         if (!$this->is_authenticated) return [];
 
