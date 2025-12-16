@@ -402,8 +402,94 @@ class ERPNextClient {
     }
 
 
+// Hämta pågående ombokningsärenden
+public function getRescheduleRequests($patient_pnr) {
+        if (!$this->is_authenticated) { return []; }
 
+        $RESOURCE_NAME = 'G4BokaTid';
 
+        // LÖSNINGEN: Vi använder urlencode() på sorteringen för att fixa "HTTP Code 0"
+        // Vi hämtar "Allt" (fields=["*"]) så vi ser status och ID.
+        $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) .
+               '?fields=["*"]' . 
+               '&limit_page_length=50' . 
+               '&order_by=' . urlencode('creation desc'); // <-- HÄR VAR FELET (mellanslaget)
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $data = json_decode($response, true);
+        curl_close($ch);
+
+        $all_requests = $data['data'] ?? [];
+        $my_requests = [];
+
+        // Filtrera i PHP (Säkrast)
+        // Vi matchar personnumret mot patient_id
+        foreach ($all_requests as $req) {
+            // trim() tar bort osynliga tecken som kan störa
+            if (isset($req['patient_id']) && trim((string)$req['patient_id']) === trim((string)$patient_pnr)) {
+                $my_requests[] = $req;
+            }
+        }
+
+        return $my_requests;
+    }
+public function createNewDoc($resource_name, $data) {
+        if (!$this->is_authenticated) {
+            return [
+                'success' => false,
+                'message' => 'Inte inloggad i ERP-systemet.'
+            ];
+        }
+
+        // ERPNext API URL för att skapa en resurs
+        $url = $this->baseurl . 'api/resource/' . rawurlencode($resource_name);
+        $json_payload = json_encode($data);
+
+        $ch = curl_init($url);
+        if ($ch === false) { return ['success' => false, 'message' => 'Kunde inte initiera curl.']; }
+
+        // Använd POST för att skapa ny Doctype
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST'); 
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_payload); 
+        
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json', 
+            'Accept: application/json',
+            'Content-Length: ' . strlen($json_payload)
+        ]);
+        
+        // Återanvänd den autentiserade sessionen (cookie-filen)
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath); 
+        
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $data = json_decode($response, true);
+        curl_close($ch);
+
+        if ($http_code === 200 || $http_code === 201) {
+            return [
+                'success' => true,
+                'data' => $data['data'] ?? $data
+            ];
+        }
+        
+        $error_message = $data['message'] ?? $data['exc'] ?? 'Okänt fel i ERPNext.';
+        
+        return [
+            'success' => false,
+            // Returnera rent felmeddelande utan HTML
+            'message' => 'Misslyckades att skapa resurs. HTTP-kod: ' . $http_code . '. Meddelande: ' . strip_tags($error_message)
+        ];
+    }
 
 
 

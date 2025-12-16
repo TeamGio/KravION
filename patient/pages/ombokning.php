@@ -1,80 +1,49 @@
 <?php
 session_start();
-require_once '../../config/exempelfil_erp.php';
+// Hämta data från session/post
+$uid = $_SESSION['personal_number'] ?? $_SESSION['patient_id'] ?? ''; 
+$old_appointment_name = $_POST['appointment_name'] ?? '';
 
-$erp_client = new ERPNextClient();
-
-// Måste vara inloggad
-if (!isset($_SESSION['patient_id'])) {
-    $_SESSION['error_message'] = "Du måste vara inloggad för att boka om en tid.";
-    header('Location: ../login.php');
-    exit();
-}
-
-// Måste finnas ett id
-$appointment_id = $_SESSION['reschedule_appointment_id'] ?? null;
-if (!$appointment_id) {
-    $_SESSION['error_message'] = "Ingen tid vald för ombokning.";
-    header('Location: ../dashboard.php?page=appointments');
-    exit();
-}
-
-
-
-
-
-
-
-
-
-
-$patient_erp_id = $_SESSION['patient_id'];
-
-// När användaren klickar på knappen
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'request_reschedule') {
-
-    $tmp = $erp_client->deleteAppointment($appointment_id);
-
-
-    if (!empty($tmp['success'])) {
-        unset($_SESSION['reschedule_appointment_id']);
-        $_SESSION['success_message'] = "Ombokning begärd. Tiden är avbokad.";
-        header('Location: ../dashboard.php?page=appointments');
-        exit();
-    }
-
-    $_SESSION['error_message'] = $tmp['message'] ?? "Kunde inte begära ombokning.";
-    header('Location: ../dashboard.php?page=appointments');
+if (empty($uid) || empty($old_appointment_name)) {
+    header('Location: ../dashboard.php?page=appointments&error=Tid eller patient kunde inte identifieras.');
     exit();
 }
 ?>
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-    <meta charset="UTF-8">
-    <title>Ombokning</title>
 
-</head>
-<body>
+<h2>Ombokning av tid</h2>
+<p>Du begär ombokning för bokning med ID: <strong><?php echo htmlspecialchars($old_appointment_name); ?></strong></p>
 
-<div class="card">
-    <h2>Ombokning</h2>
+<form method="post" action="ombokning_submit.php">
+    <input type="hidden" name="uid" value="<?php echo htmlspecialchars($uid); ?>">
+    <input type="hidden" name="old_appointment_name" value="<?php echo htmlspecialchars($old_appointment_name); ?>">
 
-    <p>Du är på väg att begära ombokning för din valda tid. 
-    Notera att om du ändrar tid 24h innan den bokade tiden kommer du faktureras för ombokningen
-    </p>
+    <label>Vilken period på dagen föredrar du?</label><br>
+    <select name="preferred_period" required>
+        <option value="Förmiddag (08:00-12:00) (Ingen garanti)">Förmiddag (08:00-12:00)</option>
+        
+        <option value="Eftermiddag(13:00-16:00) (Ingen garanti)">Eftermiddag (13:00-16:00)</option>
+    </select>
+    <br><br>
 
-    <form method="post">
-        <input type="hidden" name="action" value="request_reschedule">
-        <button class="btn" type="submit" onclick="return confirm('Är du säker på att du vill begära ombokning?');">
-            Begär ombokning
-        </button>
-    </form>
+    <label>Vilken veckodag föredrar du?</label><br>
+    <select name="preferred_day" required>
+        <option value="Måndag (Ingen garanti)">Måndag</option>
+        <option value="Tisdag (Ingen garanti)">Tisdag</option>
+        <option value="Onsdag (Ingen garanti)">Onsdag</option>
+        <option value="Torsdag (Ingen garanti)">Torsdag</option>
+        <option value="Fredag (Ingen garanti)">Fredag</option>
+    </select>
+    <br><br>
 
-    <div style="margin-top:20px;">
-        <a class="btn" href="../dashboard.php?page=appointments">← Tillbaka</a>
-    </div>
-</div>
+    <label>Vilken avdelning var du inbokad på?</label><br>
+    <select name="department" required>
+        <option value="Läkarmottagning">Läkarmottagning</option>
+        <option value="Sjuksköterskemottagning">Sjuksköterskemottagning</option>
+        <option value="Kurator mottagning">Kurator mottagning</option>
+        <option value="Fysioterapi och dietist">Fysioterapi och dietist</option>
+        <option value="Nybesök">Nybesök</option>
+    </select>
+    <br><br>
 
-</body>
-</html>
+    <button type="submit">Skicka ombokningsförfrågan</button>
+</form>
