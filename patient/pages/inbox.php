@@ -62,12 +62,42 @@
     <?php endif; ?>
 </div>
 
-<div class="card" style="margin-top: 20px;">
-    <h3><?php echo $t['contact_form']; ?></h3>
-    <iframe src="http://193.93.250.83:8080/g4form"
-            style="border: none; width: 100%; height: 600px;">
-    </iframe>
-</div>
+
+
+
+<?php
+// 1. Hämta journalanteckningar (Encounter) istället för bokningar
+$encounters = $erp_client->getJournalRecordsForPatient($patient_erp_id);
+
+$show_form = false;
+$today_date = date('Y-m-d'); // Dagens datum
+
+// 2. Loopa igenom journalerna
+foreach ($encounters as $enc) {
+    // Vi kollar tre saker:
+    // A. Finns status?
+    // B. Är statusen 'Completed'? (Läkaren är klar)
+    // C. Är datumet idag?
+    if (isset($enc['status']) && 
+        $enc['status'] === 'Completed' && 
+        $enc['encounter_date'] === $today_date) {
+            
+        $show_form = true;
+        break; // Träff hittad! Vi behöver inte leta mer.
+    }
+}
+?>
+
+<?php if ($show_form): ?>
+    <div class="card" style="margin-top: 20px; border-left: 5px solid #28a745;">
+        <h3>📋 <?php echo $t['g4form']; ?></h3>
+        
+        <iframe src="http://193.93.250.83:8080/g4form"
+                style="border: none; width: 100%; height: 600px;">
+        </iframe>
+    </div>
+<?php endif; ?>
+
 
 
 

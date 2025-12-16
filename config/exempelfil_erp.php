@@ -505,7 +505,7 @@ return array(
 
         $RESOURCE_NAME = 'Patient Encounter';
         
-        $fields = ['*'];
+        $fields = ['name', 'patient_name', 'encounter_date', 'encounter_time', 'practitioner_name', 'symptoms', 'status'];
 
         $filters = json_encode([
             ["patient_name", "=", $patient_erp_id]

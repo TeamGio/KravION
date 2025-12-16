@@ -34,7 +34,6 @@ $texts = [
         'appointments' => 'Tidsbokning',
         'prescriptions' => 'Recept',
         'upcoming_appointments' => 'Kommande besök',
-        'active_prescriptions' => 'Aktiva recept',
         'medical_records' => 'Medicinska journaler',
         'quick_actions' => 'Snabba åtgärder',
         'book_appointment' => 'Boka tid',
@@ -82,6 +81,7 @@ $texts = [
         'status' => 'Status',
         'read message' => 'Läs meddelande',
         'my inbox' => 'Min inkorg',
+        'g4form' => 'Blev du nöjd med ditt besök?',
 
 
     ],
@@ -112,7 +112,6 @@ $texts = [
         'appointments' => 'Appointments',
         'prescriptions' => 'Prescriptions',
         'upcoming_appointments' => 'Upcoming appointments',
-        'active_prescriptions' => 'Active prescriptions',
         'medical_records' => 'Medical records',
         'quick_actions' => 'Quick actions',
         'book_appointment' => 'Book appointment',
@@ -159,6 +158,7 @@ $texts = [
         'status' => 'Status',
         'read message' => 'Read message',
         'my inbox' => 'My inbox',
+        'g4form' => 'Were you satisfied with your visit?',
 
     ]
 ];

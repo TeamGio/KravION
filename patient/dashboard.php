@@ -121,7 +121,7 @@ $new_lang = ($lang === 'sv') ? 'en' : 'sv';
             </div>
             <div class="stat-card secondary">
                 <h4><?php echo $active_prescriptions; ?></h4>
-                <p><?php echo $t['active_prescriptions']; ?></p>
+                <p><?php echo $t['prescriptions']; ?></p>
             </div>
             <div class="stat-card">
                 <h4><?php echo $medical_records_count; ?></h4>
