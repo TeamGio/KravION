@@ -402,18 +402,17 @@ class ERPNextClient {
     }
 
 
-// Hämta pågående ombokningsärenden
+    // Hämta ombokningsförfrågningar för en patient
 public function getRescheduleRequests($patient_pnr) {
         if (!$this->is_authenticated) { return []; }
 
         $RESOURCE_NAME = 'G4BokaTid';
 
-        // LÖSNINGEN: Vi använder urlencode() på sorteringen för att fixa "HTTP Code 0"
-        // Vi hämtar "Allt" (fields=["*"]) så vi ser status och ID.
+
         $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) .
                '?fields=["*"]' . 
                '&limit_page_length=50' . 
-               '&order_by=' . urlencode('creation desc'); // <-- HÄR VAR FELET (mellanslaget)
+               '&order_by=' . urlencode('creation desc'); 
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
@@ -428,10 +427,8 @@ public function getRescheduleRequests($patient_pnr) {
         $all_requests = $data['data'] ?? [];
         $my_requests = [];
 
-        // Filtrera i PHP (Säkrast)
-        // Vi matchar personnumret mot patient_id
+
         foreach ($all_requests as $req) {
-            // trim() tar bort osynliga tecken som kan störa
             if (isset($req['patient_id']) && trim((string)$req['patient_id']) === trim((string)$patient_pnr)) {
                 $my_requests[] = $req;
             }
