@@ -567,6 +567,91 @@ return array(
 
 
 
+// Skicka kontaktformulär till befintlig DocType: G4KontaktForm (POST /api/resource/G4KontaktForm)
+public function submitG4KontaktForm($post) {
+    if (!$this->is_authenticated) {
+        return [
+            'success' => false,
+            'message' => 'Inte inloggad i ERP-systemet.'
+        ];
+    }
+
+    // Obligatoriskt personnummer: 12 siffror
+    $pnr = trim((string)($post['personnummer'] ?? ''));
+    if (!preg_match('/^\d{12}$/', $pnr)) {
+        return [
+            'success' => false,
+            'message' => 'Personnummer måste vara exakt 12 siffror.'
+        ];
+    }
+
+    // Ja/Nej -> ERPNext Check (1/0)
+    $toCheck = function($v) {
+        return ((string)$v === 'ja') ? 1 : 0;
+    };
+
+    // Payload (fieldnames i DocType)
+    $data = [
+        'personnummer' => $pnr,
+
+        'feber_mer_7'  => $toCheck($post['feber'] ?? ''),
+        'hosta'        => $toCheck($post['hosta'] ?? ''),
+        'hostar_blod'  => $toCheck($post['blod'] ?? ''),
+        'tungt_andas'  => $toCheck($post['andas'] ?? ''),
+        'muskel_huvud' => $toCheck($post['smarta'] ?? ''),
+        'sjuk_mer_7'   => $toCheck($post['sjuk'] ?? ''),
+
+        'symptom_text' => trim((string)($post['symptom'] ?? '')),
+
+        'nedstamd'     => $toCheck($post['nedstamd'] ?? ''),
+        'angest_oro'   => $toCheck($post['angest'] ?? ''),
+
+        'kurator_text' => trim((string)($post['kurator_symptom'] ?? ''))
+    ];
+
+    // POST mot DocType
+    $RESOURCE_NAME = 'G4KontaktForm';
+    $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME);
+    $json_payload = json_encode($data);
+
+    $ch = curl_init($url);
+    if ($ch === false) {
+        return ['success' => false, 'message' => 'Kunde inte initiera curl.'];
+    }
+
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_payload);
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Accept: application/json',
+        'Content-Length: ' . strlen($json_payload)
+    ]);
+
+    // Samma stil som övriga funktioner i din klass
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+    curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $http_code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $resp_data = json_decode($response ?? '', true);
+    curl_close($ch);
+
+    if ($http_code === 200 || $http_code === 201) {
+        return [
+            'success' => true,
+            'data' => $resp_data['data'] ?? $resp_data
+        ];
+    }
+
+    $error_message = $resp_data['message'] ?? $resp_data['exc'] ?? $response ?? 'Okänt fel i ERPNext.';
+    return [
+        'success' => false,
+        'message' => 'Misslyckades att skapa G4KontaktForm. HTTP-kod: ' . $http_code . '. Meddelande: ' . strip_tags((string)$error_message)
+    ];
+}
 
 
 
