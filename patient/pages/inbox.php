@@ -84,14 +84,113 @@ foreach ($encounters as $enc) {
 }
 ?>
 
-<?php if ($show_form): ?>
-    <div class="card">
-        <h3><?php echo $t['g4form']; ?></h3>
-        <iframe src="http://193.93.250.83:8080/g4form"
-                style="border: none; width: 100%; height: 600px;">
-        </iframe>
-    </div>
-<?php endif; ?>
+
+
+<div class="card" style="margin-top: 20px;">
+    <h2>Blev du nöjd med ditt senaste besök?</h2>
+
+    <form method="POST"><br><br>
+
+        <label>Ålder:</label><br>
+        <select name="age" required>
+            <option value="" disabled selected>Välj ålder...</option>
+            <option value="18-25">18-25</option>
+            <option value="26-35">26-35</option>
+            <option value="36-50">36-50</option>
+            <option value="51-65">51-65</option>
+            <option value="65+">65+</option>
+        </select>
+        <br><br>
+
+        <label>Kön:</label><br>
+        <select name="gender" required>
+            <option value="" disabled selected>Välj kön...</option>
+            <option value="Man">Man</option>
+            <option value="Kvinna">Kvinna</option>
+            <option value="Annat">Annat</option>
+            <option value="Vill ej uppge">Vill ej uppge</option>
+        </select>
+        <br><br>
+
+        <label>Fick du möjlighet att ställa frågorna du önskade?</label><br>
+        <select name="questions_opportunity" required>
+            <option value="" disabled selected>Välj alternativ...</option>
+            <option value="Ja">Ja</option>
+            <option value="Nej">Nej</option>
+            <option value="Delvis">Delvis</option>
+        </select>
+        <br><br>
+
+        <label>Var det enkelt att ta till sig informationen?</label><br>
+        <select name="info_clarity" required>
+            <option value="" disabled selected>Välj alternativ...</option>
+            <option value="Ja">Ja</option>
+            <option value="Nej">Nej</option>
+            <option value="Delvis">Delvis</option>
+        </select>
+        <br><br>
+
+        <label>Är du nöjd med hur du kan kontakta oss?</label><br>
+        <select name="contact_satisfaction" required>
+            <option value="" disabled selected>Välj alternativ...</option>
+            <option value="Ja">Ja</option>
+            <option value="Nej">Nej</option>
+        </select>
+        <br><br>
+
+        <label>Fick du besöka vårdcentralen inom rimlig tid?</label><br>
+        <select name="visit_time_reasonable" required>
+            <option value="" disabled selected>Välj alternativ...</option>
+            <option value="Ja">Ja</option>
+            <option value="Nej">Nej</option>
+        </select>
+        <br><br>
+
+        <label>Var väntan i väntrummet längre än 20 min?</label><br>
+        <select name="waiting_room_time" required>
+            <option value="" disabled selected>Välj alternativ...</option>
+            <option value="Ja">Ja</option>
+            <option value="Nej">Nej</option>
+        </select>
+        <br><br>
+
+        <label>Fick du tillräcklig info om behandling/bieffekter?</label><br>
+        <select name="treatment_info" required>
+            <option value="" disabled selected>Välj alternativ...</option>
+            <option value="Ja">Ja</option>
+            <option value="Nej">Nej</option>
+            <option value="Delvis">Delvis</option>
+        </select>
+        <br><br>
+
+        <label>Fick du svar från personalen som du förstod?</label><br>
+        <select name="staff_response" required>
+            <option value="" disabled selected>Välj alternativ...</option>
+            <option value="Ja">Ja</option>
+            <option value="Nej">Nej</option>
+            <option value="Delvis">Delvis</option>
+        </select>
+        <br><br>
+
+        <label>Förklarade personalen behandlingen på ett bra sätt?</label><br>
+        <select name="staff_explanation" required>
+            <option value="" disabled selected>Välj alternativ...</option>
+            <option value="Ja">Ja</option>
+            <option value="Nej">Nej</option>
+            <option value="Delvis">Delvis</option>
+        </select>
+        <br><br>
+
+        <label>Övriga kommentarer:</label><br>
+        <textarea name="extra_comments" rows="4" cols="50"></textarea>
+        <br><br>
+
+        <button type="submit">Skicka in svar</button>
+
+    </form>
+</div>
+
+
 
 
 
