@@ -1,6 +1,7 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
 
+// Sätt språk (svenska som standard)
 if (isset($_GET['lang']) && in_array($_GET['lang'], ['sv','en'])) {
     $_SESSION['language'] = $_GET['lang'];
 }
@@ -9,26 +10,21 @@ $lang = $_SESSION['language'] ?? 'sv';
 
 $texts = [
     'sv' => [
-        // INDEX
+        // --- GLOBAL / NAVIGATION ---
         'title' => 'Mölndal vårdcentral',
         'tagline' => 'Din lokala vårdcentral',
         'patient_portal' => 'Patientportal',
         'patient_desc' => 'Hantera din journal, boka tid eller förnya dina recept',
-        'patient_login' => 'Patient Login',
+        'patient_login' => 'Patientinloggning',
         'language_toggle' => 'English',
-
-        // LOGIN
-        'bankid_login_desc' => 'Logga in via BankID',
-        'safe_bankid' => 'Logga in säkert med BankID',
-        'pnr_label' => 'personnummer 12 siffror (ÅÅÅÅMMDDXXXX)',
-        'continue_bankid' => 'Fortsätt till BankID',
         'back_home' => 'Tillbaka till startsida',
-        'err_empty_pnr' => 'Vänligen ange ditt personnummer.',
-        'err_pnr_not_found' => 'BankID-verifiering misslyckades. Personnumret hittades inte.',
-
-        // DASHBOARD
         'welcome' => 'Välkommen',
         'logout' => 'Logga ut',
+        'close' => 'Stäng',
+        'send' => 'Skicka',
+        'save' => 'Spara',
+
+        // --- DASHBOARD MENY ---
         'overview' => 'Översikt',
         'medical_journal' => 'Medicinsk journal',
         'appointments' => 'Tidsbokning',
@@ -41,72 +37,160 @@ $texts = [
         'view_records' => 'Visa journaler',
         'inbox' => 'Inkorg',
 
+        // --- LOGIN ---
+        'bankid_login_desc' => 'Logga in via BankID',
+        'safe_bankid' => 'Logga in säkert med BankID',
+        'pnr_label' => 'Personnummer 12 siffror (ÅÅÅÅMMDDXXXX)',
+        'continue_bankid' => 'Fortsätt till BankID',
+        'err_empty_pnr' => 'Vänligen ange ditt personnummer.',
+        'err_pnr_not_found' => 'BankID-verifiering misslyckades. Personnumret hittades inte.',
+        'login_required' => 'Du måste vara inloggad för att utföra denna åtgärd.',
 
-        // APPOINTMENTS
+        // --- APPOINTMENTS (TIDSBOKNING) ---
         'appointments_info' => 'Här visas alla dina kommande inbokade tider.',
+        'no_upcoming_appointments' => 'Inga kommande tidsbokningar hittades.',
         'date' => 'Datum',
         'time' => 'Tid',
         'practitioner_name' => 'Behandlare',
         'reason' => 'Titel',
-        'no_upcoming_appointments' => 'Inga kommande tidsbokningar hittades.',
-        'contact_form' => 'Kontaktformulär',
         'patient' => 'Patient',
+        'cancel_booking' => 'Avboka',
+        'reschedule_booking' => 'Boka om',
+        
+        // JS Alerts / Bekräftelser
+        'alert_too_late_cancel' => 'Det är mindre än 24 timmar kvar till din bokning. För att avboka måste du kontakta mottagningen via telefon.',
+        'alert_too_late_reschedule' => 'Ombokning ej tillåten.\n\nDet är mindre än 24 timmar kvar till din tid. Vänligen kontakta mottagningen om det är akut.',
+        'confirm_cancel' => 'Är du säker på att du vill avboka? Om avbokning sker inom 24h innan möte debiteras du.',
+        
+        // Ombokningsstatus (Tabell)
+        'my_reschedule_cases' => 'Mina pågående ombokningsärenden',
+        'date_sent' => 'Datum skickad',
+        'desired_day' => 'Önskad dag',
+        'department' => 'Avdelning',
+        'status' => 'Status',
+        'reply_from_provider' => 'Svar från vårdgivare',
+        'status_received' => 'Mottagen',
+        'status_resolved' => 'Åtgärdad',
+        'status_denied' => 'Nekad',
 
-        // MEDICAL JOURNAL
-        'record_type' => 'Typ',
-        'diagnosis' => 'Diagnos',
-        'treatment' => 'Behandling',
-        'provider' => 'Vårdgivare',
-        'symptoms' => 'Symtom',
+        // --- OMBOKNING FORMULÄR (ombokning.php) ---
+        'reschedule_title' => 'Ombokning av tid',
+        'reschedule_desc' => 'Du begär ombokning för bokning med ID:',
+        'preferred_period_label' => 'Vilken period på dagen föredrar du?',
+        'morning_opt' => 'Förmiddag (08:00-12:00)',
+        'afternoon_opt' => 'Eftermiddag (13:00-16:00)',
+        'no_guarantee' => '(Ingen garanti)',
+        'preferred_day_label' => 'Vilken veckodag föredrar du?',
+        'mon' => 'Måndag',
+        'tue' => 'Tisdag',
+        'wed' => 'Onsdag',
+        'thu' => 'Torsdag',
+        'fri' => 'Fredag',
+        'department_label' => 'Vilken avdelning var du inbokad på?',
+        'dept_doctor' => 'Läkarmottagning',
+        'dept_nurse' => 'Sjuksköterskemottagning',
+        'dept_curator' => 'Kurator mottagning',
+        'dept_physio' => 'Fysioterapi och dietist',
+        'dept_new_visit' => 'Nybesök',
+        'send_reschedule_request' => 'Skicka ombokningsförfrågan',
+        'missing_fields_err' => 'Alla fält måste fyllas i.',
+        'reschedule_success' => 'Tack! Din förfrågan har skickats.',
+
+        // --- SYMPTOM FORMULÄR (Botten av appointments.php) ---
+        'contact_form_header' => 'Kontaktformulär',
+        'pnr_req_label' => 'Personnummer (12 siffror) obligatoriskt*',
+        'fever_q' => 'Har du haft feber mer än sju dagar?',
+        'cough_q' => 'Har du hosta?',
+        'cough_blood_q' => 'Hostar du blod?',
+        'heavy_breath_q' => 'Känns det tungt att andas?',
+        'muscle_pain_q' => 'Har du muskelsmärta eller huvudvärk?',
+        'sick_long_q' => 'Har du varit sjuk mer än 7 dagar?',
+        'describe_symptom_label' => 'Beskriv dina symptom (max 150 ord)',
+        'contact_curator_header' => 'Kontakta kurator',
+        'feeling_down_q' => 'Känner du dig nedstämd?',
+        'anxiety_q' => 'Känner du ångest och oro?',
+        'yes' => 'Ja',
+        'no' => 'Nej',
+
+        // --- MEDICAL JOURNAL (JOURNAL) ---
+        'click_row_info' => 'Klicka på en rad i listan för att läsa detaljerna om besöket.',
+        'read_more' => 'Läs mer',
+        'vitals_status_header' => 'Mätvärden & Status',
+        'height' => 'Längd',
+        'weight' => 'Vikt',
+        'bmi' => 'BMI',
+        'temperature' => 'Temp',
+        'pulse' => 'Puls',
+        'respiratory rate' => 'Andning',
+        'blood_pressure' => 'Blodtryck',
+        'observations' => 'Observationer',
+        'tongue' => 'Tunga',
+        'abdomen' => 'Buk',
+        'reflexes' => 'Reflexer',
+        'journal_note_header' => 'Journalanteckning',
+        'symptoms' => 'Sökorsak / Symptom',
         'notes' => 'Anteckningar',
-        'general' => 'Allmänt',
-        'not_available' => 'N/A',
+        'no_details_registered' => 'Inga detaljer registrerade för detta besök.',
         'no_records' => 'Inga medicinska journaler hittades.',
 
-        // PRESCRIPTIONS
+        // --- PRESCRIPTIONS (RECEPT) ---
         'medication' => 'Läkemedel',
-        'personnummer' => 'Personnummer',
         'withdrawal' => 'Uttag',
         'expiration_date' => 'Utgångsdatum',
         'strength' => 'Styrka',
-        'status' => 'Status',
-        'approved' => 'Godkänd',
-        'no_prescriptions' => 'Inga aktiva recept hittades.',
         'renew_prescription' => 'Förnya recept',
+        'no_prescriptions' => 'Inga aktiva recept hittades.',
+        'status_approved' => 'Godkänd',
+        'status_denied' => 'Ej godkänd',
+        'status_processing' => 'Behandlas',
+        'renew_success' => 'Receptförnyelse skickad.',
+        'renew_fail' => 'Kunde inte förnya receptet.',
 
-        // INBOX
+        // --- INBOX / FEEDBACK FORM ---
         'practitioner' => 'Avsändare',
         'subject' => 'Ämne',
-        'date' => 'Datum',
-        'status' => 'Status',
         'read message' => 'Läs meddelande',
         'my inbox' => 'Min inkorg',
-        'g4form' => 'Blev du nöjd med ditt besök?',
-
-
+        'no_messages' => 'Du har inga meddelanden i inkorgen.',
+        'feedback_header' => 'Blev du nöjd med ditt senaste besök?',
+        'age_label' => 'Ålder',
+        'choose_age' => 'Välj ålder...',
+        'gender_label' => 'Kön',
+        'choose_gender' => 'Välj kön...',
+        'gender_man' => 'Man',
+        'gender_woman' => 'Kvinna',
+        'gender_other' => 'Annat',
+        'gender_no_say' => 'Vill ej uppge',
+        'q_opportunity' => 'Fick du möjlighet att ställa frågorna du önskade?',
+        'q_info_clarity' => 'Var det enkelt att ta till sig informationen?',
+        'q_contact' => 'Är du nöjd med hur du kan kontakta oss?',
+        'q_visit_time' => 'Fick du besöka vårdcentralen inom rimlig tid?',
+        'q_wait_room' => 'Var väntan i väntrummet längre än 20 min?',
+        'q_treatment_info' => 'Fick du tillräcklig info om behandling/bieffekter?',
+        'q_staff_response' => 'Fick du svar från personalen som du förstod?',
+        'q_staff_explain' => 'Förklarade personalen behandlingen på ett bra sätt?',
+        'partially' => 'Delvis',
+        'extra_comments' => 'Övriga kommentarer:',
+        'submit_feedback' => 'Skicka in svar',
+        'opening_hours_header' => 'Information & Öppettider',
     ],
 
     'en' => [
-        // INDEX
+        // --- GLOBAL / NAVIGATION ---
         'title' => 'Mölndal Health Center',
         'tagline' => 'Your local healthcare center',
         'patient_portal' => 'Patient Portal',
         'patient_desc' => 'Manage your journal, book appointments or renew prescriptions',
         'patient_login' => 'Patient Login',
         'language_toggle' => 'Svenska',
-
-        // LOGIN
-        'bankid_login_desc' => 'Login using BankID',
-        'safe_bankid' => 'Secure login with BankID',
-        'pnr_label' => 'Personal number 12 digits (YYYYMMDDXXXX)',
-        'continue_bankid' => 'Continue to BankID',
         'back_home' => 'Back to Home',
-        'err_empty_pnr' => 'Please enter your personal number.',
-        'err_pnr_not_found' => 'BankID verification failed. Personal number not found.',
-
-        // DASHBOARD
         'welcome' => 'Welcome',
         'logout' => 'Logout',
+        'close' => 'Close',
+        'send' => 'Send',
+        'save' => 'Save',
+
+        // --- DASHBOARD MENU ---
         'overview' => 'Overview',
         'medical_journal' => 'Medical Journal',
         'appointments' => 'Appointments',
@@ -119,48 +203,144 @@ $texts = [
         'view_records' => 'View medical records',
         'inbox' => 'Inbox',
 
-        // APPOINTMENTS
+        // --- LOGIN ---
+        'bankid_login_desc' => 'Login using BankID',
+        'safe_bankid' => 'Secure login with BankID',
+        'pnr_label' => 'Personal number 12 digits (YYYYMMDDXXXX)',
+        'continue_bankid' => 'Continue to BankID',
+        'err_empty_pnr' => 'Please enter your personal number.',
+        'err_pnr_not_found' => 'BankID verification failed. Personal number not found.',
+        'login_required' => 'You must be logged in to perform this action.',
+
+        // --- APPOINTMENTS ---
         'appointments_info' => 'Here you can see all your upcoming appointments.',
+        'no_upcoming_appointments' => 'No upcoming appointments found.',
         'date' => 'Date',
         'time' => 'Time',
-        'practitioner' => 'Practitioner',
+        'practitioner_name' => 'Practitioner',
         'reason' => 'Title',
-        'no_upcoming_appointments' => 'No upcoming appointments found.',
-        'contact_form' => 'Contact Form',
         'patient' => 'Patient',
+        'cancel_booking' => 'Cancel',
+        'reschedule_booking' => 'Reschedule',
 
-        // MEDICAL JOURNAL
-        'record_type' => 'Type',
-        'diagnosis' => 'Diagnosis',
-        'treatment' => 'Treatment',
-        'provider' => 'Provider',
-        'symptoms' => 'Symptoms',
+        // JS Alerts / Confirmations
+        'alert_too_late_cancel' => 'There is less than 24 hours left until your appointment. To cancel, please contact the clinic by phone.',
+        'alert_too_late_reschedule' => 'Rescheduling not allowed.\n\nLess than 24 hours remaining. Please contact the clinic if urgent.',
+        'confirm_cancel' => 'Are you sure you want to cancel? Cancellations within 24h are subject to a fee.',
+
+        // Reschedule Status (Table)
+        'my_reschedule_cases' => 'My active reschedule requests',
+        'date_sent' => 'Date sent',
+        'desired_day' => 'Desired day',
+        'department' => 'Department',
+        'status' => 'Status',
+        'reply_from_provider' => 'Reply from provider',
+        'status_received' => 'Received',
+        'status_resolved' => 'Resolved',
+        'status_denied' => 'Denied',
+
+        // --- RESCHEDULE FORM (ombokning.php) ---
+        'reschedule_title' => 'Reschedule Appointment',
+        'reschedule_desc' => 'You are requesting to reschedule booking ID:',
+        'preferred_period_label' => 'Which time of day do you prefer?',
+        'morning_opt' => 'Morning (08:00-12:00)',
+        'afternoon_opt' => 'Afternoon (13:00-16:00)',
+        'no_guarantee' => '(No guarantee)',
+        'preferred_day_label' => 'Which weekday do you prefer?',
+        'mon' => 'Monday',
+        'tue' => 'Tuesday',
+        'wed' => 'Wednesday',
+        'thu' => 'Thursday',
+        'fri' => 'Friday',
+        'department_label' => 'Which department was the booking for?',
+        'dept_doctor' => 'Doctor\'s office',
+        'dept_nurse' => 'Nurse clinic',
+        'dept_curator' => 'Counselor',
+        'dept_physio' => 'Physiotherapy & Dietitian',
+        'dept_new_visit' => 'First visit',
+        'send_reschedule_request' => 'Send reschedule request',
+        'missing_fields_err' => 'All fields must be filled out.',
+        'reschedule_success' => 'Thank you! Your request has been sent.',
+
+        // --- SYMPTOM FORM (Bottom of appointments) ---
+        'contact_form_header' => 'Contact Form',
+        'pnr_req_label' => 'Personal number (12 digits) required*',
+        'fever_q' => 'Have you had a fever for more than 7 days?',
+        'cough_q' => 'Do you have a cough?',
+        'cough_blood_q' => 'Are you coughing up blood?',
+        'heavy_breath_q' => 'Is it difficult to breathe?',
+        'muscle_pain_q' => 'Do you have muscle pain or headache?',
+        'sick_long_q' => 'Have you been sick for more than 7 days?',
+        'describe_symptom_label' => 'Describe your symptoms (max 150 words)',
+        'contact_curator_header' => 'Contact Counselor',
+        'feeling_down_q' => 'Do you feel depressed/down?',
+        'anxiety_q' => 'Do you feel anxiety or worry?',
+        'yes' => 'Yes',
+        'no' => 'No',
+
+        // --- MEDICAL JOURNAL ---
+        'click_row_info' => 'Click on a row to view details about the visit.',
+        'read_more' => 'Read more',
+        'vitals_status_header' => 'Vitals & Status',
+        'height' => 'Height',
+        'weight' => 'Weight',
+        'bmi' => 'BMI',
+        'temperature' => 'Temp',
+        'pulse' => 'Pulse',
+        'respiratory rate' => 'Breathing',
+        'blood_pressure' => 'Blood Pressure',
+        'observations' => 'Observations',
+        'tongue' => 'Tongue',
+        'abdomen' => 'Abdomen',
+        'reflexes' => 'Reflexes',
+        'journal_note_header' => 'Journal Note',
+        'symptoms' => 'Symptoms / Reason',
         'notes' => 'Notes',
-        'general' => 'General',
-        'not_available' => 'N/A',
+        'no_details_registered' => 'No details registered for this visit.',
         'no_records' => 'No medical records found.',
 
-        // PRESCRIPTIONS
+        // --- PRESCRIPTIONS ---
         'medication' => 'Medication',
-        'personnummer' => 'Personal number',
         'withdrawal' => 'Withdrawals',
         'expiration_date' => 'Expiration date',
         'strength' => 'Strength',
-        'status' => 'Status',
-        'approved' => 'Approved',
-        'no_prescriptions' => 'No active prescriptions found.',
         'renew_prescription' => 'Renew prescription',
+        'no_prescriptions' => 'No active prescriptions found.',
+        'status_approved' => 'Approved',
+        'status_denied' => 'Not approved',
+        'status_processing' => 'Processing',
+        'renew_success' => 'Renewal request sent.',
+        'renew_fail' => 'Could not renew prescription.',
 
-        // INBOX
+        // --- INBOX / FEEDBACK FORM ---
         'practitioner' => 'Sender',
         'subject' => 'Subject',
-        'date' => 'Date',
-        'status' => 'Status',
         'read message' => 'Read message',
         'my inbox' => 'My inbox',
-        'g4form' => 'Were you satisfied with your visit?',
-
+        'no_messages' => 'You have no messages in your inbox.',
+        'feedback_header' => 'Were you satisfied with your latest visit?',
+        'age_label' => 'Age',
+        'choose_age' => 'Select age...',
+        'gender_label' => 'Gender',
+        'choose_gender' => 'Select gender...',
+        'gender_man' => 'Man',
+        'gender_woman' => 'Woman',
+        'gender_other' => 'Other',
+        'gender_no_say' => 'Prefer not to say',
+        'q_opportunity' => 'Did you get the opportunity to ask your questions?',
+        'q_info_clarity' => 'Was the information easy to understand?',
+        'q_contact' => 'Are you satisfied with how you can contact us?',
+        'q_visit_time' => 'Did you get an appointment within a reasonable time?',
+        'q_wait_room' => 'Was the wait in the waiting room longer than 20 min?',
+        'q_treatment_info' => 'Did you receive sufficient info about treatment/side effects?',
+        'q_staff_response' => 'Did you get answers from staff that you understood?',
+        'q_staff_explain' => 'Did the staff explain the treatment well?',
+        'partially' => 'Partially',
+        'extra_comments' => 'Other comments:',
+        'submit_feedback' => 'Submit answers',
+        'opening_hours_header' => 'Information & Opening Hours',
     ]
 ];
 
 $t = $texts[$lang];
+?>

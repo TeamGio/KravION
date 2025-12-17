@@ -545,10 +545,6 @@ return array(
     'message' => 'Kunde inte ta bort bokningen. HTTP-kod: ' . $code
 );
 
-return array(
-    'success' => false,
-    'message' => 'Kunde inte ta bort bokningen. HTTP-kod: ' . $code
-);
 
         
         // 3. Hantera fel

@@ -3,8 +3,8 @@
 
 
     <?php
+        // Språkhantering för blogg (om du vill ha det)
         $new_lang = ($lang === 'sv') ? 'en' : 'sv';
-
 
         $messages = $erp_client->getMessagesForPatient($patient_erp_id);
         if (count($messages) > 0):
@@ -58,7 +58,7 @@
 
 
     <?php else: ?>
-        <p style="color: #6C757D; margin-top: 30px;">Du har inga meddelanden i inkorgen.</p>
+        <p style="color: #6C757D; margin-top: 30px;"><?php echo $t['no_messages']; ?></p>
     <?php endif; ?>
 </div>
 
@@ -72,14 +72,14 @@ $encounters = $erp_client->getJournalRecordsForPatient($patient_erp_id);
 $show_form = false;
 $today_date = date('Y-m-d'); 
 
-// Loopa igenom journalerna
+// Loopa igenom journalerna för att se om vi ska visa formuläret
 foreach ($encounters as $enc) {
     if (isset($enc['status']) && 
         $enc['status'] === 'Completed' && 
         $enc['encounter_date'] === $today_date) {
             
         $show_form = true;
-        break;  // Avsluta loopen om hittat en match
+        break; 
     }
 }
 ?>
@@ -87,13 +87,13 @@ foreach ($encounters as $enc) {
 
 
 <div class="card" style="margin-top: 20px;">
-    <h2>Blev du nöjd med ditt senaste besök?</h2>
+    <h2><?php echo $t['feedback_header']; ?></h2>
 
     <form method="POST"><br><br>
 
-        <label>Ålder:</label><br>
+        <label><?php echo $t['age_label']; ?>:</label><br>
         <select name="age" required>
-            <option value="" disabled selected>Välj ålder...</option>
+            <option value="" disabled selected><?php echo $t['choose_age']; ?></option>
             <option value="18-25">18-25</option>
             <option value="26-35">26-35</option>
             <option value="36-50">36-50</option>
@@ -102,115 +102,104 @@ foreach ($encounters as $enc) {
         </select>
         <br><br>
 
-        <label>Kön:</label><br>
+        <label><?php echo $t['gender_label']; ?>:</label><br>
         <select name="gender" required>
-            <option value="" disabled selected>Välj kön...</option>
-            <option value="Man">Man</option>
-            <option value="Kvinna">Kvinna</option>
-            <option value="Annat">Annat</option>
-            <option value="Vill ej uppge">Vill ej uppge</option>
+            <option value="" disabled selected><?php echo $t['choose_gender']; ?></option>
+            <option value="Man"><?php echo $t['gender_man']; ?></option>
+            <option value="Kvinna"><?php echo $t['gender_woman']; ?></option>
+            <option value="Annat"><?php echo $t['gender_other']; ?></option>
+            <option value="Vill ej uppge"><?php echo $t['gender_no_say']; ?></option>
         </select>
         <br><br>
 
-        <label>Fick du möjlighet att ställa frågorna du önskade?</label><br>
+        <label><?php echo $t['q_opportunity']; ?></label><br>
         <select name="questions_opportunity" required>
-            <option value="" disabled selected>Välj alternativ...</option>
-            <option value="Ja">Ja</option>
-            <option value="Nej">Nej</option>
-            <option value="Delvis">Delvis</option>
+            <option value="" disabled selected><?php echo $t['choose_gender']; // (Återanvänder "Välj..." texten) ?></option>
+            <option value="Ja"><?php echo $t['yes']; ?></option>
+            <option value="Nej"><?php echo $t['no']; ?></option>
+            <option value="Delvis"><?php echo $t['partially']; ?></option>
         </select>
         <br><br>
 
-        <label>Var det enkelt att ta till sig informationen?</label><br>
+        <label><?php echo $t['q_info_clarity']; ?></label><br>
         <select name="info_clarity" required>
-            <option value="" disabled selected>Välj alternativ...</option>
-            <option value="Ja">Ja</option>
-            <option value="Nej">Nej</option>
-            <option value="Delvis">Delvis</option>
+            <option value="" disabled selected>Välj...</option>
+            <option value="Ja"><?php echo $t['yes']; ?></option>
+            <option value="Nej"><?php echo $t['no']; ?></option>
+            <option value="Delvis"><?php echo $t['partially']; ?></option>
         </select>
         <br><br>
 
-        <label>Är du nöjd med hur du kan kontakta oss?</label><br>
+        <label><?php echo $t['q_contact']; ?></label><br>
         <select name="contact_satisfaction" required>
-            <option value="" disabled selected>Välj alternativ...</option>
-            <option value="Ja">Ja</option>
-            <option value="Nej">Nej</option>
+            <option value="" disabled selected>Välj...</option>
+            <option value="Ja"><?php echo $t['yes']; ?></option>
+            <option value="Nej"><?php echo $t['no']; ?></option>
         </select>
         <br><br>
 
-        <label>Fick du besöka vårdcentralen inom rimlig tid?</label><br>
+        <label><?php echo $t['q_visit_time']; ?></label><br>
         <select name="visit_time_reasonable" required>
-            <option value="" disabled selected>Välj alternativ...</option>
-            <option value="Ja">Ja</option>
-            <option value="Nej">Nej</option>
+            <option value="" disabled selected>Välj...</option>
+            <option value="Ja"><?php echo $t['yes']; ?></option>
+            <option value="Nej"><?php echo $t['no']; ?></option>
         </select>
         <br><br>
 
-        <label>Var väntan i väntrummet längre än 20 min?</label><br>
+        <label><?php echo $t['q_wait_room']; ?></label><br>
         <select name="waiting_room_time" required>
-            <option value="" disabled selected>Välj alternativ...</option>
-            <option value="Ja">Ja</option>
-            <option value="Nej">Nej</option>
+            <option value="" disabled selected>Välj...</option>
+            <option value="Ja"><?php echo $t['yes']; ?></option>
+            <option value="Nej"><?php echo $t['no']; ?></option>
         </select>
         <br><br>
 
-        <label>Fick du tillräcklig info om behandling/bieffekter?</label><br>
+        <label><?php echo $t['q_treatment_info']; ?></label><br>
         <select name="treatment_info" required>
-            <option value="" disabled selected>Välj alternativ...</option>
-            <option value="Ja">Ja</option>
-            <option value="Nej">Nej</option>
-            <option value="Delvis">Delvis</option>
+            <option value="" disabled selected>Välj...</option>
+            <option value="Ja"><?php echo $t['yes']; ?></option>
+            <option value="Nej"><?php echo $t['no']; ?></option>
+            <option value="Delvis"><?php echo $t['partially']; ?></option>
         </select>
         <br><br>
 
-        <label>Fick du svar från personalen som du förstod?</label><br>
+        <label><?php echo $t['q_staff_response']; ?></label><br>
         <select name="staff_response" required>
-            <option value="" disabled selected>Välj alternativ...</option>
-            <option value="Ja">Ja</option>
-            <option value="Nej">Nej</option>
-            <option value="Delvis">Delvis</option>
+            <option value="" disabled selected>Välj...</option>
+            <option value="Ja"><?php echo $t['yes']; ?></option>
+            <option value="Nej"><?php echo $t['no']; ?></option>
+            <option value="Delvis"><?php echo $t['partially']; ?></option>
         </select>
         <br><br>
 
-        <label>Förklarade personalen behandlingen på ett bra sätt?</label><br>
+        <label><?php echo $t['q_staff_explain']; ?></label><br>
         <select name="staff_explanation" required>
-            <option value="" disabled selected>Välj alternativ...</option>
-            <option value="Ja">Ja</option>
-            <option value="Nej">Nej</option>
-            <option value="Delvis">Delvis</option>
+            <option value="" disabled selected>Välj...</option>
+            <option value="Ja"><?php echo $t['yes']; ?></option>
+            <option value="Nej"><?php echo $t['no']; ?></option>
+            <option value="Delvis"><?php echo $t['partially']; ?></option>
         </select>
         <br><br>
 
-        <label>Övriga kommentarer:</label><br>
+        <label><?php echo $t['extra_comments']; ?></label><br>
         <textarea name="extra_comments" rows="4" cols="50"></textarea>
         <br><br>
 
-        <button type="submit">Skicka in svar</button>
+        <button type="submit"><?php echo $t['submit_feedback']; ?></button>
 
     </form>
 </div>
 
 
-
-
-
-
-
-
 <?php
-// === BLOGGPOST – SAMMA PRINCIP SOM APPOINTMENTS ===
+// === BLOGGPOST ===
 $blog_url = ($lang === 'en')
     ? 'http://193.93.250.83:8080/blog/opening%20hours/blogpost'
     : 'http://193.93.250.83:8080/blog/%C3%B6ppettider/bloggpost';
 ?>
 
 <div class="card" style="margin-top: 20px;">
-    <h3>
-        <?php echo ($lang === 'en') 
-            ? 'Information & Opening Hours' 
-            : 'Information & Öppettider'; 
-        ?>
-    </h3>
+    <h3><?php echo $t['opening_hours_header']; ?></h3>
 
     <iframe 
         src="<?php echo $blog_url; ?>"
