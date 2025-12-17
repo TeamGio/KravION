@@ -210,7 +210,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <form method="post">
 
-<label>Personnummer (12 siffror) *</label>
+<label>Personnummer (12 siffror) obligatoriskt*</label>
 <input type="text" name="personnummer" required pattern="[0-9]{12}">
 
 <label>Har du haft feber mer än sju dagar?</label>
