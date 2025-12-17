@@ -188,7 +188,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!preg_match("/^[0-9]{12}$/", $personnummer)) {
         $fel = "Personnummer måste vara 12 siffror.";
     } else {
-        echo "<p>Formuläret är skickat.</p>";
+        echo "<p>Kontaktformulär skickat! .</p>";
         exit;
     }
 }
