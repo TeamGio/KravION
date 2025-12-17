@@ -37,10 +37,7 @@ $records = $erp_client->getMedicalrecords($patient_erp_id);
                         <span style="color:#007bff; margin-right:10px; font-size: 1.1em;">
                              <?php echo htmlspecialchars($date_display); ?>
                         </span>
-                        
-                        <span style="margin-left:10px; font-weight:normal; color:#555; background:#eee; padding:2px 8px; border-radius:4px; font-size:0.85em;">
-                            <?php echo htmlspecialchars($ref_doctype ?: 'Okänd typ'); ?>
-                        </span>
+
                     </div>
                     
                     <span style="font-size:0.8em; color:#999;">▼ Läs mer</span>
@@ -48,18 +45,18 @@ $records = $erp_client->getMedicalrecords($patient_erp_id);
 
                 <div style="padding:25px; border-top:1px solid #e0e0e0; background-color: #fff;">
                     
-                    <p style="font-size:0.9em; color:#666; margin-bottom:15px;">
-                        <strong>Dokument-ID:</strong> <?php echo htmlspecialchars($ref_name); ?>
-                    </p>
+
 
                     <?php if (!empty($actual_data)): ?>
-                        <h4 style="margin-top:0; color:#28a745;">Detaljer från <?php echo htmlspecialchars($ref_doctype); ?></h4>
                         
                         <table class="table table-striped" style="width:100%; font-size:0.9em; border:1px solid #eee;">
                             <?php foreach ($actual_data as $key => $value): ?>
                                 <?php 
-                                    // Filtrera bort ointressanta systemfält för att göra det läsligt
-                                    if (in_array($key, ['name', 'owner', 'creation', 'modified', 'modified_by', 'docstatus', 'idx', 'doctype'])) continue; 
+                                   
+                                    // Filtrera bort ointressanta systemfält + de fält du ville dölja (Title, Patient, Company etc.)
+                                    if (in_array($key, [
+                                        'name', 'owner', 'creation', 'modified', 'modified_by', 'docstatus', 'idx', 'doctype', 
+                                        'naming_series', 'title', 'patient', 'patient_name', 'company'])) continue;
                                     
                                     // Om värdet är tomt, hoppa över
                                     if (empty($value)) continue;
