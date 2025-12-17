@@ -128,11 +128,14 @@ foreach ($encounters as $enc) {
         <select name="questions_opportunity" required>
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             <option value="" disabled selected><?php echo $t['form_select_option']; ?></option>
             <option value="Ja"><?php echo $t['option_yes']; ?></option>
             <option value="Nej"><?php echo $t['option_no']; ?></option>
             <option value="Delvis"><?php echo $t['option_partly']; ?></option>
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
             <option value="" disabled selected>Välj...</option>
