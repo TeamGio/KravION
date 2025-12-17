@@ -4,8 +4,8 @@ class ERPNextClient {
     private $cookiepath = '/tmp/erpnext_cookies.txt'; // Kontrollera skrivrättigheter till denna fil!
     private $tmeout = 3600; 
 
-    private $erp_usr = "a24leoli@student.his.se"; 
-    private $erp_pwd = "Arvid123!"; 
+    private $erp_usr = "b24arvbe@student.his.se"; 
+    private $erp_pwd = "Msarvber01"; 
 
     private $is_authenticated = false;
 
