@@ -359,7 +359,9 @@ table tr:hover {
     background: #D1ECF1;
     color: #0C5460;
 }
-
+.badge-black-text {
+    color: #000 !important;
+}
 .language-selector {
     margin-bottom: var(--spacing);
 }

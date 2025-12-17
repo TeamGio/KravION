@@ -58,19 +58,20 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                         $status_raw = strtolower(trim($prescription['data_rsjo'] ?? ''));
 
                         // Default värden
-                        $badge_class = 'badge-secondary';
                         $status_text = $status_raw; // Fallback till originaltext
+                        $bg = '#e2e3e5'; // grå default
+                        $txt = '#000';   // svart text
 
                         // Mappa status till språk och färg
                         if ($status_raw === 'godkänd' || $status_raw === 'approved') {
-                            $badge_class = 'badge-success';
                             $status_text = $t['status_approved'];
+                            $bg = '#d4edda'; // grön bakgrund
                         } elseif ($status_raw === 'behandlas' || $status_raw === 'processing') {
-                            $badge_class = 'badge-warning';
                             $status_text = $t['status_processing'];
+                            $bg = '#fff3cd'; // gul bakgrund
                         } elseif ($status_raw === 'ej godkänd' || $status_raw === 'not approved') {
-                            $badge_class = 'badge-danger';
                             $status_text = $t['status_denied'];
+                            $bg = '#f8d7da'; // röd bakgrund
                         }
                     ?>
 
@@ -83,17 +84,24 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
                         <td><?php echo htmlspecialchars($prescription['strenght'] ?? 'N/A'); ?></td>
 
                         <td>
-                            <span class="badge <?php echo $badge_class; ?>">
+                            <span style="
+                                background-color: <?php echo $bg; ?>;
+                                color: <?php echo $txt; ?>;
+                                padding: 6px 12px;
+                                border-radius: 20px;
+                                font-weight: bold;
+                                font-size: 0.9rem;
+                                display: inline-block;">
                                 <?php echo htmlspecialchars($status_text); ?>
                             </span>
                         </td>
 
                         <td> 
                             <form method="post" action="/wwwit-utv/Grupp4/patient/pages/renewPrescription.php">
-                            <input type="hidden" name="prescription_id" value="<?php echo htmlspecialchars($prescription['name']); ?>">
-                            <button type="submit" class="btn btn-primary">
-                                <?php echo $t['renew_prescription']; ?>
-                            </button>
+                                <input type="hidden" name="prescription_id" value="<?php echo htmlspecialchars($prescription['name']); ?>">
+                                <button type="submit" class="btn btn-primary">
+                                    <?php echo $t['renew_prescription']; ?>
+                                </button>
                             </form>
                         </td>
                     </tr>
