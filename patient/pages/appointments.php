@@ -187,16 +187,18 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
 
 <?php
 $fel = "";
+$ok  = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $personnummer = $_POST["personnummer"] ?? "";
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    // Kontroll: personnummer obligatoriskt och exakt 12 siffror
-    if (!preg_match("/^[0-9]{12}$/", $personnummer)) {
-        $fel = $t['err_empty_pnr']; // Eller specifikt felmeddelande för format
+    // Skicka till ERP (DocType: G4KontaktForm)
+    $result = $erp_client->submitG4KontaktForm($_POST);
+
+    if (!empty($result['success'])) {
+        $ok = $t['contact_form_header'] . " skickat!";
     } else {
-        echo "<p>" . $t['contact_form_header'] . " skickat! .</p>"; // Enkelt kvittens
-        exit;
+        // Visa fel från ERP om det finns, annars fallback
+        $fel = $result['message'] ?? ($t['err_empty_pnr'] ?? 'Ett fel uppstod.');
     }
 }
 ?>
