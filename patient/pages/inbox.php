@@ -3,6 +3,18 @@
 
 
     <?php
+        // Function to debug parameters
+        function debug($o){
+            echo '<pre>';
+            print_r($o);
+            echo '</pre>';
+        }
+
+        // Connect to database
+        $pdo = new PDO('mysql:dbname=grupp4;host=localhost', "sqllab", 'Armadillo#2025');
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
         // Språkhantering för blogg (om du vill ha det)
         $new_lang = ($lang === 'sv') ? 'en' : 'sv';
 
@@ -114,10 +126,17 @@ foreach ($encounters as $enc) {
 
         <label><?php echo $t['form_q1']; ?></label><br>
         <select name="questions_opportunity" required>
+<<<<<<< Updated upstream
             <option value="" disabled selected><?php echo $t['form_select_option']; ?></option>
             <option value="Ja"><?php echo $t['option_yes']; ?></option>
             <option value="Nej"><?php echo $t['option_no']; ?></option>
             <option value="Delvis"><?php echo $t['option_partly']; ?></option>
+=======
+            <option value="" disabled selected>Välj...</option>
+            <option value="Ja"><?php echo $t['yes']; ?></option>
+            <option value="Nej"><?php echo $t['no']; ?></option>
+            <option value="Delvis"><?php echo $t['partially']; ?></option>
+>>>>>>> Stashed changes
         </select>
         <br><br>
 
@@ -192,6 +211,30 @@ foreach ($encounters as $enc) {
 
 
 <?php
+
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['age']) && !empty($_POST['gender'])) {
+    
+            // Förbered och kör insert sats
+            $querystring='INSERT INTO patient_feedback (age, gender, questions_opportunity, info_clarity, contact_satisfaction, visit_time_reasonable,waiting_room_time,treatment_info,
+            staff_response,staff_explanation, extra_comments) VALUES (:AGE, :GENDER, :QUESTIONS_OPPORTUNITY, :INFO_CLARITY, :CONTACT_SATISFACTION, :VISIT_TIME_REASONABLE,
+            :WAITING_ROOM_TIME,:TREATMENT_INFO,:STAFF_RESPONSE,:STAFF_EXPLANATION,:EXTRA_COMMENTS)';
+            $stmt = $pdo->prepare($querystring);
+            $stmt->execute([
+                ':AGE' => $_POST['age'],
+                ':GENDER' => $_POST['gender'],
+                ':QUESTIONS_OPPORTUNITY' => $_POST['questions_opportunity'],
+                ':INFO_CLARITY' => $_POST['info_clarity'],
+                ':CONTACT_SATISFACTION' => $_POST['contact_satisfaction'],
+                ':VISIT_TIME_REASONABLE' => $_POST['visit_time_reasonable'],
+                ':WAITING_ROOM_TIME' => $_POST['waiting_room_time'],
+                ':TREATMENT_INFO' => $_POST['treatment_info'],
+                ':STAFF_RESPONSE' => $_POST['staff_response'],
+                ':STAFF_EXPLANATION' => $_POST['staff_explanation'],
+                ':EXTRA_COMMENTS' => $_POST['extra_comments']
+            ]);   
+
+        }
+
 // === BLOGGPOST ===
 $blog_url = ($lang === 'en')
     ? 'http://193.93.250.83:8080/blog/opening%20hours/blogpost'
