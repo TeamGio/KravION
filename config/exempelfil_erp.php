@@ -548,7 +548,6 @@ return array(
 
         
         // 3. Hantera fel
-        $error_message = 'Okänt fel vid radering.';
         if (isset($data['exc'])) {
             $error_message = strip_tags($data['exc']); 
         } elseif (isset($data['message'])) {
@@ -672,8 +671,8 @@ public function submitG4KontaktForm($post) {
         $fields = ['name', 'patient_name', 'encounter_date', 'encounter_time', 'practitioner_name', 'symptoms', 'status'];
 
         $filters = json_encode([
-            ["patient_name", "=", $patient_erp_id]
-        ]);
+        ["patient", "=", $patient_erp_id]
+    ]);
 
         $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) .
                '?filters=' . urlencode($filters) .

@@ -157,7 +157,9 @@ $texts = [
         'form_age' => 'Ålder:',
        
         'form_gender' => 'Kön:',
-       
+       'form_select_age' => 'Välj din ålder...',
+        'form_select_gender' => 'Välj ditt kön...',
+        'form_select_option' => 'Välj ett alternativ...',
         'gender_male' => 'Man',
         'gender_female' => 'Kvinna',
         'gender_other' => 'Annat',
