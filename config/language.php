@@ -82,9 +82,33 @@ $texts = [
         'read message' => 'Läs meddelande',
         'my inbox' => 'Min inkorg',
         'g4form' => 'Blev du nöjd med ditt besök?',
+        // FORM i inbox
+        'form_title' => 'Blev du nöjd med ditt senaste besök?',
+        'form_age' => 'Ålder:',
+       
+        'form_gender' => 'Kön:',
+       
+        'gender_male' => 'Man',
+        'gender_female' => 'Kvinna',
+        'gender_other' => 'Annat',
+        'gender_no_say' => 'Vill ej uppge',
 
-
+        'option_yes' => 'Ja',
+        'option_no' => 'Nej',
+        'option_partly' => 'Delvis',
+        'form_q1' => 'Fick du möjlighet att ställa frågorna du önskade?',
+        'form_q2' => 'Var det enkelt att ta till sig informationen?',
+        'form_q3' => 'Är du nöjd med hur du kan kontakta oss?',
+        'form_q4' => 'Fick du besöka vårdcentralen inom rimlig tid?',
+        'form_q5' => 'Var väntan i väntrummet längre än 20 min?',
+        'form_q6' => 'Fick du tillräcklig info om behandling/bieffekter?',
+        'form_q7' => 'Fick du svar från personalen som du förstod?',
+        'form_q8' => 'Förklarade personalen behandlingen på ett bra sätt?',
+        'form_comments' => 'Övriga kommentarer:',
+        'form_submit' => 'Skicka in svar',
     ],
+
+
 
     'en' => [
         // INDEX
@@ -159,8 +183,32 @@ $texts = [
         'read message' => 'Read message',
         'my inbox' => 'My inbox',
         'g4form' => 'Were you satisfied with your visit?',
+        // form in inbox
+        'form_title' => 'Were you satisfied with your latest visit?',
+        'form_age' => 'Age:',
 
+        'form_gender' => 'Gender:',
+
+        'gender_male' => 'Male',
+        'gender_female' => 'Female',
+        'gender_other' => 'Other',
+        'gender_no_say' => 'Prefer not to say',
+
+        'option_yes' => 'Yes',
+        'option_no' => 'No',
+        'option_partly' => 'Partly',
+        'form_q1' => 'Did you get the opportunity to ask the questions you wanted?',
+        'form_q2' => 'Was the information easy to understand?',
+        'form_q3' => 'Are you satisfied with how you can contact us?',
+        'form_q4' => 'Did you get to visit the healthcare center within a reasonable time?',
+        'form_q5' => 'Was the wait in the waiting room longer than 20 min?',
+        'form_q6' => 'Did you get enough info about treatment/side effects?',
+        'form_q7' => 'Did you get answers from the staff that you understood?',
+        'form_q8' => 'Did the staff explain the treatment in a good way?',
+        'form_comments' => 'Other comments:',
+        'form_submit' => 'Submit answers',
     ]
+
 ];
 
 $t = $texts[$lang];

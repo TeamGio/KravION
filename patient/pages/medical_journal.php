@@ -3,6 +3,7 @@
 $encounters = $erp_client->getJournalRecordsForPatient($patient_erp_id);
 $vitals     = $erp_client->getVitalSignsForPatient($patient_erp_id);
 
+
 $records = [];
 
 // Slå ihop Encounters (Besök) baserat på tid
