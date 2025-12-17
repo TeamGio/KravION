@@ -207,51 +207,76 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <form method="post">
 
-    <label><?php echo $t['pnr_req_label']; ?></label>
-    <input type="text" name="personnummer" required pattern="[0-9]{12}">
+    <div style="margin-bottom: 20px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['pnr_req_label']; ?></label>
+        <input type="text" name="personnummer" required pattern="[0-9]{12}" style="padding: 5px; width: 100%; max-width: 300px;">
+    </div>
 
-    <label><?php echo $t['fever_q']; ?></label>
-    <input type="radio" name="feber" value="ja" required> <?php echo $t['yes']; ?>
-    <input type="radio" name="feber" value="nej"> <?php echo $t['no']; ?>
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['fever_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="feber" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="feber" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-    <label><?php echo $t['cough_q']; ?></label>
-    <input type="radio" name="hosta" value="ja" required> <?php echo $t['yes']; ?>
-    <input type="radio" name="hosta" value="nej"> <?php echo $t['no']; ?>
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['cough_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="hosta" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="hosta" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-    <label><?php echo $t['cough_blood_q']; ?></label>
-    <input type="radio" name="blod" value="ja" required> <?php echo $t['yes']; ?>
-    <input type="radio" name="blod" value="nej"> <?php echo $t['no']; ?>
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['cough_blood_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="blod" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="blod" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-    <label><?php echo $t['heavy_breath_q']; ?></label>
-    <input type="radio" name="andas" value="ja" required> <?php echo $t['yes']; ?>
-    <input type="radio" name="andas" value="nej"> <?php echo $t['no']; ?>
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['heavy_breath_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="andas" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="andas" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-    <label><?php echo $t['muscle_pain_q']; ?></label>
-    <input type="radio" name="smarta" value="ja" required> <?php echo $t['yes']; ?>
-    <input type="radio" name="smarta" value="nej"> <?php echo $t['no']; ?>
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['muscle_pain_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="smarta" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="smarta" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-    <label><?php echo $t['sick_long_q']; ?></label>
-    <input type="radio" name="sjuk" value="ja" required> <?php echo $t['yes']; ?>
-    <input type="radio" name="sjuk" value="nej"> <?php echo $t['no']; ?>
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['sick_long_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="sjuk" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="sjuk" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-    <label><?php echo $t['describe_symptom_label']; ?></label>
-    <textarea name="symptom" rows="4"></textarea>
+    <div style="margin-bottom: 30px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['describe_symptom_label']; ?></label>
+        <textarea name="symptom" rows="4" style="width: 100%; max-width: 500px;"></textarea>
+    </div>
+
+    <hr style="border: 1px solid #eee; margin: 20px 0;">
 
     <h3><?php echo $t['contact_curator_header']; ?></h3>
 
-    <label><?php echo $t['feeling_down_q']; ?></label>
-    <input type="radio" name="nedstamd" value="ja" required> <?php echo $t['yes']; ?>
-    <input type="radio" name="nedstamd" value="nej"> <?php echo $t['no']; ?>
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['feeling_down_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="nedstamd" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="nedstamd" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-    <label><?php echo $t['anxiety_q']; ?></label>
-    <input type="radio" name="angest" value="ja" required> <?php echo $t['yes']; ?>
-    <input type="radio" name="angest" value="nej"> <?php echo $t['no']; ?>
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['anxiety_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="angest" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="angest" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-    <label><?php echo $t['describe_symptom_label']; ?></label>
-    <textarea name="kurator_symptom" rows="4"></textarea>
+    <div style="margin-bottom: 20px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['describe_symptom_label']; ?></label>
+        <textarea name="kurator_symptom" rows="4" style="width: 100%; max-width: 500px;"></textarea>
+    </div>
 
-    <br><br>
-    <button type="submit"><?php echo $t['send']; ?></button>
+    <button type="submit" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px;">
+        <?php echo $t['send']; ?>
+    </button>
 
     </form>
 </div>
