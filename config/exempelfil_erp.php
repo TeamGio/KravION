@@ -664,7 +664,7 @@ return array(
 
         $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) .
                '?filters=' . urlencode(json_encode([["patient", "=", $patient_erp_id]])) . 
-               '&fields=' . urlencode(json_encode(["name", "status"]));
+               '&fields=' . urlencode(json_encode(["*"]));
 
         $ch = curl_init($url);
         
@@ -746,6 +746,25 @@ return array(
         return [];
     }
 
-    
+    // Hämta ett specifikt dokument (oavsett typ)
+    public function getDoc($doctype, $docname) {
+        if (!$this->is_authenticated) return null;
+
+        // Bygg URL: api/resource/Doctype/Namn
+        $url = $this->baseurl . 'api/resource/' . rawurlencode($doctype) . '/' . rawurlencode($docname);
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_COOKIEFILE     => $this->cookiepath,
+            CURLOPT_TIMEOUT        => $this->tmeout,
+            CURLOPT_HTTPHEADER     => ['Accept: application/json']
+        ]);
+
+        $result = json_decode(curl_exec($ch), true);
+        curl_close($ch);
+
+        return $result['data'] ?? null;
+    }
 
 }
