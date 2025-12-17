@@ -177,9 +177,86 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
     <?php endif; ?>
 </div>
 
-<div class="card" style="margin-top: 20px;">
-    <h3><?php echo $t['contact_form']; ?></h3>
-    <iframe src="http://193.93.250.83:8080/kontakt-formular"
-            style="border: none; width: 100%; height: 600px;">
-    </iframe>
-</div>
+
+<?php
+$fel = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $personnummer = $_POST["personnummer"] ?? "";
+
+    // Kontroll: personnummer obligatoriskt och exakt 12 siffror
+    if (!preg_match("/^[0-9]{12}$/", $personnummer)) {
+        $fel = "Personnummer måste vara 12 siffror.";
+    } else {
+        echo "<p>Formuläret är skickat.</p>";
+        exit;
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<title>Formulär</title>
+<style>
+    body { font-family: Arial; }
+    label { display: block; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<?php if ($fel) echo "<p style='color:red;'>$fel</p>"; ?>
+
+<form method="post">
+
+<label>Personnummer (12 siffror) *</label>
+<input type="text" name="personnummer" required pattern="[0-9]{12}">
+
+<label>Har du haft feber mer än sju dagar?</label>
+<input type="radio" name="feber" value="ja" required> Ja
+<input type="radio" name="feber" value="nej"> Nej
+
+<label>Har du hosta?</label>
+<input type="radio" name="hosta" value="ja" required> Ja
+<input type="radio" name="hosta" value="nej"> Nej
+
+<label>Hostar du blod?</label>
+<input type="radio" name="blod" value="ja" required> Ja
+<input type="radio" name="blod" value="nej"> Nej
+
+<label>Känns det tungt att andas?</label>
+<input type="radio" name="andas" value="ja" required> Ja
+<input type="radio" name="andas" value="nej"> Nej
+
+<label>Har du muskelsmärta eller huvudvärk?</label>
+<input type="radio" name="smarta" value="ja" required> Ja
+<input type="radio" name="smarta" value="nej"> Nej
+
+<label>Har du varit sjuk mer än 7 dagar?</label>
+<input type="radio" name="sjuk" value="ja" required> Ja
+<input type="radio" name="sjuk" value="nej"> Nej
+
+<label>Beskriv dina symptom (max 150 ord)</label>
+<textarea name="symptom" rows="4"></textarea>
+
+<h3>Kontakta kurator</h3>
+
+<label>Känner du dig nedstämd?</label>
+<input type="radio" name="nedstamd" value="ja" required> Ja
+<input type="radio" name="nedstamd" value="nej"> Nej
+
+<label>Känner du ångest och oro?</label>
+<input type="radio" name="angest" value="ja" required> Ja
+<input type="radio" name="angest" value="nej"> Nej
+
+<label>Beskriv symptom (max 150 ord)</label>
+<textarea name="kurator_symptom" rows="4"></textarea>
+
+<br><br>
+<button type="submit">Skicka</button>
+
+</form>
+
+</body>
+</html>
