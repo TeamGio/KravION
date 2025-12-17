@@ -47,14 +47,15 @@
 </div>
 
 <?php
+
+
+
 // Hämta journalanteckningar
 $encounters = $erp_client->getJournalRecordsForPatient($patient_erp_id);
-
 $show_form = false;
 $today_date = date('Y-m-d'); 
 
 foreach ($encounters as $enc) {
-    // TIPS: Om du vill kunna se formuläret även om besöket var igår, ta bort "&& $enc['encounter_date'] === $today_date"
     if (isset($enc['status']) && 
         $enc['status'] === 'Completed' ) { 
             
@@ -72,7 +73,7 @@ foreach ($encounters as $enc) {
 
         <label><?php echo $t['form_age']; ?></label><br>
         <select name="age" required>
-            <option value="" disabled selected><?php echo $t['form_select_age']; ?></option>
+            <option value="" disabled selected></option>
             <option value="18-25">18-25</option>
             <option value="26-35">26-35</option>
             <option value="36-50">36-50</option>
@@ -83,7 +84,7 @@ foreach ($encounters as $enc) {
 
         <label><?php echo $t['form_gender']; ?></label><br>
         <select name="gender" required>
-            <option value="" disabled selected><?php echo $t['form_select_gender']; ?></option>
+            <option value="" disabled selected></option>
             <option value="Man"><?php echo $t['gender_male']; ?></option>
             <option value="Kvinna"><?php echo $t['gender_female']; ?></option>
             <option value="Annat"><?php echo $t['gender_other']; ?></option>
@@ -93,7 +94,7 @@ foreach ($encounters as $enc) {
 
         <label><?php echo $t['form_q1']; ?></label><br>
         <select name="questions_opportunity" required>
-            <option value="" disabled selected><?php echo $t['form_select_option']; ?></option>
+            <option value="" disabled selected></option>
             <option value="Ja"><?php echo $t['option_yes']; ?></option>
             <option value="Nej"><?php echo $t['option_no']; ?></option>
             <option value="Delvis"><?php echo $t['option_partly']; ?></option>
@@ -102,7 +103,7 @@ foreach ($encounters as $enc) {
 
         <label><?php echo $t['form_q2']; ?></label><br>
         <select name="info_clarity" required>
-            <option value="" disabled selected><?php echo $t['form_select_option']; ?></option>
+            <option value="" disabled selected></option>
             <option value="Ja"><?php echo $t['option_yes']; ?></option>
             <option value="Nej"><?php echo $t['option_no']; ?></option>
             <option value="Delvis"><?php echo $t['option_partly']; ?></option>
@@ -111,7 +112,7 @@ foreach ($encounters as $enc) {
 
         <label><?php echo $t['form_q3']; ?></label><br>
         <select name="contact_satisfaction" required>
-            <option value="" disabled selected><?php echo $t['form_select_option']; ?></option>
+            <option value="" disabled selected></option>
             <option value="Ja"><?php echo $t['option_yes']; ?></option>
             <option value="Nej"><?php echo $t['option_no']; ?></option>
         </select>
@@ -119,7 +120,7 @@ foreach ($encounters as $enc) {
 
         <label><?php echo $t['form_q4']; ?></label><br>
         <select name="visit_time_reasonable" required>
-            <option value="" disabled selected><?php echo $t['form_select_option']; ?></option>
+            <option value="" disabled selected></option>
             <option value="Ja"><?php echo $t['option_yes']; ?></option>
             <option value="Nej"><?php echo $t['option_no']; ?></option>
         </select>
@@ -127,7 +128,7 @@ foreach ($encounters as $enc) {
 
         <label><?php echo $t['form_q5']; ?></label><br>
         <select name="waiting_room_time" required>
-            <option value="" disabled selected><?php echo $t['form_select_option']; ?></option>
+            <option value="" disabled selected></option>
             <option value="Ja"><?php echo $t['option_yes']; ?></option>
             <option value="Nej"><?php echo $t['option_no']; ?></option>
         </select>
@@ -135,7 +136,7 @@ foreach ($encounters as $enc) {
 
         <label><?php echo $t['form_q6']; ?></label><br>
         <select name="treatment_info" required>
-            <option value="" disabled selected><?php echo $t['form_select_option']; ?></option>
+            <option value="" disabled selected></option>
             <option value="Ja"><?php echo $t['option_yes']; ?></option>
             <option value="Nej"><?php echo $t['option_no']; ?></option>
             <option value="Delvis"><?php echo $t['option_partly']; ?></option>
@@ -144,7 +145,7 @@ foreach ($encounters as $enc) {
 
         <label><?php echo $t['form_q7']; ?></label><br>
         <select name="staff_response" required>
-            <option value="" disabled selected><?php echo $t['form_select_option']; ?></option>
+            <option value="" disabled selected></option>
             <option value="Ja"><?php echo $t['option_yes']; ?></option>
             <option value="Nej"><?php echo $t['option_no']; ?></option>
             <option value="Delvis"><?php echo $t['option_partly']; ?></option>
@@ -153,7 +154,7 @@ foreach ($encounters as $enc) {
 
         <label><?php echo $t['form_q8']; ?></label><br>
         <select name="staff_explanation" required>
-            <option value="" disabled selected><?php echo $t['form_select_option']; ?></option>
+            <option value="" disabled selected></option>
             <option value="Ja"><?php echo $t['option_yes']; ?></option>
             <option value="Nej"><?php echo $t['option_no']; ?></option>
             <option value="Delvis"><?php echo $t['option_partly']; ?></option>
@@ -169,6 +170,7 @@ foreach ($encounters as $enc) {
     </form>
 </div>
 <?php endif; ?>
+
 
 <?php
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['age']) && !empty($_POST['gender'])) {

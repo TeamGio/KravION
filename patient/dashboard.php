@@ -119,7 +119,7 @@ $new_lang = ($lang === 'sv') ? 'en' : 'sv';
                 <h4><?php echo $upcoming_appointments; ?></h4>
                 <p><?php echo $t['upcoming_appointments']; ?></p>
             </div>
-            <div class="stat-card secondary">
+            <div class="stat-card">
                 <h4><?php echo $active_prescriptions; ?></h4>
                 <p><?php echo $t['prescriptions']; ?></p>
             </div>
