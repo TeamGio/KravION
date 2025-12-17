@@ -2,41 +2,33 @@
 // prescriptions.php
 
 $message = '';
-// VIKTIGT: Vi tar bort den URL-baserade rensningslogiken.
-// session_start() antas köras i föräldern (dashboard.php)
 $success_message = null; 
 $error_message = null;   
-
-// --- NY LOGIK FÖR ATT VISA SESSION-BASERAT MEDDELANDE ---
 
 // 1. Hantera Framgångsmeddelanden (Flash Message)
 if (isset($_SESSION['success_message'])) {
     $success_message = htmlspecialchars($_SESSION['success_message']);
-    // Rensa sessionen direkt efter att ha lagrat meddelandet lokalt
     unset($_SESSION['success_message']);
 }
 
-// 2. Hantera Felmeddelanden (Om renewPrescription skickade ett fel)
+// 2. Hantera Felmeddelanden
 if (isset($_SESSION['error_message'])) {
     $error_message = htmlspecialchars($_SESSION['error_message']);
-    // Rensa sessionen
     unset($_SESSION['error_message']);
 }
-// -----------------------------------------------------------
-
 
 $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
 ?>
 
 <?php if (isset($success_message)): ?>
     <div class="alert alert-success" role="alert" style="margin-top: 20px;">
-         Klart! <?php echo $success_message; ?>
+         <?php echo $success_message; ?>
     </div>
 <?php endif; ?>
 
 <?php if (isset($error_message)): ?>
     <div class="alert alert-danger" role="alert" style="margin-top: 20px;">
-         Fel! <?php echo $error_message; ?>
+         <?php echo $error_message; ?>
     </div>
 <?php endif; ?>
 
@@ -62,38 +54,23 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
             <tbody>
                 <?php foreach ($prescriptions as $prescription): ?>
                     <?php 
-                        // Originalstatus från ERP
-                        $status = $prescription['data_rsjo'] ?? 'Ej satt';
-                        $raw_status = strtolower(trim($status));
+                        // Originalstatus från ERP (ofta svenska)
+                        $status_raw = strtolower(trim($prescription['data_rsjo'] ?? ''));
 
-                        // Bestäm badge-färg baserat på originalstatus
-                        // Lägg till 'behandlas' till villkoren för badge-färg om du vill ha en annan färg för pågående.
-                        switch ($raw_status) {
-                            case 'godkänd':
-                                $badge_class = 'badge-success';
-                                break;
-                                
-                                case 'behandlas':
-                                    $badge_class = 'badge-warning';
-                                    break;
-                                    
-                                    case 'ej godkänd':
-                                        default:
-                                        $badge_class = 'badge-danger';
-                                        break;
-                                    }
+                        // Default värden
+                        $badge_class = 'badge-secondary';
+                        $status_text = $status_raw; // Fallback till originaltext
 
-                        // Översätt status vid engelska
-                        if ($lang === 'en') {
-                            if ($raw_status === 'godkänd') {
-                                $status = 'Approved';
-                            } elseif ($raw_status === 'ej godkänd') {
-                                $status = 'Not approved';
-                            } elseif ($raw_status === 'behandlas') {
-                                $status = 'Processing';
-                                // Uppdatera badge-klassen för 'behandlas'
-                                $badge_class = 'badge-warning'; 
-                            }
+                        // Mappa status till språk och färg
+                        if ($status_raw === 'godkänd' || $status_raw === 'approved') {
+                            $badge_class = 'badge-success';
+                            $status_text = $t['status_approved'];
+                        } elseif ($status_raw === 'behandlas' || $status_raw === 'processing') {
+                            $badge_class = 'badge-warning';
+                            $status_text = $t['status_processing'];
+                        } elseif ($status_raw === 'ej godkänd' || $status_raw === 'not approved') {
+                            $badge_class = 'badge-danger';
+                            $status_text = $t['status_denied'];
                         }
                     ?>
 
@@ -107,7 +84,7 @@ $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);
 
                         <td>
                             <span class="badge <?php echo $badge_class; ?>">
-                                <?php echo htmlspecialchars($status); ?>
+                                <?php echo htmlspecialchars($status_text); ?>
                             </span>
                         </td>
 

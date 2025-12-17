@@ -4,8 +4,8 @@ class ERPNextClient {
     private $cookiepath = '/tmp/erpnext_cookies.txt'; // Kontrollera skrivrättigheter till denna fil!
     private $tmeout = 3600; 
 
-    private $erp_usr = "a24leoli@student.his.se"; 
-    private $erp_pwd = "Arvid123!"; 
+    private $erp_usr = "b24arvbe@student.his.se"; 
+    private $erp_pwd = "Msarvber01"; 
 
     private $is_authenticated = false;
 
@@ -545,10 +545,6 @@ return array(
     'message' => 'Kunde inte ta bort bokningen. HTTP-kod: ' . $code
 );
 
-return array(
-    'success' => false,
-    'message' => 'Kunde inte ta bort bokningen. HTTP-kod: ' . $code
-);
 
         
         // 3. Hantera fel
@@ -668,7 +664,7 @@ return array(
 
         $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) .
                '?filters=' . urlencode(json_encode([["patient", "=", $patient_erp_id]])) . 
-               '&fields=' . urlencode(json_encode(["name", "status"]));
+               '&fields=' . urlencode(json_encode(["*"]));
 
         $ch = curl_init($url);
         
@@ -750,6 +746,25 @@ return array(
         return [];
     }
 
-    
+    // Hämta ett specifikt dokument (oavsett typ)
+    public function getDoc($doctype, $docname) {
+        if (!$this->is_authenticated) return null;
+
+        // Bygg URL: api/resource/Doctype/Namn
+        $url = $this->baseurl . 'api/resource/' . rawurlencode($doctype) . '/' . rawurlencode($docname);
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_COOKIEFILE     => $this->cookiepath,
+            CURLOPT_TIMEOUT        => $this->tmeout,
+            CURLOPT_HTTPHEADER     => ['Accept: application/json']
+        ]);
+
+        $result = json_decode(curl_exec($ch), true);
+        curl_close($ch);
+
+        return $result['data'] ?? null;
+    }
 
 }

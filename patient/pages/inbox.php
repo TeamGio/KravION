@@ -3,8 +3,8 @@
 
 
     <?php
+        // Språkhantering för blogg (om du vill ha det)
         $new_lang = ($lang === 'sv') ? 'en' : 'sv';
-
 
         $messages = $erp_client->getMessagesForPatient($patient_erp_id);
         if (count($messages) > 0):
@@ -58,7 +58,7 @@
 
 
     <?php else: ?>
-        <p style="color: #6C757D; margin-top: 30px;">Du har inga meddelanden i inkorgen.</p>
+        <p style="color: #6C757D; margin-top: 30px;"><?php echo $t['no_messages']; ?></p>
     <?php endif; ?>
 </div>
 
@@ -72,14 +72,14 @@ $encounters = $erp_client->getJournalRecordsForPatient($patient_erp_id);
 $show_form = false;
 $today_date = date('Y-m-d'); 
 
-// Loopa igenom journalerna
+// Loopa igenom journalerna för att se om vi ska visa formuläret
 foreach ($encounters as $enc) {
     if (isset($enc['status']) && 
         $enc['status'] === 'Completed' && 
         $enc['encounter_date'] === $today_date) {
             
         $show_form = true;
-        break;  // Avsluta loopen om hittat en match
+        break; 
     }
 }
 ?>
@@ -191,26 +191,15 @@ foreach ($encounters as $enc) {
 </div>
 
 
-
-
-
-
-
-
 <?php
-// === BLOGGPOST – SAMMA PRINCIP SOM APPOINTMENTS ===
+// === BLOGGPOST ===
 $blog_url = ($lang === 'en')
     ? 'http://193.93.250.83:8080/blog/opening%20hours/blogpost'
     : 'http://193.93.250.83:8080/blog/%C3%B6ppettider/bloggpost';
 ?>
 
 <div class="card" style="margin-top: 20px;">
-    <h3>
-        <?php echo ($lang === 'en') 
-            ? 'Information & Opening Hours' 
-            : 'Information & Öppettider'; 
-        ?>
-    </h3>
+    <h3><?php echo $t['opening_hours_header']; ?></h3>
 
     <iframe 
         src="<?php echo $blog_url; ?>"

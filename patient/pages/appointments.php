@@ -32,15 +32,16 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
 
 <?php if (!empty($requests)): ?>
 <div class="card" style="margin-top: 20px; margin-bottom: 20px; border-left: 5px solid #ffc107;">
-    <h3>Mina pågående ombokningsärenden</h3>
+    <h3><?php echo $t['my_reschedule_cases']; ?></h3>
     <table class="table-striped">
         <thead>
             <tr>
-                <th>Datum skickad</th>
-                <th>Önskad dag</th>
-                <th>Avdelning</th>
-                <th>Status</th>
-                <th>Svar från vårdgivare</th> </tr>
+                <th><?php echo $t['date_sent']; ?></th>
+                <th><?php echo $t['desired_day']; ?></th>
+                <th><?php echo $t['department']; ?></th>
+                <th><?php echo $t['status']; ?></th>
+                <th><?php echo $t['reply_from_provider']; ?></th> 
+            </tr>
         </thead>
 <tbody>
             <?php foreach ($requests as $req): ?>
@@ -50,17 +51,23 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
                 <td><?php echo htmlspecialchars($req['department']); ?></td>
                 <td>
                     <?php 
-                        $status = $req['status'] ?? 'Mottagen'; 
+                        $status_raw = $req['status'] ?? 'Mottagen'; 
                         
-                        $bg = '#fff3cd'; // bakgrund
-                        $txt = '#141313ff'; // text
+                        // Översätt status för visning
+                        $status_display = $status_raw;
+                        if ($status_raw === 'Mottagen') $status_display = $t['status_received'];
+                        if ($status_raw === 'Åtgärdad') $status_display = $t['status_resolved'];
+                        if ($status_raw === 'Nekad')    $status_display = $t['status_denied'];
 
-                        if ($status === 'Åtgärdad') {
-                            $bg = '#d4edda'; //  bakgrund
-                            $txt = '#1d1b1bff'; //  text
-                        } elseif ($status === 'Nekad') {
-                            $bg = '#f8d7da'; //  bakgrund
-                            $txt = '#222020ff'; //  text
+                        $bg = '#fff3cd'; // bakgrund default
+                        $txt = '#141313ff'; // text default
+
+                        if ($status_raw === 'Åtgärdad') {
+                            $bg = '#d4edda'; 
+                            $txt = '#1d1b1bff';
+                        } elseif ($status_raw === 'Nekad') {
+                            $bg = '#f8d7da'; 
+                            $txt = '#222020ff';
                         }
                     ?>
                     <span style="
@@ -71,7 +78,7 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
                         font-weight: bold; 
                         font-size: 0.9rem;
                         display: inline-block;">
-                        <?php echo htmlspecialchars($status); ?>
+                        <?php echo htmlspecialchars($status_display); ?>
                     </span>
                 </td>
                 
@@ -99,14 +106,14 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
                     <th><?php echo $t['reason']; ?></th>
                     <th><?php echo $t['patient']; ?></th>
                     <th><?php echo $t['cancel_booking']; ?></th>
-                    <th><?php echo $t['reschedule_booking']?></th>
+                    <th><?php echo $t['reschedule_booking']; ?></th>
                 </tr>
             </thead>
             <tbody>
 <?php foreach ($appointments as $app): 
                     // Hämta datum och tid
                     $date = !empty($app['appointment_date']) ? date('Y-m-d', strtotime($app['appointment_date'])) : 'N/A';
-                    $time = $app['appointment_time'] ?? '00:00'; // Sätt standardtid om den saknas
+                    $time = $app['appointment_time'] ?? '00:00'; 
                     
                     $practitioner = $app['practitioner_name'] ?? 'N/A';
                     $title = $app['title'] ?? 'N/A';
@@ -119,7 +126,7 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
                     // Räkna ut skillnaden i timmar
                     $hours_until_appointment = ($appointment_timestamp - $current_timestamp) / 3600;
                     
-                    // Kontrollera om det är mindre än 24h kvar (och att tiden inte redan passerat)
+                    // Kontrollera om det är mindre än 24h kvar
                     $is_too_late = ($hours_until_appointment < 24);
                 ?>
                 <tr>
@@ -133,8 +140,8 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
                         <?php if ($is_too_late): ?>
                             <button type="button" 
                                     style="background-color: #ccc; cursor: not-allowed; border:1px solid #999;"
-                                    onclick="alert('Det är mindre än 24 timmar kvar till din bokning. För att avboka måste du kontakta mottagningen via telefon.')">
-                                Avboka
+                                    onclick="alert('<?php echo $t['alert_too_late_cancel']; ?>')">
+                                <?php echo $t['cancel_booking']; ?>
                             </button>
                         <?php else: ?>
                             <form method="post" action="pages/Cancel.php">
@@ -143,9 +150,9 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
                                      type="submit"
                                      name="action"
                                      value="cancel"
-                                     title="Om avbokning sker inom 24h innan möte, debiteras du för tiden"
-                                     onclick="return confirm('Är du säker på att du vill avboka?')">
-                                    Avboka
+                                     title="Avbokningsregel"
+                                     onclick="return confirm('<?php echo $t['confirm_cancel']; ?>')">
+                                    <?php echo $t['cancel_booking']; ?>
                                 </button>
                             </form>
                         <?php endif; ?>
@@ -155,13 +162,13 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
                         <?php if ($is_too_late): ?>
                             <button type="button" 
                                     style="background-color: #ccc; cursor: not-allowed; border:1px solid #999;"
-                                    onclick="alert('Ombokning ej tillåten.\n\nDet är mindre än 24 timmar kvar till din tid. Vänligen kontakta mottagningen om det är akut.')">
-                                Boka om
+                                    onclick="alert('<?php echo $t['alert_too_late_reschedule']; ?>')">
+                                <?php echo $t['reschedule_booking']; ?>
                             </button>
                         <?php else: ?>
                             <form method="post" action="pages/ombokning.php"> 
                                 <input type="hidden" name="appointment_name" value="<?php echo htmlspecialchars($app['name']); ?>">
-                                <button type="submit" name="action" value="reschedule">Boka om</button>
+                                <button type="submit" name="action" value="reschedule"><?php echo $t['reschedule_booking']; ?></button>
                             </form>
                         <?php endif; ?>
                     </td>
@@ -186,77 +193,90 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Kontroll: personnummer obligatoriskt och exakt 12 siffror
     if (!preg_match("/^[0-9]{12}$/", $personnummer)) {
-        $fel = "Personnummer måste vara 12 siffror.";
+        $fel = $t['err_empty_pnr']; // Eller specifikt felmeddelande för format
     } else {
-        echo "<p>Kontaktformulär skickat! .</p>";
+        echo "<p>" . $t['contact_form_header'] . " skickat! .</p>"; // Enkelt kvittens
         exit;
     }
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-<meta charset="UTF-8">
-<title>Formulär</title>
-<style>
-    body { font-family: Arial; }
-    label { display: block; margin-top: 10px; }
-</style>
-</head>
-<body>
+<div class="card" style="margin-top:20px;">
+    <h3><?php echo $t['contact_form_header']; ?></h3>
+    <?php if ($fel) echo "<p style='color:red;'>$fel</p>"; ?>
 
-<?php if ($fel) echo "<p style='color:red;'>$fel</p>"; ?>
+    <form method="post">
 
-<form method="post">
+    <div style="margin-bottom: 20px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['pnr_req_label']; ?></label>
+        <input type="text" name="personnummer" required pattern="[0-9]{12}" style="padding: 5px; width: 100%; max-width: 300px;">
+    </div>
 
-<label>Personnummer (12 siffror) *</label>
-<input type="text" name="personnummer" required pattern="[0-9]{12}">
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['fever_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="feber" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="feber" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-<label>Har du haft feber mer än sju dagar?</label>
-<input type="radio" name="feber" value="ja" required> Ja
-<input type="radio" name="feber" value="nej"> Nej
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['cough_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="hosta" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="hosta" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-<label>Har du hosta?</label>
-<input type="radio" name="hosta" value="ja" required> Ja
-<input type="radio" name="hosta" value="nej"> Nej
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['cough_blood_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="blod" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="blod" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-<label>Hostar du blod?</label>
-<input type="radio" name="blod" value="ja" required> Ja
-<input type="radio" name="blod" value="nej"> Nej
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['heavy_breath_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="andas" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="andas" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-<label>Känns det tungt att andas?</label>
-<input type="radio" name="andas" value="ja" required> Ja
-<input type="radio" name="andas" value="nej"> Nej
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['muscle_pain_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="smarta" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="smarta" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-<label>Har du muskelsmärta eller huvudvärk?</label>
-<input type="radio" name="smarta" value="ja" required> Ja
-<input type="radio" name="smarta" value="nej"> Nej
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['sick_long_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="sjuk" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="sjuk" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-<label>Har du varit sjuk mer än 7 dagar?</label>
-<input type="radio" name="sjuk" value="ja" required> Ja
-<input type="radio" name="sjuk" value="nej"> Nej
+    <div style="margin-bottom: 30px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['describe_symptom_label']; ?></label>
+        <textarea name="symptom" rows="4" style="width: 100%; max-width: 500px;"></textarea>
+    </div>
 
-<label>Beskriv dina symptom (max 150 ord)</label>
-<textarea name="symptom" rows="4"></textarea>
+    <hr style="border: 1px solid #eee; margin: 20px 0;">
 
-<h3>Kontakta kurator</h3>
+    <h3><?php echo $t['contact_curator_header']; ?></h3>
 
-<label>Känner du dig nedstämd?</label>
-<input type="radio" name="nedstamd" value="ja" required> Ja
-<input type="radio" name="nedstamd" value="nej"> Nej
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['feeling_down_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="nedstamd" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="nedstamd" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-<label>Känner du ångest och oro?</label>
-<input type="radio" name="angest" value="ja" required> Ja
-<input type="radio" name="angest" value="nej"> Nej
+    <div style="margin-bottom: 15px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['anxiety_q']; ?></label>
+        <label style="margin-right: 15px;"><input type="radio" name="angest" value="ja" required> <?php echo $t['yes']; ?></label>
+        <label><input type="radio" name="angest" value="nej"> <?php echo $t['no']; ?></label>
+    </div>
 
-<label>Beskriv symptom (max 150 ord)</label>
-<textarea name="kurator_symptom" rows="4"></textarea>
+    <div style="margin-bottom: 20px;">
+        <label style="display:block; font-weight:bold;"><?php echo $t['describe_symptom_label']; ?></label>
+        <textarea name="kurator_symptom" rows="4" style="width: 100%; max-width: 500px;"></textarea>
+    </div>
 
-<br><br>
-<button type="submit">Skicka</button>
+    <button type="submit" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px;">
+        <?php echo $t['send']; ?>
+    </button>
 
-</form>
-
-</body>
-</html>
+    </form>
+</div>
