@@ -9,7 +9,7 @@
     --secondary-color: #28A745;
     --background-color: #F8F9FA;
     --text-color: #212529;
-    --accent-color: #17A2B8;
+    --accent-color: #0d88b5;
     --alert-color: #DC3545;
     --white: #FFFFFF;
     --gray-light: #E9ECEF;
@@ -294,13 +294,11 @@ body {
     padding: calc(var(--spacing) * 1.5);
     border-radius: 10px;
     text-align: center;
-    font-weight: 520;
-    font-size: 1.15em;
+    font-weight: 535;
+    font-size: 1.19em;
 }
 
-.stat-card.secondary {
-    background: linear-gradient(135deg, var(--secondary-color), #20c997);
-}
+
 
 .stat-card h4 {
     font-size: 2.5em;

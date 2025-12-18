@@ -46,23 +46,13 @@
     <?php endif; ?>
 </div>
 
+
+
+
 <?php
-
-
-
-// Hämta journalanteckningar
-$encounters = $erp_client->getJournalRecordsForPatient($patient_erp_id);
-$show_form = false;
-$today_date = date('Y-m-d'); 
-
-foreach ($encounters as $enc) {
-    if (isset($enc['status']) && 
-        $enc['status'] === 'Completed' ) { 
-            
-        $show_form = true;
-        break; 
-    }
-}
+// --- HÄR ÄR ENDA ÄNDRINGEN ---
+// Vi skiter i att kolla datum. Vi sätter bara denna till sant direkt.
+$show_form = true; 
 ?>
 
 <?php if ($show_form): ?>
