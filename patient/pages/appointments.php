@@ -203,7 +203,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 
-<div class="form-group label" style="margin-top:20px;">
+<div class= "card">
+
+
+    <div class="form-group label" style="margin-top:20px;">
     <h3><?php echo $t['contact_form_header']; ?></h3>
     <?php if ($fel) echo "<p style='color:red;'>$fel</p>"; ?>
 
@@ -281,4 +284,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </button>
 
     </form>
+
+
+
+    </div>
+
 </div>
