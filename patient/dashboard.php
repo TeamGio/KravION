@@ -6,7 +6,7 @@ session_start();
 require_once '../config/language.php';
 require_once '../config/exempelfil_erp.php';
 
-// Inaktivitet
+
 $INACTIVITY_LIMIT = 300;
 
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $INACTIVITY_LIMIT)) {
