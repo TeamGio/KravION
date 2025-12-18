@@ -150,6 +150,7 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
                                      type="submit"
                                      name="action"
                                      value="cancel"
+                                     class="btn btn-primary"
                                      title="Avbokningsregel"
                                      onclick="return confirm('<?php echo $t['confirm_cancel']; ?>')">
                                     <?php echo $t['cancel_booking']; ?>
@@ -168,7 +169,7 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
                         <?php else: ?>
                             <form method="post" action="pages/ombokning.php"> 
                                 <input type="hidden" name="appointment_name" value="<?php echo htmlspecialchars($app['name']); ?>">
-                                <button type="submit" name="action" value="reschedule"><?php echo $t['reschedule_booking']; ?></button>
+                                <button type="submit" name="action" value="reschedule" class="btn btn-primary"><?php echo $t['reschedule_booking']; ?></button>
                             </form>
                         <?php endif; ?>
                     </td>
