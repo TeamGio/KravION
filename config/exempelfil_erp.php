@@ -320,7 +320,7 @@ class ERPNextClient {
             ];
         }
 
-        // 1) Validera att bokningen finns
+        // finns bokningen?
         $check = $this->getAppointmentById($appointment_id);
         if (empty($check['success'])) {
             return [
@@ -331,7 +331,7 @@ class ERPNextClient {
 
         $appointment = $check['data'];
 
-        // 2) Validera ägarskap om patient-id skickas
+      
         if (!empty($patient_erp_id)) {
             $appointment_patient = $appointment['patient'] ?? null;
             if ($appointment_patient !== $patient_erp_id) {
@@ -342,7 +342,7 @@ class ERPNextClient {
             }
         }
 
-        // 3) Om redan Cancelled, returnera OK 
+        
         $current_status = $appointment['status'] ?? '';
         if ($current_status === 'Cancelled') {
             return [
@@ -351,7 +351,7 @@ class ERPNextClient {
             ];
         }
 
-        // 4) Uppdatera status till Cancelled
+        // Uppdatera status till Cancelled
         $RESOURCE_NAME = 'Patient Appointment';
         $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) . '/' . urlencode($appointment_id);
 
@@ -483,7 +483,7 @@ public function createNewDoc($resource_name, $data) {
         
         return [
             'success' => false,
-            // Returnera rent felmeddelande utan HTML
+           
             'message' => 'Misslyckades att skapa resurs. HTTP-kod: ' . $http_code . '. Meddelande: ' . strip_tags($error_message)
         ];
     }
@@ -510,7 +510,7 @@ public function deleteAppointment($appointment_id) {
             ];
         }
 
-        // 1. Använd DELETE för permanent radering
+        //  Använd DELETE för permanent radering
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); 
         
         // Sätt headers
@@ -528,7 +528,7 @@ public function deleteAppointment($appointment_id) {
         $data = json_decode($response, true);
         curl_close($ch);
         
-        // 2. Kontrollera resultatet
+        //  Kontroll resultatet
 $code = (int)$http_code;
 
 $code = (int)$http_code;
@@ -547,7 +547,7 @@ return array(
 
 
         
-        // 3. Hantera fel
+        //  Hantera fel
         if (isset($data['exc'])) {
             $error_message = strip_tags($data['exc']); 
         } elseif (isset($data['message'])) {
@@ -566,7 +566,7 @@ return array(
 
 
 
-// Skicka kontaktformulär till befintlig DocType: G4KontaktForm (POST /api/resource/G4KontaktForm)
+// Skicka kontaktformulär till DocType
 public function submitG4KontaktForm($post) {
     if (!$this->is_authenticated) {
         return [
@@ -575,7 +575,7 @@ public function submitG4KontaktForm($post) {
         ];
     }
 
-    // Obligatoriskt personnummer: 12 siffror
+    // Obligatoriskt pnr: 12 siffror
     $pnr = trim((string)($post['personnummer'] ?? ''));
     if (!preg_match('/^\d{12}$/', $pnr)) {
         return [
@@ -589,7 +589,7 @@ public function submitG4KontaktForm($post) {
         return ((string)$v === 'ja') ? 1 : 0;
     };
 
-    // Payload (fieldnames i DocType)
+    // Payload (fieldnames i DocType hos erp)
     $data = [
         'personnummer' => $pnr,
 
@@ -627,7 +627,7 @@ public function submitG4KontaktForm($post) {
         'Content-Length: ' . strlen($json_payload)
     ]);
 
-    // Samma stil som övriga funktioner i din klass
+    
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
     curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath);
     curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
