@@ -57,105 +57,129 @@ $show_form = true;
 
 <?php if ($show_form): ?>
 <div class="card" style="margin-top: 20px;">
-    <h2><?php echo $t['form_title']; ?></h2>
+    <h3><?php echo $t['form_title']; ?></h3>
 
-    <form method="POST"><br><br>
+    <form method="POST"><br>
+        <div class="form-group">
+            <label><?php echo $t['form_age']; ?></label>
+                <select name="age" required>
+                    <option value="" disabled selected></option>
+                    <option value="18-25">18-25</option>
+                    <option value="26-35">26-35</option>
+                    <option value="36-50">36-50</option>
+                    <option value="51-65">51-65</option>
+                    <option value="65+">65+</option>
+                </select>
+        </div>
 
-        <label><?php echo $t['form_age']; ?></label><br>
-        <select name="age" required>
-            <option value="" disabled selected></option>
-            <option value="18-25">18-25</option>
-            <option value="26-35">26-35</option>
-            <option value="36-50">36-50</option>
-            <option value="51-65">51-65</option>
-            <option value="65+">65+</option>
-        </select>
-        <br><br>
 
-        <label><?php echo $t['form_gender']; ?></label><br>
-        <select name="gender" required>
-            <option value="" disabled selected></option>
-            <option value="Man"><?php echo $t['gender_male']; ?></option>
-            <option value="Kvinna"><?php echo $t['gender_female']; ?></option>
-            <option value="Annat"><?php echo $t['gender_other']; ?></option>
-            <option value="Vill ej uppge"><?php echo $t['gender_no_say']; ?></option>
-        </select>
-        <br><br>
+        <div class="form-group">
+            <label><?php echo $t['form_gender']; ?></label>
+            <select name="gender" required>
+                <option value="" disabled selected></option>
+                <option value="Man"><?php echo $t['gender_male']; ?></option>
+                <option value="Kvinna"><?php echo $t['gender_female']; ?></option>
+                <option value="Annat"><?php echo $t['gender_other']; ?></option>
+                <option value="Vill ej uppge"><?php echo $t['gender_no_say']; ?></option>
+            </select>
+        </div>
+        <br>
 
-        <label><?php echo $t['form_q1']; ?></label><br>
-        <select name="questions_opportunity" required>
-            <option value="" disabled selected></option>
-            <option value="Ja"><?php echo $t['option_yes']; ?></option>
+        <div class="form-group">
+            <label><?php echo $t['form_q1']; ?></label>
+            <select name="questions_opportunity" required>
+                <option value="" disabled selected></option>
+                <option value="Ja"><?php echo $t['option_yes']; ?></option>
+                <option value="Nej"><?php echo $t['option_no']; ?></option>
+            <option value="Delvis"><?php echo $t['option_partly']; ?></option>
+            </select>
+        </div>
+        <br>
+
+        <div class="form-group">
+            <label><?php echo $t['form_q2']; ?></label>
+            <select name="info_clarity" required>
+                <option value="" disabled selected></option>
+                <option value="Ja"><?php echo $t['option_yes']; ?></option>
+                <option value="Nej"><?php echo $t['option_no']; ?></option>
+            <option value="Delvis"><?php echo $t['option_partly']; ?></option>
+            </select>
+        </div>
+        <br>
+
+        <div class="form-group">
+            <label><?php echo $t['form_q3']; ?></label>
+            <select name="contact_satisfaction" required>
+                <option value="" disabled selected></option>
+                <option value="Ja"><?php echo $t['option_yes']; ?></option>
+                <option value="Nej"><?php echo $t['option_no']; ?></option>
+            </select>
+        </div>
+        <br>
+
+        <div class="form-group">
+            <label><?php echo $t['form_q4']; ?></label>
+            <select name="visit_time_reasonable" required>
+                <option value="" disabled selected></option>
+                <option value="Ja"><?php echo $t['option_yes']; ?></option>
+                <option value="Nej"><?php echo $t['option_no']; ?></option>
+            </select>
+        </div>
+        <br>
+
+
+        <div class="form-group">
+            <label><?php echo $t['form_q5']; ?></label>
+            <select name="waiting_room_time" required>
+                <option value="" disabled selected></option>
+                <option value="Ja"><?php echo $t['option_yes']; ?></option>
+                <option value="Nej"><?php echo $t['option_no']; ?></option>
+            </select>
+        </div>
+        <br>
+
+        <div class="form-group">
+        <label><?php echo $t['form_q6']; ?></label>
+            <select name="treatment_info" required>
+                <option value="" disabled selected></option>
+                <option value="Ja"><?php echo $t['option_yes']; ?></option>
             <option value="Nej"><?php echo $t['option_no']; ?></option>
             <option value="Delvis"><?php echo $t['option_partly']; ?></option>
         </select>
-        <br><br>
+        </div>
+        <br>
 
-        <label><?php echo $t['form_q2']; ?></label><br>
-        <select name="info_clarity" required>
-            <option value="" disabled selected></option>
-            <option value="Ja"><?php echo $t['option_yes']; ?></option>
-            <option value="Nej"><?php echo $t['option_no']; ?></option>
-            <option value="Delvis"><?php echo $t['option_partly']; ?></option>
-        </select>
-        <br><br>
-
-        <label><?php echo $t['form_q3']; ?></label><br>
-        <select name="contact_satisfaction" required>
-            <option value="" disabled selected></option>
-            <option value="Ja"><?php echo $t['option_yes']; ?></option>
-            <option value="Nej"><?php echo $t['option_no']; ?></option>
-        </select>
-        <br><br>
-
-        <label><?php echo $t['form_q4']; ?></label><br>
-        <select name="visit_time_reasonable" required>
-            <option value="" disabled selected></option>
-            <option value="Ja"><?php echo $t['option_yes']; ?></option>
-            <option value="Nej"><?php echo $t['option_no']; ?></option>
-        </select>
-        <br><br>
-
-        <label><?php echo $t['form_q5']; ?></label><br>
-        <select name="waiting_room_time" required>
-            <option value="" disabled selected></option>
-            <option value="Ja"><?php echo $t['option_yes']; ?></option>
-            <option value="Nej"><?php echo $t['option_no']; ?></option>
-        </select>
-        <br><br>
-
-        <label><?php echo $t['form_q6']; ?></label><br>
-        <select name="treatment_info" required>
-            <option value="" disabled selected></option>
-            <option value="Ja"><?php echo $t['option_yes']; ?></option>
-            <option value="Nej"><?php echo $t['option_no']; ?></option>
-            <option value="Delvis"><?php echo $t['option_partly']; ?></option>
-        </select>
-        <br><br>
-
-        <label><?php echo $t['form_q7']; ?></label><br>
+        <div class="form-group">
+        <label><?php echo $t['form_q7']; ?></label>
         <select name="staff_response" required>
             <option value="" disabled selected></option>
             <option value="Ja"><?php echo $t['option_yes']; ?></option>
             <option value="Nej"><?php echo $t['option_no']; ?></option>
             <option value="Delvis"><?php echo $t['option_partly']; ?></option>
         </select>
-        <br><br>
+        </div>
+        <br>
 
-        <label><?php echo $t['form_q8']; ?></label><br>
+        <div class="form-group">
+        <label><?php echo $t['form_q8']; ?></label>
         <select name="staff_explanation" required>
             <option value="" disabled selected></option>
             <option value="Ja"><?php echo $t['option_yes']; ?></option>
             <option value="Nej"><?php echo $t['option_no']; ?></option>
             <option value="Delvis"><?php echo $t['option_partly']; ?></option>
         </select>
-        <br><br>
+        </div>
+        <br>
 
-        <label><?php echo $t['form_comments']; ?></label><br>
+        <div class="form-group">
+        <label><?php echo $t['form_comments']; ?></label>
         <textarea name="extra_comments" rows="4" cols="50"></textarea>
-        <br><br>
+        </div>
+        <br>
 
-        <button type="submit"><?php echo $t['form_submit']; ?></button>
+
+        <button type="submit" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px;">
+        <?php echo $t['form_submit']; ?></button>
 
     </form>
 </div>
