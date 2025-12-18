@@ -6,7 +6,7 @@
 
 :root {
     --primary-color: #0066CC;
-    --secondary-color: #28A745;
+    --secondary-color: #dc1818c9;
     --background-color: #F8F9FA;
     --text-color: #212529;
     --accent-color: #0d88b5;
@@ -121,7 +121,7 @@ body {
 }
 
 .btn-secondary:hover {
-    background: #218838;
+    background: grey;
 }
 
 .btn-accent {
@@ -152,6 +152,9 @@ body {
     background: var(--primary-color);
     color: var(--white);
 }
+
+
+
 
 .login-container {
     max-width: 450px;

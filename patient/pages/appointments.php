@@ -137,12 +137,12 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
                     <td><?php echo htmlspecialchars($patient_name); ?></td>
                     
                     <td> 
-                        <?php if ($is_too_late): ?>
-                            <button type="button" 
-                                    style="background-color: #ccc; cursor: not-allowed; border:1px solid #999;"
-                                    onclick="alert('<?php echo $t['alert_too_late_cancel']; ?>')">
-                                <?php echo $t['cancel_booking']; ?>
-                            </button>
+                        <?php if ($is_too_late): ?>            
+                              <button type="button" 
+                                     class="btn btn-secondary" 
+                                     onclick="alert('<?php echo $t['alert_too_late_cancel']; ?>')">
+                         <?php       echo $t['cancel_booking']; ?>
+                                </button>
                         <?php else: ?>
                             <form method="post" action="pages/Cancel.php">
                                 <input type="hidden" name="name" value="<?php echo htmlspecialchars($app['name']); ?>">
@@ -150,7 +150,7 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
                                      type="submit"
                                      name="action"
                                      value="cancel"
-                                     class="btn btn-primary"
+                                     class="btn btn-secondary"
                                      title="Avbokningsregel"
                                      onclick="return confirm('<?php echo $t['confirm_cancel']; ?>')">
                                     <?php echo $t['cancel_booking']; ?>
@@ -161,11 +161,11 @@ $requests = $erp_client->getRescheduleRequests($my_pnr);
 
                     <td>
                         <?php if ($is_too_late): ?>
-                            <button type="button" 
-                                    style="background-color: #ccc; cursor: not-allowed; border:1px solid #999;"
-                                    onclick="alert('<?php echo $t['alert_too_late_reschedule']; ?>')">
-                                <?php echo $t['reschedule_booking']; ?>
-                            </button>
+                             <button type="button" 
+                                     class="btn btn-primary" 
+                                     onclick="alert('<?php echo $t['alert_too_late_cancel']; ?>')">
+                         <?php       echo $t['reschedule_booking']; ?>
+                                </button>
                         <?php else: ?>
                             <form method="post" action="pages/ombokning.php"> 
                                 <input type="hidden" name="appointment_name" value="<?php echo htmlspecialchars($app['name']); ?>">
