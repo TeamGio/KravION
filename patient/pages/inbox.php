@@ -50,8 +50,6 @@
 
 
 <?php
-// --- HÄR ÄR ENDA ÄNDRINGEN ---
-// Vi skiter i att kolla datum. Vi sätter bara denna till sant direkt.
 $show_form = true; 
 ?>
 
