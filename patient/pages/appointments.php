@@ -255,7 +255,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <textarea name="symptom" rows="4" style="width: 100%; max-width: 500px;"></textarea>
     </div>
 
-    <hr style="border: 1px solid #eee; margin: 20px 0;">
+    <hr style="border: 1px solid #007bff; margin: 20px 0;">
 
     <h3><?php echo $t['contact_curator_header']; ?></h3>
 
