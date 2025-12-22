@@ -43,10 +43,10 @@ if (!isset($erp_client) || !method_exists($erp_client, 'renewPrescription')) {
     $result['message'] = 'ERP-klienten eller metoden för förnyelse saknas.';
 } else {
     // Utför API-anropet (PUT)
-    $tmp = $erp_client->renewPrescription($prescription_id, $patient_erp_id);
+    $api_call = $erp_client->renewPrescription($prescription_id, $patient_erp_id);
 
-    if (is_array($tmp)) {
-        $result = array_merge($result, $tmp);
+    if (is_array($api_call)) {
+        $result = array_merge($result, $api_call);
     } else {
         $result['message'] = 'Ogiltigt svar från ERP-klienten vid förnyelse.';
     }
