@@ -747,7 +747,7 @@ public function submitG4KontaktForm($post) {
 
         $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) .
                '?filters=' . urlencode(json_encode([["patient", "=", $patient_erp_id]])) . 
-               '&fields=' . urlencode(json_encode(["*"]));
+               '&fields=' . urlencode(string: json_encode(["*"]));
 
         $ch = curl_init($url);
         

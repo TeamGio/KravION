@@ -9,7 +9,6 @@ $records = $erp_client->getMedicalrecords($patient_erp_id);
         <?php echo $t['click_row_info']; ?>
     </p>
 
-    
     <?php if (!empty($records)): ?>
         <?php foreach ($records as $record): ?>
             <?php
@@ -23,19 +22,12 @@ $records = $erp_client->getMedicalrecords($patient_erp_id);
                 $ref_doctype = $record['reference_doctype'] ?? '';
                 $ref_name    = $record['reference_name'] ?? '';
 
-                $actual_data = []; // Här ska vi spara den riktiga datan
+                $actual_data = []; 
                 
-                // 3. GÖR DET EXTRA ANROPET HÄR
+                
                 if (!empty($ref_doctype) && !empty($ref_name)) {
                     $actual_data = $erp_client->getDoc($ref_doctype, $ref_name);
                 }
-
-                $title = match ($record['reference_doctype'] ?? '') {
-                'Lab Test' => 'Labbrapport',
-                'Vital Signs' => 'Vitala parametrar',
-                'Patient Encounter' => 'Patientbesök',
-                default => 'Journalanteckning',
-                };
             ?>
 
             <details style="margin-bottom:15px; background: white; border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
@@ -44,9 +36,6 @@ $records = $erp_client->getMedicalrecords($patient_erp_id);
                     <div style="font-weight:600; color:#333;">
                         <span style="color:#007bff; margin-right:10px; font-size: 1.1em;">
                              <?php echo htmlspecialchars($date_display); ?>
-                        </span>
-                        <span style="color:#000000; margin-right:10px; font-size: 1.1em;">
-                             <?php echo htmlspecialchars($title); ?>
                         </span>
 
                     </div>
