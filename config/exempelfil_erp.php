@@ -155,7 +155,6 @@ class ERPNextClient {
             // Sätter den tillåtna statusen som indikerar att en begäran är gjord
             'data_rsjo' => 'Behandlas', 
             // Sätter det önskade uttagssaldot
-            'uttag' => 4        
         ];
         $json_payload = json_encode($update_data);
 
@@ -203,7 +202,7 @@ class ERPNextClient {
         if ($http_code === 200 && isset($data['data'])) {
             return [
                 'success' => true,
-                'message' => 'Receptet är nu satt till "Behandlas" med 4 uttag. Det kan ta en stund innan det godkänns.', // <-- Detta meddelande skickas till prescriptions.php
+                'message' => 'Receptet är nu satt till "Behandlas". Det kan ta en stund innan det godkänns.', // <-- Detta meddelande skickas till prescriptions.php
                 'data' => $data['data']
             ];
         }
