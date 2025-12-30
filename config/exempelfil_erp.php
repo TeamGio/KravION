@@ -202,14 +202,13 @@ class ERPNextClient {
         if ($http_code === 200 && isset($data['data'])) {
             return [
                 'success' => true,
-                'message' => 'Receptet är nu satt till "Behandlas". Det kan ta en stund innan det godkänns.', // <-- Detta meddelande skickas till prescriptions.php
+                'message' => 'Receptet är nu satt till "Behandlas". Det kan ta en stund innan det godkänns.', 
                 'data' => $data['data']
             ];
         }
         
         return [
             'success' => false,
-            // Returnera det detaljerade felmeddelandet
             'message' => 'Misslyckades med att förnyas receptet. HTTP-kod: ' . $http_code . '. Meddelande: ' . $error_message
         ];
     }

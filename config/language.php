@@ -71,7 +71,6 @@ $texts = [
         'reply_from_provider' => 'Svar från vårdgivare',
         'status_received' => 'Mottagen',
         'status_resolved' => 'Åtgärdad',
-        'status_denied' => 'Nekad',
 
         // --- OMBOKNING FORMULÄR (ombokning.php) ---
         'reschedule_title' => 'Ombokning av tid',

@@ -39,7 +39,6 @@ $old_appointment_name = $_POST['appointment_name'] ?? 'Okänd bokning';
     <link rel="stylesheet" href="../../assets/css/style.css">
 
     <style>
-        /* Centrerar formuläret snyggt på skärmen */
         body {
             display: flex;
             justify-content: center;
@@ -47,7 +46,7 @@ $old_appointment_name = $_POST['appointment_name'] ?? 'Okänd bokning';
             min-height: 100vh;
             background-color: var(--background-color); 
             margin: 0;
-            font-family: 'Open Sans', sans-serif; /* Säkerställer typsnitt om CSS laddar långsamt */
+            font-family: 'Open Sans', sans-serif; 
         }
     </style>
 </head>
