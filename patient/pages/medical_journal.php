@@ -47,7 +47,7 @@ krsort($records);
             $data = $bundle['data'] ?? [];
         ?>
         
-        <div class="card" style="margin-bottom:25px; border-left:5px solid <?php echo $type === 'lab' ? '#28a745' : '#007bff'; ?>; padding:15px;">
+        <div class="card" style="margin-bottom:25px; border-left:5px solid <?php echo $type === 'lab' ? '#28a745' : '#007bff'; // för labb flikarna?>; padding:15px;">
             <div style="display:flex; justify-content:space-between; border-bottom:1px solid #dee2e6; padding-bottom:8px;">
                 <h4 style="margin:0;">
                     <?php echo $type === 'lab' ? ($t['lab_test'] ?? 'Labb') : ($t['encounter_on'] ?? 'Besök den / Visited on'); ?>:
@@ -70,11 +70,12 @@ krsort($records);
                         <table style="width:100%; border-collapse: collapse; font-size:0.9em; margin-bottom:10px;">
                             <thead>
                                 <tr style="background:#f8f9fa; text-align:left;">
-                                    <th>Test</th>
-                                    <th>Resultat/Results</th>
-                                    <th>Normalintervall/Normal range</th>
+                                    <th><?php echo htmlspecialchars($t['test'] ?? $t['lab_test_name'] ?? 'Test'); ?></th>
+                                    <th><?php echo htmlspecialchars($t['result'] ?? $t['result_value'] ?? 'Resultat'); ?></th>
+                                    <th><?php echo htmlspecialchars($t['normal_range'] ?? $t['reference'] ?? 'Normalintervall'); ?></th>
                                 </tr>
                             </thead>
+
                             <tbody>
                                 <?php
                                 $lab_items = $data['normal_test_items'] ?? $data['descriptive_test_items'] ?? [];
@@ -113,6 +114,7 @@ krsort($records);
             </details>
         </div>
         <?php endforeach; ?>
+
     <?php else: ?>
         <div class="alert alert-info">
             <?php echo $t['no_records']; ?>
