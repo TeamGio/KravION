@@ -133,6 +133,7 @@ $texts = [
         'encounter_on' => 'Besök den',
         'result' => 'Resultat',
         'normal_range' => 'Normalintervall',
+        'bp_diastolic' => 'Blodtryck (Diastoliskt)',
 
         // --- PRESCRIPTIONS (RECEPT) ---
         'medication' => 'Läkemedel',
@@ -309,6 +310,7 @@ $texts = [
         'result' => 'Result',
         'normal_range' => 'Normal Range',
         'click_row_info' => 'Click on a row to view details about the visit.',
+        'bp_diastolic' => 'Blood Pressure (Diastolic)',
 
         // --- PRESCRIPTIONS ---
         'medication' => 'Medication',

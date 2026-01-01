@@ -19,7 +19,7 @@ foreach ($vitals as $vs) {
    }
 }
 
-foreach ($med_recs as $mr) { // tar fram labbsvar
+foreach ($med_recs as $mr) { // tar fram lab test
    if (($mr['reference_doctype'] ?? '') === 'Lab Test') {
        $lab_data = $erp_client->getDoc($mr['reference_doctype'], $mr['reference_name']);
        if ($lab_data) {
@@ -100,7 +100,7 @@ krsort($records);
                         <div>
                             <p><?php echo $t['temperature']; ?>: <?php echo htmlspecialchars($vs['temperature'] ?? 'N/A'); ?></p>
                             <p><?php echo $t['pulse']; ?>: <?php echo htmlspecialchars($vs['pulse'] ?? 'N/A'); ?></p>
-                            <p><?php echo $t['respiratory rate']; ?>: <?php echo htmlspecialchars($vs['respiratory_rate'] ?? 'N/A'); ?></p>
+                            <p><?php echo $t['bp_diastolic']; ?>: <?php echo htmlspecialchars($vs['bp_diastolic'] ?? 'N/A'); ?></p>
                         </div>
                     </div>
                     
