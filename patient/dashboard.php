@@ -60,6 +60,13 @@ $upcoming_appointments = count($appointments);
 $journal_lista = $erp_client->getMedicalrecords($patient_erp_id);
 $medical_records_count = count($journal_lista);
 
+$vital_signs = $erp_client->getVitalSignsForPatient($patient_erp_id);
+$vital_signs_count = count($vital_signs);
+
+$journal_records = $erp_client->getJournalRecordsForPatient($patient_erp_id);
+$journal_records_count = count($journal_records);
+
+
 
 
 
@@ -124,7 +131,7 @@ $new_lang = ($lang === 'sv') ? 'en' : 'sv';
                 <p><?php echo $t['prescriptions']; ?></p>
             </div>
             <div class="stat-card">
-                <h4><?php echo $medical_records_count; ?></h4>
+                <h4><?php echo ($medical_records_count + $vital_signs_count + $journal_records_count); ?></h4>
                 <p><?php echo $t['medical_records']; ?></p>
             </div>
         </div>
