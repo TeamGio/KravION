@@ -1,43 +1,8 @@
-<?php
-$encounters = $erp_client->getJournalRecordsForPatient($patient_erp_id);
-$vitals     = $erp_client->getVitalSignsForPatient($patient_erp_id);
-$med_recs   = $erp_client->getMedicalrecords($patient_erp_id);
-
-$records = [];
-
-foreach ($encounters as $enc) {
-   $key = ($enc['encounter_date'] ?? '') . ' ' . ($enc['encounter_time'] ?? '');
-   $records[$key] = ['type' => 'encounter', 'encounter' => $enc];
-}
-
-foreach ($vitals as $vs) {
-   $key = ($vs['signs_date'] ?? '') . ' ' . ($vs['signs_time'] ?? '');
-   if (isset($records[$key])) {
-       $records[$key]['vitals'] = $vs;
-   } else {
-       $records[$key] = ['type' => 'encounter', 'vitals' => $vs];
-   }
-}
-
-foreach ($med_recs as $mr) { // tar fram lab test
-   if (($mr['reference_doctype'] ?? '') === 'Lab Test') {
-       $lab_data = $erp_client->getDoc($mr['reference_doctype'], $mr['reference_name']);
-       if ($lab_data) {
-           $date = $lab_data['result_date'] ?? date('Y-m-d', strtotime($lab_data['creation']));
-           $time = $lab_data['result_time'] ?? '00:00:00';
-           $key = $date . ' ' . $time . '_' . $lab_data['name'];
-          
-           $l_staff = $lab_data['practitioner_name'] ?? $lab_data['employee_name'] ?? 'Laboratoriet';
-           $records[$key] = ['type' => 'lab', 'data' => $lab_data, 'staff' => $l_staff];
-       }
-   }
-}
-
-krsort($records);
-?>
 <div class="card">
     <h3><?php echo $t['medical_journal']; ?></h3>
+    
     <?php if (!empty($records)): ?>
+        
         <?php foreach ($records as $datetime => $bundle): ?>
         <?php // tar fram ALLA små flikar
             $type = $bundle['type'] ?? 'encounter';
