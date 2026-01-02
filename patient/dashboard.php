@@ -1,11 +1,8 @@
-
-
 <?php
 session_start();
 
 require_once '../config/language.php';
 require_once '../config/exempelfil_erp.php';
-
 
 $INACTIVITY_LIMIT = 300;
 
@@ -17,8 +14,6 @@ if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 
 }
 $_SESSION['last_activity'] = time();
 
-
-
 // Om ej inloggad, skicka till login
 if (!isset($_SESSION['patient_id'])) {
     header('Location: login.php');
@@ -28,8 +23,6 @@ if (!isset($_SESSION['patient_id'])) {
 $patient_erp_id = $_SESSION['patient_id'];
 $patient_pnr = $_SESSION['personal_number'] ?? 'N/A';
 $page = $_GET['page'] ?? 'overview';
-
-$patient_id = $patient_erp_id;
 
 // Hämta patient från ERPNext
 $erp_client = new ERPNextClient();
@@ -49,32 +42,64 @@ $patient_data = [
 ];
 
 
+// -------------------------------------------------------------
+// 1. HÄMTA DATA FRÅN API
+// -------------------------------------------------------------
 
-// Statistik
 $prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);   
 $active_prescriptions = count($prescriptions);
 
 $appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);     
 $upcoming_appointments = count($appointments);
 
-$journal_lista = $erp_client->getMedicalrecords($patient_erp_id);
-$medical_records_count = count($journal_lista);
-
-$vital_signs = $erp_client->getVitalSignsForPatient($patient_erp_id);
-$vital_signs_count = count($vital_signs);
-
-$journal_records = $erp_client->getJournalRecordsForPatient($patient_erp_id);
-$journal_records_count = count($journal_records);
+// HÄR ÄR ÄNDRINGEN: Vi döper dem direkt till namnen din kod vill ha ($med_recs, $vitals, $encounters)
+$med_recs   = $erp_client->getMedicalrecords($patient_erp_id);
+$vitals     = $erp_client->getVitalSignsForPatient($patient_erp_id);
+$encounters = $erp_client->getJournalRecordsForPatient($patient_erp_id);
 
 
+// -------------------------------------------------------------
+// 2. LOGIK FRÅN MEDICAL JOURNAL (Klistra in din kod exakt som den var)
+// -------------------------------------------------------------
+
+$records = [];
+
+foreach ($encounters as $enc) {
+   $key = ($enc['encounter_date'] ?? '') . ' ' . ($enc['encounter_time'] ?? '');
+   $records[$key] = ['type' => 'encounter', 'encounter' => $enc];
+}
+
+foreach ($vitals as $vs) {
+   $key = ($vs['signs_date'] ?? '') . ' ' . ($vs['signs_time'] ?? '');
+   if (isset($records[$key])) {
+       $records[$key]['vitals'] = $vs;
+   } else {
+       $records[$key] = ['type' => 'encounter', 'vitals' => $vs];
+   }
+}
+
+foreach ($med_recs as $mr) { 
+   if (($mr['reference_doctype'] ?? '') === 'Lab Test') {
+       $lab_data = $erp_client->getDoc($mr['reference_doctype'], $mr['reference_name']);
+       if ($lab_data) {
+           $date = $lab_data['result_date'] ?? date('Y-m-d', strtotime($lab_data['creation']));
+           $time = $lab_data['result_time'] ?? '00:00:00';
+           $key = $date . ' ' . $time . '_' . $lab_data['name'];
+          
+           $l_staff = $lab_data['practitioner_name'] ?? $lab_data['employee_name'] ?? 'Laboratoriet';
+           $records[$key] = ['type' => 'lab', 'data' => $lab_data, 'staff' => $l_staff];
+       }
+   }
+}
+
+krsort($records); // Sorterar listan
+
+// Nu räknar vi antalet bakade händelser
+$display_journal_count = count($records);
 
 
-
-
-// Språkknapp (samma logik som index/login)
+// Språkknapp
 $new_lang = ($lang === 'sv') ? 'en' : 'sv';
-
-
 
 ?>
 <!DOCTYPE html>
@@ -87,7 +112,6 @@ $new_lang = ($lang === 'sv') ? 'en' : 'sv';
 </head>
 <body>
 
-<!-- SPRÅKKNAPP – ENDA NYA TILLÄGGET -->
 <div style="position:absolute; top:10px; right:10px;">
     <a href="?lang=<?php echo $new_lang; ?>" class="btn btn-outline btn-sm">
         <?php echo $t['language_toggle']; ?>
@@ -97,7 +121,6 @@ $new_lang = ($lang === 'sv') ? 'en' : 'sv';
 <div class="container">
     <div class="dashboard">
 
-        <!-- HEADER -->
         <div class="dashboard-header">
             <div>
                 <h1><?php echo $t['welcome']; ?>, <?php echo htmlspecialchars($patient_data['first_name']); ?>!</h1>
@@ -108,7 +131,6 @@ $new_lang = ($lang === 'sv') ? 'en' : 'sv';
             </div>
         </div>
 
-        <!-- MENY -->
         <div class="dashboard-nav">
             <ul>
                 <li><a href="?page=overview" class="<?php echo $page === 'overview' ? 'active' : ''; ?>"><?php echo $t['overview']; ?></a></li>
@@ -119,7 +141,6 @@ $new_lang = ($lang === 'sv') ? 'en' : 'sv';
             </ul>
         </div>
 
-        <!-- OVERSIKT -->
         <?php if ($page === 'overview'): ?>
         <div class="stats-grid">
             <div class="stat-card">
@@ -130,17 +151,17 @@ $new_lang = ($lang === 'sv') ? 'en' : 'sv';
                 <h4><?php echo $active_prescriptions; ?></h4>
                 <p><?php echo $t['prescriptions']; ?></p>
             </div>
+            
             <div class="stat-card">
-                <h4><?php echo ($medical_records_count + $vital_signs_count + $journal_records_count); ?></h4>
+                <h4><?php echo $display_journal_count; ?></h4>
                 <p><?php echo $t['medical_records']; ?></p>
             </div>
         </div>
-
-
         <?php endif; ?>
 
-        <!-- UNDER-SIDOR -->
         <?php 
+            // Medical journal kan nu använda $records direkt (om du städat den filen), 
+            // eller köra sin egen logik igen (om du lät den vara kvar). Båda funkar.
             if ($page === 'medical_journal') include 'pages/medical_journal.php';
             elseif ($page === 'appointments') include 'pages/appointments.php';
             elseif ($page === 'prescriptions') include 'pages/prescriptions.php';
