@@ -459,7 +459,7 @@ public function createNewDoc($resource_name, $data) {
             'Content-Length: ' . strlen($json_payload)
         ]);
         
-        // Återanvänd den autentiserade sessionen (cookie-filen)
+        
         curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiepath); 
         
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->tmeout);
@@ -487,7 +487,7 @@ public function createNewDoc($resource_name, $data) {
     }
 
 
-
+        // avboka tid
 public function deleteAppointment($appointment_id) {
         if (!$this->is_authenticated) {
             return [
@@ -497,7 +497,7 @@ public function deleteAppointment($appointment_id) {
         }
 
         $RESOURCE_NAME = 'Patient Appointment';
-        // Skapa den fullständiga URL:en med ID (name) på bokningen.
+        // Skapa den fullständiga URL 
         $url = $this->baseurl . 'api/resource/' . rawurlencode($RESOURCE_NAME) . '/' . urlencode($appointment_id);
 
         $ch = curl_init($url);
@@ -508,10 +508,10 @@ public function deleteAppointment($appointment_id) {
             ];
         }
 
-        //  Använd DELETE för permanent radering
+        //  DELETE för permanent radering
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); 
         
-        // Sätt headers
+        
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Accept: application/json',
         ]);
@@ -526,7 +526,7 @@ public function deleteAppointment($appointment_id) {
         $data = json_decode($response, true);
         curl_close($ch);
         
-        //  Kontroll resultatet
+        
 $code = (int)$http_code;
 
 $code = (int)$http_code;
@@ -587,7 +587,7 @@ public function submitG4KontaktForm($post) {
         return ((string)$v === 'ja') ? 1 : 0;
     };
 
-    // Payload (fieldnames i DocType hos erp)
+    // (fieldnames i DocType hos erp)
     $data = [
         'personnummer' => $pnr,
 
