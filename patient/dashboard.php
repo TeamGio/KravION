@@ -51,10 +51,10 @@ $patient_data = [
 
 
 // Statistik
-$prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);   // ← FIX
+$prescriptions = $erp_client->getPrescriptionsForPatient($patient_erp_id);   
 $active_prescriptions = count($prescriptions);
 
-$appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);     // ← FIX
+$appointments = $erp_client->getAppointmentsForPatient($patient_erp_id);     
 $upcoming_appointments = count($appointments);
 
 $journal_lista = $erp_client->getMedicalrecords($patient_erp_id);
