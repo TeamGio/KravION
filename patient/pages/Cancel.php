@@ -39,7 +39,7 @@ error_log("Avbokning av $appointment_id för patient $patient_erp_id");
 if (!isset($erp_client) || !method_exists($erp_client, 'cancelAppointment')) {
     $result['message'] = 'ERP-klienten eller metoden för avbokning saknas.';
 } else {
-    // Utför API-anropet (PUT/DELETE inuti cancelAppointment)
+    // Utför API-anropet PUT/DELETE inuti cancelAppointment
 $tmp = $erp_client->deleteAppointment($appointment_id);    if (is_array($tmp)) {
         $result = array_merge($result, $tmp);
     } else {

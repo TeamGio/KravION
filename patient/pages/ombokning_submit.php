@@ -34,12 +34,12 @@ $final_day    = $map_day[$preferred_day] ?? $preferred_day;
 
 // Datastruktur baserad på din fältlista
 $data = [
-    "patient_id"       => $uid,            // Fält 2
-    "preferred_period" => $final_period,   // Fält 3
-    "preferred_day"    => $final_day,      // Fält 4
-    "department"       => $department,     // Fält 5
-    "old_appointment"  => $old_appointment_name, // Fält 7
-    "status"           => "Mottagen"       // Fält 8
+    "patient_id"       => $uid,           
+    "preferred_period" => $final_period,   
+    "preferred_day"    => $final_day,      
+    "department"       => $department,     
+    "old_appointment"  => $old_appointment_name, 
+    "status"           => "Mottagen"       
 ];
 
 try {
